@@ -49,11 +49,6 @@ export const metadata: Metadata = {
 	title: "Orbit Desk",
 	description:
 		"Your global workspace — sync, simplify, and stay productive anywhere with OrbitDesk.",
-	appleWebApp: {
-		capable: true,
-		statusBarStyle: "default",
-		title: "Orbit Desk",
-	},
 };
 
 export default function RootLayout({
