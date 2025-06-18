@@ -9,10 +9,18 @@ const withPWA = withPWAInit({
 		disableDevLogs: true,
 		// Precache these files during service worker installation
 		additionalManifestEntries: [
-			{ url: "/offline", revision: null },
-			{ url: "/offline-bg.jpg", revision: null },
+			{ url: "/offline", revision: "1" },
+			{ url: "/offline-bg.jpg", revision: "1" },
 		],
 		runtimeCaching: [
+			// Cache the offline page
+			{
+				urlPattern: ({ url }) => url.pathname === "/offline",
+				handler: "CacheFirst",
+				options: {
+					cacheName: "offline-page",
+				},
+			},
 			{
 				urlPattern: /^\/offline-bg\.jpg$/,
 				handler: "CacheFirst",
@@ -26,7 +34,7 @@ const withPWA = withPWAInit({
 			},
 			// Cache pages for offline access
 			{
-				urlPattern: /^\/$/,
+				urlPattern: ({ request }) => request.mode === "navigate",
 				handler: "NetworkFirst",
 				options: {
 					cacheName: "pages",
@@ -34,6 +42,7 @@ const withPWA = withPWAInit({
 						maxEntries: 32,
 						maxAgeSeconds: 60 * 60 * 24, // 24 hours
 					},
+					networkTimeoutSeconds: 3,
 				},
 			},
 			// Cache API responses
