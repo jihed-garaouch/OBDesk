@@ -1,23 +1,18 @@
-"use client";
-
 import { useTheme } from "@/context/ThemeContext";
-import Image from "next/image";
 
-const Home = () => {
+const HomeScreen = () => {
 	const { theme, toggleTheme } = useTheme();
 
 	return (
 		<section className='h-screen w-full flex justify-center items-center bg-background text-foreground'>
 			<div className='flex flex-col gap-2 items-center'>
 				<div className='flex items-center gap-2'>
-					<Image
+					<img
 						src='/logo.webp'
 						alt='logo'
-						className={`border-2 rounded-full ${
+						className={`w-[50px] h-[50px] border-2 rounded-full ${
 							theme === "dark" ? " border-foreground" : " border-gray-400"
 						}`}
-						width={50}
-						height={50}
 					/>
 					<h1 className='text-3xl font-bold'>OrbitDesk</h1>
 				</div>
@@ -32,4 +27,4 @@ const Home = () => {
 	);
 };
 
-export default Home;
+export default HomeScreen;

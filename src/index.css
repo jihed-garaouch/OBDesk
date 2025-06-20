@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+/* ===== FONT DEFINITIONS ===== */
+@font-face {
+	font-family: "Satoshi";
+	src: url("/fonts/Satoshi/Satoshi-Light.otf") format("opentype");
+	font-weight: 300;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Satoshi";
+	src: url("/fonts/Satoshi/Satoshi-Regular.otf") format("opentype");
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Satoshi";
+	src: url("/fonts/Satoshi/Satoshi-Medium.otf") format("opentype");
+	font-weight: 500;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Satoshi";
+	src: url("/fonts/Satoshi/Satoshi-Bold.otf") format("opentype");
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Satoshi";
+	src: url("/fonts/Satoshi/Satoshi-Black.otf") format("opentype");
+	font-weight: 900;
+	font-style: normal;
+	font-display: swap;
+}
+
+:root {
+	--font-satoshi: "Satoshi", sans-serif;
+	--font-dm-sans: "DM Sans", sans-serif;
+	--background: #0a0a0a;
+	--foreground: #ededed;
+	--accent: #13a234;
+}
+
+html[data-theme="light"] {
+	--background: #ededed;
+	--foreground: #0a0a0a;
+	--accent: #13a234;
+}
+
+@theme inline {
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--color-accent: var(--accent);
+	--font-satoshi: var(--font-satoshi);
+	--font-dm-sans: var(--font-dm-sans);
+}
+
+body {
+	color: var(--foreground);
+	font-family: var(--font-satoshi);
+}

@@ -1,5 +1,3 @@
-"use client";
-
 import { useTheme } from "@/context/ThemeContext";
 import { FiPower } from "react-icons/fi";
 import { RiWifiOffLine } from "react-icons/ri";
@@ -7,12 +5,15 @@ import { RiWifiOffLine } from "react-icons/ri";
 const OfflineScreen = () => {
 	const { theme } = useTheme();
 
+	const handleReload = () => {
+		window.location.reload();
+	};
+
 	const isDarkTheme = theme === "dark";
 
 	return (
 		<section
 			className={`relative h-screen w-full flex justify-center items-center`}>
-			{/* eslint-disable-next-line @next/next/no-img-element */}
 			<img
 				src='/offline-bg.jpg'
 				alt='Offline-Background'
@@ -32,12 +33,18 @@ const OfflineScreen = () => {
 				</h1>
 				<div className='h-[3px] w-[80px] bg-foreground -mt-[7px] md:-mt-[15px]' />
 				<p className='font-bold text-center w-[80%] text-sm md:text-base'>
-					Don’t worry, your data is safe. We’ll sync when you’re back online.
+					{`Don't worry, your data is safe. We'll sync when you're back online.`}
 				</p>
 				<div className='text-xs flex items-center gap-1 font-bold mt-2'>
 					<RiWifiOffLine className='font-bold' />
 					<span>Offline Mode.</span>
 				</div>
+				<button
+					className='cursor-pointer mt-[10px] py-2 px-8 rounded-[20px] bg-foreground text-background font-bold text-[13px]'
+					onClick={handleReload}
+					type='button'>
+					Try Again
+				</button>
 			</div>
 		</section>
 	);

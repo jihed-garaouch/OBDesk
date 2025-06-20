@@ -1,14 +1,13 @@
-"use client";
-
-import { ThemeProvider } from "@/context/ThemeContext";
+import { ThemeProvider } from "@/context/ThemeProvider";
 import useNetworkStatus from "@/hooks/useNetworkStatus";
-import OfflineScreen from "@/screens/Offline/Offline";
 import React from "react";
+import OfflineScreen from "@/screens/Offline/Offline";
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
 	const { isOnline } = useNetworkStatus();
+	const isLoggedIn = false;
 
-	if (!isOnline) {
+	if (!isOnline && !isLoggedIn) {
 		return (
 			<ThemeProvider>
 				<OfflineScreen />
