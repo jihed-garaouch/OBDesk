@@ -13,7 +13,7 @@ const OfflineScreen = () => {
 
 	return (
 		<section
-			className={`relative h-dvh overflow-hidden w-full flex justify-center items-center`}>
+			className={`relative h-svh overflow-hidden w-full flex justify-center items-center`}>
 			<img
 				src='/offline-bg.jpg'
 				alt='Offline-Background'

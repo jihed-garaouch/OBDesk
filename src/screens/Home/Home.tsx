@@ -4,7 +4,7 @@ const HomeScreen = () => {
 	const { theme, toggleTheme } = useTheme();
 
 	return (
-		<section className='h-dvh overflow-hidden w-full flex justify-center items-center bg-background text-foreground'>
+		<section className='h-svh overflow-hidden w-full flex justify-center items-center bg-background text-foreground'>
 			<div className='flex flex-col gap-2 items-center'>
 				<div className='flex items-center gap-2'>
 					<img
