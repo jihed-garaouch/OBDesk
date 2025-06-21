@@ -5,7 +5,7 @@ import OfflineScreen from "@/screens/Offline/Offline";
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
 	const { isOnline } = useNetworkStatus();
-	const isLoggedIn = true;
+	const isLoggedIn = false;
 
 	if (!isOnline && !isLoggedIn) {
 		return (
