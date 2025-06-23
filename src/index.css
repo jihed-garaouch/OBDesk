@@ -40,14 +40,14 @@
 :root {
 	--font-satoshi: "Satoshi", sans-serif;
 	--font-dm-sans: "DM Sans", sans-serif;
-	--background: #0a0a0a;
+	--background: #000000;
 	--foreground: #ededed;
 	--accent: #13a234;
 }
 
 html[data-theme="light"] {
 	--background: #ededed;
-	--foreground: #0a0a0a;
+	--foreground: #000000;
 	--accent: #13a234;
 }
 

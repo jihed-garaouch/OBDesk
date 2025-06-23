@@ -1,7 +1,7 @@
 import { useTheme } from "@/context/ThemeContext";
 
 const HomeScreen = () => {
-	const { theme, toggleTheme } = useTheme();
+	const { theme } = useTheme();
 
 	return (
 		<section className='h-svh overflow-hidden w-full flex justify-center items-center bg-background text-foreground'>
@@ -17,11 +17,6 @@ const HomeScreen = () => {
 					<h1 className='text-3xl font-bold'>OrbitDesk</h1>
 				</div>
 				<p className='text-accent font-dm-sans'>Your global workspace</p>
-				<button
-					onClick={toggleTheme}
-					className='bg-foreground text-background px-4 py-2 rounded cursor-pointer'>
-					{theme === "light" ? "🌙 Dark" : "☀️ Light"}
-				</button>
 			</div>
 		</section>
 	);
