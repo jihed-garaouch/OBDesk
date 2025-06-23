@@ -15,7 +15,7 @@ const LoginScreen = () => {
 		password: "",
 	});
 
-	const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		console.log("Login form submitted:", formDetails);
 
@@ -43,7 +43,7 @@ const LoginScreen = () => {
 					<p className='font-medium text-sm mb-4 text-center'>
 						Let's get you in.
 					</p>
-					<div className='flex flex-col gap-2'>
+					<form onSubmit={handleSubmit} className='flex flex-col gap-2'>
 						<Input
 							type='email'
 							label='Email'
@@ -64,15 +64,14 @@ const LoginScreen = () => {
 							}
 							placeholder='Enter your password'
 						/>
-					</div>
-					<button
-						type='submit'
-						onClick={handleSubmit}
-						className={`mt-5 w-full bg-foreground text-background px-4 py-2 rounded-[4px] cursor-pointer font-bold text-sm ${
-							isDarkTheme ? "hover:bg-white" : "hover:bg-black"
-						} transition-all duration-300 ease-in-out`}>
-						Sign in
-					</button>
+						<button
+							type='submit'
+							className={`mt-5 w-full bg-foreground text-background px-4 py-2 rounded-[4px] cursor-pointer font-bold text-sm ${
+								isDarkTheme ? "hover:bg-white" : "hover:bg-black"
+							} transition-all duration-300 ease-in-out`}>
+							Sign in
+						</button>
+					</form>
 					<div className='mt-5 flex items-center gap-2'>
 						<div className='h-[1px] w-full bg-foreground rounded-[4px] bg-gradient-to-r from-background via-foreground to-foreground' />
 						<p className='uppercase text-[10px]'>or</p>

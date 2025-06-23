@@ -33,6 +33,7 @@ const Input = ({
 				<div className='border-foreground border px-4 py-2 w-full rounded-[4px] flex items-center gap-3'>
 					<input
 						id={id}
+						required
 						type={showPassWord ? "text" : "password"}
 						value={value}
 						onChange={onChange}
@@ -46,6 +47,7 @@ const Input = ({
 			) : (
 				<input
 					id={id}
+					required
 					type={type}
 					value={value}
 					onChange={onChange}
