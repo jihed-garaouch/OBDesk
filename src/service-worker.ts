@@ -17,7 +17,14 @@ self.addEventListener("install", (event) => {
 	console.log("Service Worker installing...");
 	event.waitUntil(
 		caches.open("offline-assets").then((cache) => {
-			return cache.addAll(["/offline.html", "/offline-bg.jpg"]);
+			return cache.addAll([
+				"/offline.html",
+				"/offline-bg.jpg",
+				"/fonts/Satoshi/Satoshi-Regular.otf",
+				"/fonts/Satoshi/Satoshi-Medium.otf",
+				"/fonts/Satoshi/Satoshi-Bold.otf",
+				"/fonts/Satoshi/Satoshi-Black.otf",
+			]);
 		})
 	);
 	self.skipWaiting();
@@ -27,6 +34,14 @@ self.addEventListener("activate", (event) => {
 	console.log("Service Worker activated");
 	event.waitUntil(self.clients.claim());
 });
+
+// Cache fonts
+registerRoute(
+	({ request }) => request.destination === "font",
+	new CacheFirst({
+		cacheName: "fonts",
+	})
+);
 
 // Cache images
 registerRoute(
@@ -58,10 +73,13 @@ registerRoute(
 				handlerDidError: async () => {
 					console.log("Network failed, serving offline page");
 					const offlinePage = await caches.match("/offline.html");
-					return offlinePage || new Response("Offline", {
-						status: 503,
-						statusText: "Service Unavailable"
-					});
+					return (
+						offlinePage ||
+						new Response("Offline", {
+							status: 503,
+							statusText: "Service Unavailable",
+						})
+					);
 				},
 			},
 		],
