@@ -92,10 +92,11 @@ export const AuthContextProvider = ({
 	};
 	
 	const signInWithGitHub = async (): Promise<AuthResult> => {
+		const redirectTo = `${window.location.origin}/auth/v1/callback`;
 		const { data, error } = await supabase.auth.signInWithOAuth({
 			provider: "github",
 			options: { 
-				// redirectTo,
+				redirectTo,
 				 queryParams: { prompt: "select_account" } },
 		});
 
