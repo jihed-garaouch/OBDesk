@@ -22,7 +22,7 @@ const SignUpScreen = () => {
 
 	const isDarkTheme = theme === "dark";
 
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState<boolean>(false);
 	const [formDetails, setFormDetails] = useState({
 		firstName: "",
 		lastName: "",
@@ -37,7 +37,7 @@ const SignUpScreen = () => {
 		password?: string;
 	}>({});
 
-	const { signUpWithEmail } = UserAuth();
+	const { signUpWithEmail, signInWithGoogle } = UserAuth();
 
 	const handleChange =
 		<K extends keyof typeof formDetails>(key: K) =>
@@ -203,6 +203,7 @@ const SignUpScreen = () => {
 					</div>
 					<button
 						type='button'
+						onClick={signInWithGoogle}
 						className='mt-5 w-full bg-transparent border border-foreground/50 text-foreground px-4 py-3 rounded-[4px] cursor-pointer font-bold text-sm flex items-center justify-center gap-2 hover:bg-foreground hover:text-background transition-all duration-300 ease-in-out'>
 						<FcGoogle className='text-xl' />
 						<span>Sign up with Google</span>

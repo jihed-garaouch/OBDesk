@@ -20,6 +20,7 @@ type AuthResult<T = unknown> =
 interface AuthContextType {
 	signUpWithEmail: (creds: Credentials) => Promise<AuthResult>;
 	signInWithEmail: (creds: Credentials) => Promise<AuthResult>;
+	signInWithGoogle: () => Promise<AuthResult>;
 	signOut: () => Promise<void>;
 	session: Session | null;
 	isLoadingSession: boolean;
@@ -74,6 +75,21 @@ export const AuthContextProvider = ({
 		return { success: true, data };
 	};
 
+	const signInWithGoogle = async (): Promise<AuthResult> => {
+		const redirectTo = `${window.location.origin}/auth/v1/callback`; // ensure this matches Supabase settings
+		const { data, error } = await supabase.auth.signInWithOAuth({
+			provider: "google",
+			options: { redirectTo, queryParams: { prompt: "select_account" } },
+		});
+
+		if (error) {
+			console.error("Error signing up with Google: ", error);
+			return { success: false, error: error.message ?? String(error) };
+		}
+
+		return { success: true, data };
+	};
+
 	const signInWithEmail = async ({
 		email,
 		password,
@@ -108,6 +124,16 @@ export const AuthContextProvider = ({
 		}
 	};
 
+	// Sign out
+	const signOut = async () => {
+		const { error } = await supabase.auth.signOut();
+		if (error) {
+			console.error("Error signing out:", error);
+			toast.error("Error signing out");
+			return;
+		}
+	};
+
 	useEffect(() => {
 		supabase.auth.getSession().then(({ data: { session } }) => {
 			setSession(session);
@@ -126,22 +152,12 @@ export const AuthContextProvider = ({
 		};
 	}, []);
 
-	// Sign out
-	async function signOut() {
-		const { error } = await supabase.auth.signOut();
-		if (error) {
-			console.error("Error signing out:", error);
-			toast.error("Error signing out");
-			return;
-		}
-		toast.success("Signed out successfully");
-	}
-
 	const values: AuthContextType = {
 		signUpWithEmail,
 		signInWithEmail,
 		session,
 		signOut,
+		signInWithGoogle,
 		isLoadingSession,
 	};
 

@@ -7,6 +7,7 @@ import HomeScreen from "@/screens/Dashboard/Home";
 import FinanceScreen from "@/screens/Dashboard/Finance";
 import TodoScreen from "@/screens/Dashboard/Todo";
 import DashboardLayout from "@/components/Dashboard/DashboardLayout";
+import AuthCallback from "@/components/Auth/AuthCallBack";
 
 export type AppRoute = {
 	path: string;
@@ -17,6 +18,8 @@ export type AppRoute = {
 
 const routes: AppRoute[] = [
 	{ path: "/", element: <Navigate to='/dashboard' replace /> },
+
+	{ path: "/auth/v1/callback", element: <AuthCallback /> },
 
 	{
 		path: "/dashboard",
