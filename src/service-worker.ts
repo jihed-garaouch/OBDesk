@@ -3,6 +3,7 @@
 import { precacheAndRoute, cleanupOutdatedCaches } from "workbox-precaching";
 import { registerRoute } from "workbox-routing";
 import { CacheFirst, NetworkFirst } from "workbox-strategies";
+import { ExpirationPlugin } from "workbox-expiration";
 
 declare let self: ServiceWorkerGlobalScope;
 
@@ -37,9 +38,39 @@ self.addEventListener("activate", (event) => {
 
 // Cache fonts
 registerRoute(
-	({ request }) => request.destination === "font",
+	({ url }) => url.pathname.startsWith("/fonts/Satoshi/"),
 	new CacheFirst({
-		cacheName: "fonts",
+		cacheName: "satoshi-fonts",
+		plugins: [
+			new ExpirationPlugin({
+				maxEntries: 10,
+				maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+			}),
+			{
+				// Ensure cached response has a usable Content-Type header
+				async cacheWillUpdate({ response }) {
+					if (!response || response.status !== 200) return null;
+					const cloned = response.clone();
+					const body = await cloned.blob();
+					const headers = new Headers(cloned.headers);
+
+					// If server didn't set Content-Type or it's wrong, set a sensible one
+					if (
+						!headers.get("Content-Type") ||
+						headers.get("Content-Type") === "application/octet-stream"
+					) {
+						// .otf => font/otf, change to 'font/woff2' if you switch to woff2
+						headers.set("Content-Type", "font/otf");
+					}
+
+					return new Response(body, {
+						status: cloned.status,
+						statusText: cloned.statusText,
+						headers,
+					});
+				},
+			},
+		],
 	})
 );
 
