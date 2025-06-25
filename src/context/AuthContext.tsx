@@ -21,6 +21,7 @@ interface AuthContextType {
 	signUpWithEmail: (creds: Credentials) => Promise<AuthResult>;
 	signInWithEmail: (creds: Credentials) => Promise<AuthResult>;
 	signInWithGoogle: () => Promise<AuthResult>;
+	signInWithGitHub: () => Promise<AuthResult>;
 	signOut: () => Promise<void>;
 	session: Session | null;
 	isLoadingSession: boolean;
@@ -80,6 +81,22 @@ export const AuthContextProvider = ({
 		const { data, error } = await supabase.auth.signInWithOAuth({
 			provider: "google",
 			options: { redirectTo, queryParams: { prompt: "select_account" } },
+		});
+
+		if (error) {
+			console.error("Error signing up with Google: ", error);
+			return { success: false, error: error.message ?? String(error) };
+		}
+
+		return { success: true, data };
+	};
+	
+	const signInWithGitHub = async (): Promise<AuthResult> => {
+		const { data, error } = await supabase.auth.signInWithOAuth({
+			provider: "github",
+			options: { 
+				// redirectTo,
+				 queryParams: { prompt: "select_account" } },
 		});
 
 		if (error) {
@@ -158,6 +175,7 @@ export const AuthContextProvider = ({
 		session,
 		signOut,
 		signInWithGoogle,
+		signInWithGitHub,
 		isLoadingSession,
 	};
 
