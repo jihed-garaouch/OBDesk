@@ -40,10 +40,11 @@
         body {
             margin: 0;
             font-family: 'Satoshi', sans-serif;
+            background-color: #000000;
             color: #fff;
             background: url('/offline-bg.jpg') no-repeat center center;
             background-size: cover;
-            height: 100vh;
+            height: 100svh;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -112,6 +113,27 @@
             font-weight: bold;
             font-size: 13px;
 
+        }
+
+        @media screen and (max-width: 768px) {
+            .icon-large {
+                width: 3rem;
+                height: 3rem;
+            }
+
+            .title {
+                font-size: 3rem;
+                font-weight: 900;
+                margin: 0 0 0 0;
+            }
+
+            .subtitle {
+                font-size: 0.75rem;
+            }
+
+            .message {
+                font-size: 14px;
+            }
         }
     </style>
 </head>
