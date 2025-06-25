@@ -17,7 +17,13 @@ export default defineConfig({
 			srcDir: "src",
 			filename: "service-worker.ts",
 			registerType: "autoUpdate",
-			includeAssets: ["favicon.ico", "apple-touch-icon.png"],
+			includeAssets: [
+				"favicon.ico",
+				"apple-touch-icon.png",
+				"offline-bg.jpg",
+				"offline.html",
+				"fonts/*",
+			],
 			manifest: {
 				name: "Orbit Desk",
 				short_name: "OrbitDesk",
