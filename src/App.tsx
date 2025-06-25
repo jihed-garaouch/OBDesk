@@ -1,9 +1,26 @@
-import HomeScreen from "@/screens/Home/Home";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import NotFound from "@/screens/NotFound/NotFound";
-import LoginScreen from "@/screens/Login/Login";
-import SignUpScreen from "@/screens/SignUp/SignUp";
+import RouteGuard from "./components/RouteGuard";
 import ThemeToggle from "./components/ui/ThemeToggle";
+import routes, { type AppRoute } from "./routes";
+
+const renderRoute = (route: AppRoute) => {
+	const element = route.protected ? (
+		<RouteGuard>{route.element}</RouteGuard>
+	) : (
+		route.element
+	);
+
+	if (!route.children || route.children.length === 0) {
+		return <Route key={route.path} path={route.path} element={element} />;
+	}
+
+	// has nested children
+	return (
+		<Route key={route.path} path={route.path} element={element}>
+			{route.children.map((child) => renderRoute(child))}
+		</Route>
+	);
+};
 
 const App = () => {
 	return (
@@ -20,12 +37,7 @@ const App = () => {
 				style={{ display: "none" }}
 			/>
 			<BrowserRouter>
-				<Routes>
-					<Route path='/' element={<HomeScreen />} />
-					<Route path='/login' element={<LoginScreen />} />
-					<Route path='/sign-up' element={<SignUpScreen />} />
-					<Route path='*' element={<NotFound />} />
-				</Routes>
+				<Routes>{routes.map((r) => renderRoute(r))}</Routes>
 			</BrowserRouter>
 		</div>
 	);

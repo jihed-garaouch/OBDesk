@@ -1,9 +1,9 @@
-import { useTheme } from "@/context/ThemeContext";
+import { UseTheme } from "@/context/ThemeContext";
 import { FiPower } from "react-icons/fi";
 import { RiWifiOffLine } from "react-icons/ri";
 
 const OfflineScreen = () => {
-	const { theme } = useTheme();
+	const { theme } = UseTheme();
 
 	const handleReload = () => {
 		window.location.reload();

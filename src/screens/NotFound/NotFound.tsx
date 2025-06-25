@@ -1,8 +1,8 @@
-import { useTheme } from "@/context/ThemeContext";
+import { UseTheme } from "@/context/ThemeContext";
 import { useNavigate } from "react-router-dom";
 
 const NotFound = () => {
-	const { theme } = useTheme();
+	const { theme } = UseTheme();
 	const navigate = useNavigate();
 
 	const isDarkTheme = theme === "dark";

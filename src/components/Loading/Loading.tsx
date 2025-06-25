@@ -1,9 +1,7 @@
-"use client";
-
-import { useTheme } from "@/context/ThemeContext";
+import { UseTheme } from "@/context/ThemeContext";
 
 const LoadingScreen = () => {
-	const { theme } = useTheme();
+	const { theme } = UseTheme();
 
 	return (
 		<div className='flex min-h-svh flex-col items-center justify-center bg-background relative'>

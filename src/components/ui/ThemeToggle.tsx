@@ -1,4 +1,4 @@
-import { useTheme } from "@/context/ThemeContext";
+import { UseTheme } from "@/context/ThemeContext";
 import gsap from "gsap";
 import { useEffect, useRef } from "react";
 import { FaMoon, FaSun } from "react-icons/fa";
@@ -7,7 +7,7 @@ const ThemeToggle = () => {
 	const circleRef = useRef<HTMLDivElement>(null);
 	const containerRef = useRef<HTMLDivElement>(null);
 
-	const { theme, toggleTheme } = useTheme();
+	const { theme, toggleTheme } = UseTheme();
 
 	const isDark = theme === "dark";
 

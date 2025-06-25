@@ -1,24 +1,27 @@
-import { ThemeProvider } from "@/context/ThemeProvider";
+import { AuthContextProvider, UserAuth } from "@/context/AuthContext";
+import { ThemeProvider } from "@/context/ThemeContext";
 import useNetworkStatus from "@/hooks/useNetworkStatus";
-import React from "react";
 import OfflineScreen from "@/screens/Offline/Offline";
+import React from "react";
 
-const Providers = ({ children }: { children: React.ReactNode }) => {
+const ProvidersInner = ({ children }: { children: React.ReactNode }) => {
 	const { isOnline } = useNetworkStatus();
-	const isLoggedIn = false;
+	const { session } = UserAuth();
 
-	if (!isOnline && !isLoggedIn) {
-		return (
-			<ThemeProvider>
-				<OfflineScreen />
-			</ThemeProvider>
-		);
+	if (!isOnline && !session) {
+		return <OfflineScreen />;
 	}
 
+	return <main className='flex-grow'>{children}</main>;
+};
+
+const Providers = ({ children }: { children: React.ReactNode }) => {
 	return (
-		<ThemeProvider>
-			<main className='flex-grow'>{children}</main>
-		</ThemeProvider>
+		<AuthContextProvider>
+			<ThemeProvider>
+				<ProvidersInner>{children}</ProvidersInner>
+			</ThemeProvider>
+		</AuthContextProvider>
 	);
 };
 

@@ -1,28 +1,90 @@
 import Input from "@/components/ui/Input";
-import { useTheme } from "@/context/ThemeContext";
+import { UseTheme } from "@/context/ThemeContext";
 import { useState } from "react";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { z } from "zod";
+import { toast } from "sonner";
+import { UserAuth } from "@/context/AuthContext";
+import { LoaderIcon } from "@/vectors/loader";
+
+const signInSchema = z.object({
+	email: z.string().email("Please enter a valid email"),
+	password: z.string().min(6, "Password must be at least 6 characters"),
+});
 
 const LoginScreen = () => {
-	const { theme } = useTheme();
+	const { theme } = UseTheme();
+	const navigate = useNavigate();
 
 	const isDarkTheme = theme === "dark";
 
+	const [loading, setLoading] = useState(false);
 	const [formDetails, setFormDetails] = useState({
 		email: "",
 		password: "",
 	});
 
-	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		console.log("Login form submitted:", formDetails);
+	const [errors, setErrors] = useState<{
+		email?: string;
+		password?: string;
+	}>({});
 
-		setFormDetails({
-			email: "",
-			password: "",
-		});
+	const { signInWithEmail } = UserAuth();
+
+	const handleChange =
+		<K extends keyof typeof formDetails>(key: K) =>
+		(e: React.ChangeEvent<HTMLInputElement>) => {
+			const newValue = e.target.value;
+			setFormDetails((prev) => ({ ...prev, [key]: newValue }));
+
+			const fieldSchema = {
+				email: z.email("Please enter a valid email"),
+				password: z.string().min(6, "Password must be at least 6 characters"),
+			}[key];
+
+			const result = fieldSchema.safeParse(newValue);
+			setErrors((prev) => ({
+				...prev,
+				[key]: result.success ? undefined : result.error.issues[0]?.message,
+			}));
+		};
+
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
+		const parsed = signInSchema.safeParse(formDetails);
+		if (!parsed.success) {
+			const fieldErrors = parsed.error.flatten().fieldErrors;
+			setErrors({
+				email: fieldErrors.email?.[0],
+				password: fieldErrors.password?.[0],
+			});
+			return;
+		}
+
+		// clear previous field errors
+		setErrors({});
+		setLoading(true);
+
+		try {
+			const { email, password } = parsed.data;
+			const res = await signInWithEmail({ email, password });
+
+			if (!res.success) {
+				toast.error(String(res.error ?? "Sign in failed"));
+				return;
+			}
+
+			navigate("/");
+			setFormDetails({ email: "", password: "" });
+		} catch (err) {
+			console.error("Login error:", err);
+			toast.error("Something went wrong. Please try again.");
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	return (
@@ -49,27 +111,36 @@ const LoginScreen = () => {
 							label='Email'
 							id='email'
 							value={formDetails.email}
-							onChange={(e) =>
-								setFormDetails({ ...formDetails, email: e.target.value })
-							}
+							onChange={handleChange("email")}
 							placeholder='Enter your email'
 						/>
+						{errors.email && (
+							<p className='text-xs text-red-500'>{errors.email}</p>
+						)}
+
 						<Input
 							type='password'
 							label='Password'
 							id='password'
 							value={formDetails.password}
-							onChange={(e) =>
-								setFormDetails({ ...formDetails, password: e.target.value })
-							}
+							onChange={handleChange("password")}
 							placeholder='Enter your password'
 						/>
+						{errors.password && (
+							<p className='text-xs text-red-500'>{errors.password}</p>
+						)}
+
 						<button
+							disabled={loading}
 							type='submit'
 							className={`mt-5 w-full bg-foreground text-background px-4 py-2 rounded-[4px] cursor-pointer font-bold text-sm ${
 								isDarkTheme ? "hover:bg-white" : "hover:bg-black"
-							} transition-all duration-300 ease-in-out`}>
-							Sign in
+							} transition-all duration-300 ease-in-out flex justify-center items-center`}>
+							{loading ? (
+								<LoaderIcon className='h-3 w-3 animate-spin stroke-background' />
+							) : (
+								"Sign in"
+							)}
 						</button>
 					</form>
 					<div className='mt-5 flex items-center gap-2'>

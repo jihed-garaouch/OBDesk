@@ -1,15 +1,28 @@
 import Input from "@/components/ui/Input";
-import { useTheme } from "@/context/ThemeContext";
+import { UseTheme } from "@/context/ThemeContext";
 import { useState } from "react";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { z } from "zod";
+import { toast } from "sonner";
+import { UserAuth } from "@/context/AuthContext";
+import { LoaderIcon } from "@/vectors/loader";
+
+const signUpSchema = z.object({
+	firstName: z.string().min(3, "First name is required"),
+	lastName: z.string().min(3, "Last name is required"),
+	email: z.email("Please enter a valid email"),
+	password: z.string().min(6, "Password must be at least 6 characters"),
+});
 
 const SignUpScreen = () => {
-	const { theme } = useTheme();
+	const { theme } = UseTheme();
+	const navigate = useNavigate();
 
 	const isDarkTheme = theme === "dark";
 
+	const [loading, setLoading] = useState(false);
 	const [formDetails, setFormDetails] = useState({
 		firstName: "",
 		lastName: "",
@@ -17,16 +30,88 @@ const SignUpScreen = () => {
 		password: "",
 	});
 
-	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		console.log("Signup form submitted:", formDetails);
+	const [errors, setErrors] = useState<{
+		firstName?: string;
+		lastName?: string;
+		email?: string;
+		password?: string;
+	}>({});
 
-		setFormDetails({
-			firstName: "",
-			lastName: "",
-			email: "",
-			password: "",
-		});
+	const { signUpWithEmail } = UserAuth();
+
+	const handleChange =
+		<K extends keyof typeof formDetails>(key: K) =>
+		(e: React.ChangeEvent<HTMLInputElement>) => {
+			const newValue = e.target.value;
+			setFormDetails((prev) => ({ ...prev, [key]: newValue }));
+
+			const fieldSchema = {
+				firstName: z.string().min(2, "First name is required"),
+				lastName: z.string().min(2, "Last name is required"),
+				email: z.email("Please enter a valid email"),
+				password: z.string().min(6, "Password must be at least 6 characters"),
+			}[key];
+
+			// Validate just this field
+			const result = fieldSchema.safeParse(newValue);
+
+			setErrors((prev) => ({
+				...prev,
+				[key]: result.success ? undefined : result.error.issues[0]?.message,
+			}));
+		};
+
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
+		const parsed = signUpSchema.safeParse(formDetails);
+		if (!parsed.success) {
+			// flatten field errors from zod
+			const fieldErrors = parsed.error.flatten().fieldErrors;
+			setErrors({
+				firstName: fieldErrors.firstName?.[0],
+				lastName: fieldErrors.lastName?.[0],
+				email: fieldErrors.email?.[0],
+				password: fieldErrors.password?.[0],
+			});
+			return;
+		}
+
+		// clear any previous errors
+		setErrors({});
+		setLoading(true);
+
+		try {
+			const { email, password, firstName, lastName } = parsed.data;
+			const res = await signUpWithEmail({
+				email,
+				password,
+				metadata: {
+					first_name: firstName,
+					last_name: lastName,
+				},
+			});
+
+			if (!res.success) {
+				const errMsg = String(res.error ?? "Sign up failed");
+				toast.error(errMsg);
+				return;
+			}
+
+			navigate("/");
+
+			setFormDetails({
+				firstName: "",
+				lastName: "",
+				email: "",
+				password: "",
+			});
+		} catch (err) {
+			toast.error("Something went wrong");
+			console.error(err);
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	return (
@@ -55,47 +140,60 @@ const SignUpScreen = () => {
 							label='First Name'
 							id='firstName'
 							value={formDetails.firstName}
-							onChange={(e) =>
-								setFormDetails({ ...formDetails, firstName: e.target.value })
-							}
+							onChange={handleChange("firstName")}
 							placeholder='Enter your first name'
 						/>
+						{errors.firstName && (
+							<p className='text-xs text-red-500'>{errors.firstName}</p>
+						)}
+
 						<Input
 							type='text'
 							label='Last Name'
 							id='lastName'
 							value={formDetails.lastName}
-							onChange={(e) =>
-								setFormDetails({ ...formDetails, lastName: e.target.value })
-							}
+							onChange={handleChange("lastName")}
 							placeholder='Enter your last name'
 						/>
+						{errors.lastName && (
+							<p className='text-xs text-red-500'>{errors.lastName}</p>
+						)}
+
 						<Input
 							type='email'
 							label='Email'
 							id='email'
 							value={formDetails.email}
-							onChange={(e) =>
-								setFormDetails({ ...formDetails, email: e.target.value })
-							}
+							onChange={handleChange("email")}
 							placeholder='Enter your email'
 						/>
+						{errors.email && (
+							<p className='text-xs text-red-500'>{errors.email}</p>
+						)}
+
 						<Input
 							type='password'
 							label='Password'
 							id='password'
 							value={formDetails.password}
-							onChange={(e) =>
-								setFormDetails({ ...formDetails, password: e.target.value })
-							}
+							onChange={handleChange("password")}
 							placeholder='Enter your password'
 						/>
+						{errors.password && (
+							<p className='text-xs text-red-500'>{errors.password}</p>
+						)}
+
 						<button
+							disabled={loading}
 							type='submit'
 							className={`mt-5 w-full bg-foreground text-background px-4 py-2 rounded-[4px] cursor-pointer font-bold text-sm ${
 								isDarkTheme ? "hover:bg-white" : "hover:bg-black"
-							} transition-all duration-300 ease-in-out`}>
-							Sign up
+							} transition-all duration-300 ease-in-out flex justify-center items-center`}>
+							{loading ? (
+								<LoaderIcon className='h-3 w-3 animate-spin stroke-background' />
+							) : (
+								"Sign up"
+							)}
 						</button>
 					</form>
 					<div className='mt-5 flex items-center gap-2'>
