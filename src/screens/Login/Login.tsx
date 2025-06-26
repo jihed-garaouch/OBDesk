@@ -133,9 +133,9 @@ const LoginScreen = () => {
 						<button
 							disabled={loading}
 							type='submit'
-							className={`mt-5 w-full bg-foreground text-background px-4 py-2 rounded-[4px] cursor-pointer font-bold text-sm ${
+							className={`active:scale-95 mt-5 w-full bg-foreground text-background px-4 py-2 rounded-[4px] cursor-pointer font-bold text-sm ${
 								isDarkTheme ? "hover:bg-white" : "hover:bg-black"
-							} transition-all duration-300 ease-in-out flex justify-center items-center`}>
+							} transition-all duration-500 ease-in-out flex justify-center items-center`}>
 							{loading ? (
 								<LoaderIcon className='h-3 w-3 animate-spin stroke-background' />
 							) : (
@@ -151,14 +151,14 @@ const LoginScreen = () => {
 					<button
 						onClick={signInWithGoogle}
 						type='button'
-						className='mt-5 w-full bg-transparent border border-foreground/50 text-foreground px-4 py-3 rounded-[4px] cursor-pointer font-bold text-sm flex items-center justify-center gap-2 hover:bg-foreground hover:text-background transition-all duration-300 ease-in-out'>
+						className='active:scale-95 focus:bg-foreground focus:text-background mt-5 w-full bg-transparent border border-foreground/50 text-foreground px-4 py-3 rounded-[4px] cursor-pointer font-bold text-sm flex items-center justify-center gap-2 hover:bg-foreground hover:text-background transition-all duration-500 ease-in-out'>
 						<FcGoogle className='text-xl' />
 						<span>Sign in with Google</span>
 					</button>
 					<button
 						onClick={signInWithGitHub}
 						type='button'
-						className='mt-5 w-full bg-transparent border border-foreground/50 text-foreground px-4 py-3 rounded-[4px] cursor-pointer font-bold text-sm flex items-center justify-center gap-2 hover:bg-foreground hover:text-background transition-all duration-300 ease-in-out'>
+						className='active:scale-95 focus:bg-foreground focus:text-background mt-5 w-full bg-transparent border border-foreground/50 text-foreground px-4 py-3 rounded-[4px] cursor-pointer font-bold text-sm flex items-center justify-center gap-2 hover:bg-foreground hover:text-background transition-all duration-500 ease-in-out'>
 						<FaGithub className='text-xl' />
 						<span>Sign in with GitHub</span>
 					</button>

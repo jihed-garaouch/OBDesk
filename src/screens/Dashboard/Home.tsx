@@ -8,9 +8,9 @@ const HomeScreen = () => {
 	const fullName = user?.full_name;
 
 	return (
-		<div className='max-w-4xl mx-auto'>
+		<div className=''>
 			<h1 className='text-2xl font-bold mb-6'>
-				Welcome back, {firstName || fullName || user?.email}
+				Welcome back, {firstName || fullName.split(" ")[0] || user?.email}👋
 			</h1>
 			<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
 				{/* Sample Dashboard Cards */}

@@ -1,6 +1,6 @@
 const FinanceScreen = () => {
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="">
       <h1 className="text-2xl font-bold mb-6">Finance Dashboard</h1>
       <div className="grid gap-4">
         <div className="p-4 border border-[var(--border)] rounded-lg">
