@@ -30,17 +30,17 @@ const MusicPlayer = () => {
 					</div>
 				</div>
 			</div>
-			<button className='cursor-pointer hover:bg-foreground/15 active:scale-90 p-2 rounded-full transition-all duration-300 ease-in-out text-sm md:text-base'>
+			<button className='cursor-pointer hover:bg-foreground/15 active:bg-foreground/15 active:scale-90 p-2 rounded-full transition-all duration-300 ease-in-out text-sm md:text-base'>
 				<TbPlayerSkipBack />
 			</button>
-			<button className='cursor-pointer hover:bg-foreground/15 active:scale-90 p-2 rounded-full transition-all duration-300 ease-in-out text-sm md:text-base'>
+			<button className='cursor-pointer hover:bg-foreground/15 active:bg-foreground/15 active:scale-90 p-2 rounded-full transition-all duration-300 ease-in-out text-sm md:text-base'>
 				<TbPlayerPlay />
 				{/* <TbPlayerPause /> */}
 			</button>
-			<button className='cursor-pointer hover:bg-foreground/15 active:scale-90 p-2 rounded-full transition-all duration-300 ease-in-out text-sm md:text-base'>
+			<button className='cursor-pointer hover:bg-foreground/15 active:bg-foreground/15 active:scale-90 p-2 rounded-full transition-all duration-300 ease-in-out text-sm md:text-base'>
 				<TbPlayerSkipForward />
 			</button>
-			<button className='cursor-pointer hover:bg-foreground/15 active:scale-90 p-2 rounded-full transition-all duration-300 ease-in-out text-sm md:text-base'>
+			<button className='cursor-pointer hover:bg-foreground/15 active:bg-foreground/15 active:scale-90 p-2 rounded-full transition-all duration-300 ease-in-out text-sm md:text-base'>
 				<LuVolume2 />
 				{/* <LuVolumeX /> */}
 			</button>
