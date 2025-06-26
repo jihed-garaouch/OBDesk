@@ -9,9 +9,9 @@ const MusicPlayer = () => {
 	return (
 		<div className='bg-foreground/12 p-2 rounded-full flex items-center text-[1.2rem] cursor-pointer shadow-sm'>
 			<div className='group relative flex items-center gap-2 bg-foreground/8 hover:bg-foreground/15 active:scale-95 px-3 py-1 rounded-full transition-all duration-300 ease-in-out'>
-				<button className='rounded-full h-8 w-8 shadow-sm overflow-hidden flex-shrink-0'>
+				<button className='bg-white/50 border-[0.1px] border-white/5 rounded-full h-8 w-8 shadow-sm overflow-hidden cursor-pointer'>
 					<img
-						src='https://images.unsplash.com/photo-1596751303335-ca42b3ca50c1?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1026'
+						src='https://img.freepik.com/free-photo/3d-music-related-scene_23-2151125082.jpg?t=st=1761334364~exp=1761337964~hmac=416464f0fff74284be50f521f871e2d6d61003f41ea534e38d2c4b20ec13d618&w=1480'
 						alt='Music'
 						className='object-cover w-full h-full'
 					/>

@@ -74,13 +74,27 @@ registerRoute(
 	})
 );
 
-// Cache images
+// Cache internal app images
 registerRoute(
 	({ request, sameOrigin }) => {
 		return sameOrigin && request.destination === "image";
 	},
 	new CacheFirst({
 		cacheName: "images",
+	})
+);
+
+// Cache only external images
+registerRoute(
+	({ request }) => request.destination === "image",
+	new CacheFirst({
+		cacheName: "external-images",
+		plugins: [
+			new ExpirationPlugin({
+				maxEntries: 50,
+				maxAgeSeconds: 7 * 24 * 60 * 60, // 1 week
+			}),
+		],
 	})
 );
 
