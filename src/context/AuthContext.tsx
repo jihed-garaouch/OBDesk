@@ -25,6 +25,7 @@ interface AuthContextType {
 	signOut: () => Promise<void>;
 	session: Session | null;
 	isLoadingSession: boolean;
+	user: { [key: string]: string | boolean } | undefined;
 }
 
 const credentialsSchema = z.object({
@@ -41,6 +42,7 @@ export const AuthContextProvider = ({
 }) => {
 	const [session, setSession] = useState<Session | null>(null);
 	const [isLoadingSession, setIsLoadingSession] = useState<boolean>(true);
+	const [user, setUser] = useState<{ [key: string]: string | boolean }>();
 
 	const signUpWithEmail = async ({
 		email,
@@ -72,6 +74,7 @@ export const AuthContextProvider = ({
 			return { success: false, error: error.message ?? String(error) };
 		}
 
+		localStorage.setItem("provider", "email");
 		toast.success("Sign-up successful.");
 		return { success: true, data };
 	};
@@ -88,16 +91,18 @@ export const AuthContextProvider = ({
 			return { success: false, error: error.message ?? String(error) };
 		}
 
+		localStorage.setItem("provider", "google");
 		return { success: true, data };
 	};
-	
+
 	const signInWithGitHub = async (): Promise<AuthResult> => {
 		const redirectTo = `${window.location.origin}/auth/v1/callback`;
 		const { data, error } = await supabase.auth.signInWithOAuth({
 			provider: "github",
-			options: { 
+			options: {
 				redirectTo,
-				 queryParams: { prompt: "select_account" } },
+				queryParams: { prompt: "select_account" },
+			},
 		});
 
 		if (error) {
@@ -105,6 +110,7 @@ export const AuthContextProvider = ({
 			return { success: false, error: error.message ?? String(error) };
 		}
 
+		localStorage.setItem("provider", "github");
 		return { success: true, data };
 	};
 
@@ -131,6 +137,7 @@ export const AuthContextProvider = ({
 				return { success: false, error: error.message ?? String(error) };
 			}
 
+			localStorage.setItem("provider", "email");
 			toast.success("Signed in successfully");
 			return { success: true, data };
 		} catch (err: unknown) {
@@ -150,12 +157,20 @@ export const AuthContextProvider = ({
 			toast.error("Error signing out");
 			return;
 		}
+		localStorage.removeItem("provider");
 	};
 
-	useEffect(() => {
+		useEffect(() => {
 		supabase.auth.getSession().then(({ data: { session } }) => {
 			setSession(session);
 			setIsLoadingSession(false);
+			setUser(
+				session?.user?.identities
+					?.find(
+						(identity) => identity.provider === localStorage.getItem("provider")
+					)
+					?.identity_data
+			);
 		});
 
 		const { data: subscription } = supabase.auth.onAuthStateChange(
@@ -178,6 +193,7 @@ export const AuthContextProvider = ({
 		signInWithGoogle,
 		signInWithGitHub,
 		isLoadingSession,
+		user,
 	};
 
 	return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;

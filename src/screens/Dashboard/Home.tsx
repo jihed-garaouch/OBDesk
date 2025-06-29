@@ -1,16 +1,19 @@
 import { UserAuth } from "@/context/AuthContext";
 
 const HomeScreen = () => {
-	const { session } = UserAuth();
+	const { user } = UserAuth();
 
-	const user = session?.user?.identities?.[0]?.identity_data;
 	const firstName = user?.first_name;
 	const fullName = user?.full_name;
 
 	return (
 		<div className=''>
 			<h1 className='text-2xl font-bold mb-6'>
-				Welcome back, {firstName || fullName.split(" ")[0] || user?.email}👋
+				Welcome back,{" "}
+				{firstName ||
+					(typeof fullName === "string" ? fullName.split(" ")[0] : undefined) ||
+					user?.email}
+				👋
 			</h1>
 			<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
 				{/* Sample Dashboard Cards */}

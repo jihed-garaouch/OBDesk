@@ -7,16 +7,16 @@ import { MdOutlineInsertChart } from "react-icons/md";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import MusicPlayer from "./MusicPlayer";
 import Avatar from "../ui/Avatar";
+import MusicPlayerModal from "./MusicPlayerModal";
 
 const DashboardLayout = () => {
 	const { theme } = UseTheme();
-	const { signOut } = UserAuth();
+	const { signOut, user } = UserAuth();
 	const location = useLocation();
 	const isDarkTheme = theme === "dark";
 	const [mobileOpen, setMobileOpen] = useState(false);
-	const { session } = UserAuth();
+	const [showMusicPlayerModal, setShowMusicPlayerModal] = useState(false);
 
-	const user = session?.user?.identities?.[0]?.identity_data;
 	const fullName = user?.full_name;
 
 	const navItems = [
@@ -172,7 +172,7 @@ const DashboardLayout = () => {
 			<main className='flex-1 p-4 md:p-6 pt-16 md:pt-3 overflow-hidden'>
 				<div className='bg-foreground/5 border-foreground/10 border shadow-md backdrop-blur-md mb-3 rounded-full p-2 flex justify-between items-center text-xs w-fit ml-auto'>
 					<div className='flex items-center gap-2 md:gap-3'>
-						<MusicPlayer />
+						<MusicPlayer setShowMusicPlayerModal={setShowMusicPlayerModal} />
 						<div className='bg-foreground rounded-full h-8 w-8 shadow-sm flex items-center justify-center font-bold text-sm text-background overflow-hidden cursor-default'>
 							<Avatar />
 						</div>
@@ -180,6 +180,10 @@ const DashboardLayout = () => {
 				</div>
 				<Outlet />
 			</main>
+			<MusicPlayerModal
+				isOpen={showMusicPlayerModal}
+				onClose={() => setShowMusicPlayerModal(false)}
+			/>
 		</div>
 	);
 };

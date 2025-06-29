@@ -75,3 +75,31 @@ body {
 	color: var(--foreground);
 	font-family: var(--font-satoshi);
 }
+
+.custom-animate-spin {
+	animation: spin 5s linear infinite;
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+::-webkit-scrollbar {
+	width: 5px;
+	height: 8px;
+}
+
+::-webkit-scrollbar-track {
+	background: rgba(255, 255, 255, 0.05);
+	border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--foreground);
+	border-radius: 10px;
+}
