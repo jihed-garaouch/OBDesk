@@ -1,93 +1,14 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { IoClose } from "react-icons/io5";
+import { LuVolume2, LuVolumeX } from "react-icons/lu";
+import { RiLoopRightFill } from "react-icons/ri";
 import {
 	TbPlayerPause,
 	TbPlayerPlay,
 	TbPlayerSkipBack,
 	TbPlayerSkipForward,
 } from "react-icons/tb";
-import { LuVolume2 } from "react-icons/lu";
-import { IoClose } from "react-icons/io5";
-
-const tracks = [
-	{
-		id: 1,
-		title: "Morning Drift Lofi",
-		artist: "Amaksi",
-		src: "/music/audio/music-1.mp3",
-		cover: "/music/img/music-1.webp",
-	},
-	{
-		id: 2,
-		title: "Good Night",
-		artist: "FASSounds",
-		src: "/music/audio/music-2.mp3",
-		cover: "/music/img/music-2.webp",
-	},
-	{
-		id: 3,
-		title: "Lofi Background Music",
-		artist: "LofiDreams",
-		src: "/music/audio/music-3.mp3",
-		cover: "/music/img/music-3.webp",
-	},
-	{
-		id: 4,
-		title: "No Noise",
-		artist: "Ikoliks",
-		src: "/music/audio/music-4.mp3",
-		cover: "/music/img/music-4.webp",
-	},
-	{
-		id: 5,
-		title: "Walk",
-		artist: "Sup3rrr",
-		src: "/music/audio/music-5.mp3",
-		cover: "/music/img/music-5.webp",
-	},
-	{
-		id: 6,
-		title: "Gallows",
-		artist: "Isaiah Matthew",
-		src: "/music/audio/music-6.mp3",
-		cover: "/music/img/music-6.webp",
-	},
-	{
-		id: 7,
-		title: "Chillout",
-		artist: "Music Unlimited",
-		src: "/music/audio/music-7.mp3",
-		cover: "/music/img/music-7.webp",
-	},
-	{
-		id: 8,
-		title: "Outside",
-		artist: "Coma Media",
-		src: "/music/audio/music-8.mp3",
-		cover: "/music/img/music-8.webp",
-	},
-	{
-		id: 9,
-		title: "Autumn Sky",
-		artist: "Lidérc",
-		src: "/music/audio/music-9.mp3",
-		cover: "/music/img/music-9.webp",
-	},
-	{
-		id: 10,
-		title: "Lofi Study",
-		artist: "FASSounds",
-		src: "/music/audio/music-10.mp3",
-		cover: "/music/img/music-10.webp",
-	},
-];
-
-type Track = {
-    id: number;
-    title: string;
-    artist: string;
-    src: string;
-    cover: string;
-}
+import { UseMusicPlayer } from "@/context/MusicPlayerContext";
 
 const MusicPlayerModal = ({
 	isOpen,
@@ -96,16 +17,52 @@ const MusicPlayerModal = ({
 	isOpen: boolean;
 	onClose: () => void;
 }) => {
-	const [currentTrack, setCurrentTrack] = useState<Track>(tracks[0]);
-	const [isPlaying, setIsPlaying] = useState(false);
+	const {
+		tracks,
+		currentIndex,
+		currentTrack,
+		isPlaying,
+		isLooping,
+		isMuted,
+		currentTime,
+		duration,
+		handlePlayPause,
+		handleNext,
+		handlePrev,
+		handleSelect,
+		setIsLooping,
+		setIsMuted,
+		handleSeek,
+		formatTime,
+	} = UseMusicPlayer();
+
+	// --- Handle Cover Rotation ---
+	const [rotation, setRotation] = useState(0);
+	const rotationRef = useRef(0);
+	const lastTimestampRef = useRef<number | null>(null);
+
+	useEffect(() => {
+		let frameId: number;
+
+		const rotate = (timestamp: number) => {
+			if (lastTimestampRef.current === null)
+				lastTimestampRef.current = timestamp;
+			const delta = timestamp - lastTimestampRef.current;
+
+			if (isPlaying) {
+				rotationRef.current += (delta / 8000) * 360; // 8s for full rotation
+				setRotation(rotationRef.current);
+			}
+
+			lastTimestampRef.current = timestamp;
+			frameId = requestAnimationFrame(rotate);
+		};
+
+		frameId = requestAnimationFrame(rotate);
+		return () => cancelAnimationFrame(frameId);
+	}, [isPlaying]);
 
 	if (!isOpen) return null;
-
-	const handlePlayPause = () => setIsPlaying(!isPlaying);
-	const handleSelect = (track: Track) => {
-		setCurrentTrack(track);
-		setIsPlaying(true);
-	};
 
 	return (
 		<div
@@ -124,51 +81,86 @@ const MusicPlayerModal = ({
 				{/* Now Playing */}
 				<div className='flex flex-col items-center gap-3 mt-4'>
 					<div
-						className={`h-32 w-32 rounded-full overflow-hidden shadow-md border border-foreground/20 ${
-							isPlaying ? "custom-animate-spin" : ""
-						}`}>
+						className='h-32 w-32 rounded-full overflow-hidden shadow-md border border-foreground/20'
+						style={{
+							transform: `rotate(${rotation}deg)`,
+							transition: "transform 0.1s linear",
+						}}>
 						<img
 							src={currentTrack.cover}
 							alt={currentTrack.title}
 							className='object-cover h-full w-full'
 						/>
 					</div>
+
+					{/* Track Info */}
 					<div className='text-center'>
 						<h2 className='text-sm font-medium'>{currentTrack.title}</h2>
 						<p className='text-xs text-foreground/60'>{currentTrack.artist}</p>
 					</div>
 
+					{/* Progress Bar */}
+					<div className='w-full flex flex-col items-center gap-1'>
+						<input
+							type='range'
+							min={0}
+							max={duration || 0}
+							value={currentTime}
+							onChange={(e) => handleSeek(parseFloat(e.target.value))}
+							className='w-full accent-foreground cursor-pointer'
+						/>
+						<div className='w-full flex justify-between text-[10px] text-foreground/70'>
+							<span>{formatTime(currentTime)}</span>
+							<span>{formatTime(duration)}</span>
+						</div>
+					</div>
+
 					{/* Controls */}
 					<div className='flex items-center gap-3 mt-2'>
-						<button className='p-2 rounded-full hover:bg-white/30 active:scale-95 transition-all duration-300 ease-in-out cursor-pointer'>
+						<button
+							onClick={() => setIsLooping((prev) => !prev)}
+							className={`p-2 rounded-full hover:bg-white/30 active:scale-95 transition-all cursor-pointer ${
+								isLooping ? "text-green-400" : ""
+							}`}
+							title='Loop'>
+							<RiLoopRightFill size={18} />
+						</button>
+						<button
+							onClick={handlePrev}
+							className='p-2 rounded-full hover:bg-white/30 active:scale-95 transition-all cursor-pointer'>
 							<TbPlayerSkipBack size={20} />
 						</button>
 						<button
 							onClick={handlePlayPause}
-							className='bg-white/20 p-3 rounded-full hover:bg-white/30 active:scale-95 transition-all duration-300 ease-in-out cursor-pointer'>
+							className='bg-white/20 p-3 rounded-full hover:bg-white/30 active:scale-95 transition-all cursor-pointer'>
 							{isPlaying ? (
 								<TbPlayerPause size={22} />
 							) : (
 								<TbPlayerPlay size={22} />
 							)}
 						</button>
-						<button className='p-2 rounded-full hover:bg-white/30 active:scale-95 transition-all duration-300 ease-in-out cursor-pointer'>
+						<button
+							onClick={handleNext}
+							className='p-2 rounded-full hover:bg-white/30 active:scale-95 transition-all cursor-pointer'>
 							<TbPlayerSkipForward size={20} />
 						</button>
-						<button className='p-2 rounded-full hover:bg-white/30 active:scale-95 transition-all duration-300 ease-in-out cursor-pointer'>
-							<LuVolume2 size={18} />
+						<button
+							onClick={() => setIsMuted((prev) => !prev)}
+							className='p-2 rounded-full hover:bg-white/30 active:scale-95 transition-all cursor-pointer'
+							title={isMuted ? "Unmute" : "Mute"}>
+							{isMuted ? <LuVolumeX size={18} /> : <LuVolume2 size={18} />}
 						</button>
 					</div>
 				</div>
 
 				{/* Song List */}
 				<div className='mt-5 border-t border-foreground/10 pt-2 max-h-60 flex flex-col gap-1 overflow-y-auto'>
-					{tracks.map((track) => (
+					{tracks.map((track, index) => (
 						<div
 							key={track.id}
-							onClick={() => handleSelect(track)}
+							onClick={() => handleSelect(index)}
 							className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-all ${
-								currentTrack.id === track.id
+								currentIndex === index
 									? "bg-foreground/10"
 									: "hover:bg-foreground/5"
 							}`}>

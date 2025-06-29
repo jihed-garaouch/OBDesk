@@ -1,4 +1,5 @@
 import { AuthContextProvider, UserAuth } from "@/context/AuthContext";
+import { MusicPlayerProvider } from "@/context/MusicPlayerContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import useNetworkStatus from "@/hooks/useNetworkStatus";
 import OfflineScreen from "@/screens/Offline/Offline";
@@ -19,7 +20,9 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
 	return (
 		<AuthContextProvider>
 			<ThemeProvider>
-				<ProvidersInner>{children}</ProvidersInner>
+				<MusicPlayerProvider>
+					<ProvidersInner>{children}</ProvidersInner>
+				</MusicPlayerProvider>
 			</ThemeProvider>
 		</AuthContextProvider>
 	);
