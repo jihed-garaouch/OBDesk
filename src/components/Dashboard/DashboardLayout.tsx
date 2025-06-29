@@ -1,21 +1,30 @@
 import { UserAuth } from "@/context/AuthContext";
 import { UseTheme } from "@/context/ThemeContext";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FiCheckSquare, FiHome, FiMenu, FiX } from "react-icons/fi";
-import { IoArrowUndoOutline } from "react-icons/io5";
+import {
+	IoArrowUndoOutline,
+	IoCloudDoneOutline,
+	IoCloudOfflineOutline,
+} from "react-icons/io5";
 import { MdOutlineInsertChart } from "react-icons/md";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import MusicPlayer from "./MusicPlayer";
 import Avatar from "../ui/Avatar";
 import MusicPlayerModal from "./MusicPlayerModal";
+import useNetworkStatus from "@/hooks/useNetworkStatus";
 
 const DashboardLayout = () => {
 	const { theme } = UseTheme();
 	const { signOut, user } = UserAuth();
+	const { isOnline } = useNetworkStatus();
 	const location = useLocation();
+
 	const isDarkTheme = theme === "dark";
 	const [mobileOpen, setMobileOpen] = useState(false);
 	const [showMusicPlayerModal, setShowMusicPlayerModal] = useState(false);
+	const [showBackOnline, setShowBackOnline] = useState(false);
+	const wasOffline = useRef(false);
 
 	const fullName = user?.full_name;
 
@@ -33,6 +42,19 @@ const DashboardLayout = () => {
 		path === "/dashboard"
 			? location.pathname === path
 			: location.pathname.startsWith(path);
+
+	useEffect(() => {
+		if (!isOnline) {
+			wasOffline.current = true;
+			setShowBackOnline(false);
+		} else if (wasOffline.current && isOnline) {
+			setShowBackOnline(true);
+			wasOffline.current = false;
+
+			const timer = setTimeout(() => setShowBackOnline(false), 2000);
+			return () => clearTimeout(timer);
+		}
+	}, [isOnline]);
 
 	return (
 		<div className='h-svh flex'>
@@ -168,13 +190,59 @@ const DashboardLayout = () => {
 				</div>
 			</aside>
 
+			{/* Mobile Offline Indicator */}
+			<div
+				className={`md:hidden fixed top-5 right-5 flex items-center gap-1 text-xs px-3 py-2 rounded-full border shadow-xs backdrop-blur-md transition-all duration-300 ease-out
+          ${
+						!isOnline
+							? "opacity-100 translate-y-0 bg-red-500/5 border-red-500/20 text-red-500"
+							: showBackOnline
+							? "opacity-100 translate-y-0 bg-green-500/10 border-green-500/20 text-green-500"
+							: "opacity-0 -translate-y-2 pointer-events-none bg-green-500/10 border-green-500/20 text-green-500"
+					}`}>
+				{!isOnline ? (
+					<>
+						<IoCloudOfflineOutline className='text-sm' />
+						<span>Offline</span>
+					</>
+				) : (
+					<>
+						<IoCloudDoneOutline className='text-sm' />
+						<span>Back Online</span>
+					</>
+				)}
+			</div>
+
 			{/* Main Content */}
 			<main className='flex-1 p-4 md:p-6 pt-16 md:pt-3 overflow-hidden'>
-				<div className='bg-foreground/5 border-foreground/10 border shadow-md backdrop-blur-md mb-3 rounded-full p-2 flex justify-between items-center text-xs w-fit ml-auto'>
-					<div className='flex items-center gap-2 md:gap-3'>
-						<MusicPlayer setShowMusicPlayerModal={setShowMusicPlayerModal} />
-						<div className='bg-foreground rounded-full h-8 w-8 shadow-sm flex items-center justify-center font-bold text-sm text-background overflow-hidden cursor-default'>
-							<Avatar />
+				<div className='flex items-center gap-2 justify-between'>
+					<div
+						className={`hidden md:flex items-center gap-1 text-xs px-3 py-2 rounded-full border shadow-xs backdrop-blur-md transition-all duration-300 ease-out
+          ${
+						!isOnline
+							? "opacity-100 translate-y-0 bg-red-500/5 border-red-500/20 text-red-500"
+							: showBackOnline
+							? "opacity-100 translate-y-0 bg-green-500/10 border-green-500/20 text-green-500"
+							: "opacity-0 -translate-y-2 pointer-events-none bg-green-500/10 border-green-500/20 text-green-500"
+					}`}>
+						{!isOnline ? (
+							<>
+								<IoCloudOfflineOutline className='text-sm' />
+								<span>Offline</span>
+							</>
+						) : (
+							<>
+								<IoCloudDoneOutline className='text-sm' />
+								<span>Back Online</span>
+							</>
+						)}
+					</div>
+					<div className='bg-foreground/5 border-foreground/10 border shadow-md backdrop-blur-md mb-3 rounded-full p-2 flex justify-between items-center text-xs ml-auto w-fit'>
+						<div className='flex items-center gap-2 md:gap-3'>
+							<MusicPlayer setShowMusicPlayerModal={setShowMusicPlayerModal} />
+							<div className='bg-foreground rounded-full h-8 w-8 shadow-sm flex items-center justify-center font-bold text-sm text-background overflow-hidden cursor-default'>
+								<Avatar />
+							</div>
 						</div>
 					</div>
 				</div>
