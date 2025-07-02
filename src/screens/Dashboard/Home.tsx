@@ -1,3 +1,4 @@
+import MiniWorldClock from "@/components/Dashboard/MiniWorldClock";
 import { UserAuth } from "@/context/AuthContext";
 
 const HomeScreen = () => {
@@ -18,7 +19,10 @@ const HomeScreen = () => {
 						user?.email}
 					👋
 				</h1>
-				<p className="text-xs">Here is your workspace overview.</p>
+				<p className='text-xs'>Here is your workspace overview.</p>
+			</div>
+			<div className="mb-4">
+				<MiniWorldClock />
 			</div>
 			<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
 				{/* Sample Dashboard Cards */}
