@@ -1,13 +1,14 @@
+import AuthCallback from "@/components/Auth/AuthCallBack";
+import DashboardLayout from "@/components/Dashboard/DashboardLayout";
+import FinanceScreen from "@/screens/Dashboard/Finance";
+import HomeScreen from "@/screens/Dashboard/Home";
+import TodoScreen from "@/screens/Dashboard/Todo";
+import WorldClockScreen from "@/screens/Dashboard/WorldClock";
+import LoginScreen from "@/screens/Login/Login";
+import NotFound from "@/screens/NotFound/NotFound";
+import SignUpScreen from "@/screens/SignUp/SignUp";
 import React from "react";
 import { Navigate } from "react-router-dom";
-import LoginScreen from "@/screens/Login/Login";
-import SignUpScreen from "@/screens/SignUp/SignUp";
-import NotFound from "@/screens/NotFound/NotFound";
-import HomeScreen from "@/screens/Dashboard/Home";
-import FinanceScreen from "@/screens/Dashboard/Finance";
-import TodoScreen from "@/screens/Dashboard/Todo";
-import DashboardLayout from "@/components/Dashboard/DashboardLayout";
-import AuthCallback from "@/components/Auth/AuthCallBack";
 
 export type AppRoute = {
 	path: string;
@@ -27,6 +28,7 @@ const routes: AppRoute[] = [
 		protected: true,
 		children: [
 			{ path: "", element: <HomeScreen /> },
+			{ path: "world-clock", element: <WorldClockScreen /> },
 			{ path: "finance", element: <FinanceScreen /> },
 			{ path: "todo", element: <TodoScreen /> },
 		],

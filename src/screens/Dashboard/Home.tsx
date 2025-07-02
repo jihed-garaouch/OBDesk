@@ -8,13 +8,18 @@ const HomeScreen = () => {
 
 	return (
 		<div className=''>
-			<h1 className='text-2xl font-bold mb-6'>
-				Welcome back,{" "}
-				{firstName ||
-					(typeof fullName === "string" ? fullName.split(" ")[0] : undefined) ||
-					user?.email}
-				👋
-			</h1>
+			<div className='flex flex-col gap-1 mb-6'>
+				<h1 className='text-2xl font-bold'>
+					Welcome back,{" "}
+					{firstName ||
+						(typeof fullName === "string"
+							? fullName.split(" ")[0]
+							: undefined) ||
+						user?.email}
+					👋
+				</h1>
+				<p className="text-xs">Here is your workspace overview.</p>
+			</div>
 			<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
 				{/* Sample Dashboard Cards */}
 				<div className='p-4 border border-[var(--border)] rounded-lg'>

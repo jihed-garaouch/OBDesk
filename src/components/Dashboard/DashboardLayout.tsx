@@ -1,18 +1,18 @@
 import { UserAuth } from "@/context/AuthContext";
 import { UseTheme } from "@/context/ThemeContext";
+import { navItems } from "@/data/Navbar";
+import useNetworkStatus from "@/hooks/useNetworkStatus";
 import { useEffect, useRef, useState } from "react";
-import { FiCheckSquare, FiHome, FiMenu, FiX } from "react-icons/fi";
+import { FiMenu, FiX } from "react-icons/fi";
 import {
 	IoArrowUndoOutline,
 	IoCloudDoneOutline,
 	IoCloudOfflineOutline,
 } from "react-icons/io5";
-import { MdOutlineInsertChart } from "react-icons/md";
 import { Link, Outlet, useLocation } from "react-router-dom";
-import MusicPlayer from "./MusicPlayer";
 import Avatar from "../ui/Avatar";
+import MusicPlayer from "./MusicPlayer";
 import MusicPlayerModal from "./MusicPlayerModal";
-import useNetworkStatus from "@/hooks/useNetworkStatus";
 
 const DashboardLayout = () => {
 	const { theme } = UseTheme();
@@ -27,16 +27,6 @@ const DashboardLayout = () => {
 	const wasOffline = useRef(false);
 
 	const fullName = user?.full_name;
-
-	const navItems = [
-		{ path: "/dashboard", icon: <FiHome />, label: "Home" },
-		{
-			path: "/dashboard/finance",
-			icon: <MdOutlineInsertChart />,
-			label: "Finance",
-		},
-		{ path: "/dashboard/todo", icon: <FiCheckSquare />, label: "Todo" },
-	];
 
 	const isActive = (path: string) =>
 		path === "/dashboard"
@@ -84,7 +74,7 @@ const DashboardLayout = () => {
 									: "hover:bg-foreground/10 transition-all duration-500 ease-in-out"
 							}`}>
 							<span>{item.icon}</span>
-							<span className='text-sm hidden group-hover:block'>
+							<span className='text-sm hidden group-hover:block truncate max-w[170px]'>
 								{item.label}
 							</span>
 						</Link>
@@ -214,7 +204,7 @@ const DashboardLayout = () => {
 			</div>
 
 			{/* Main Content */}
-			<main className='flex-1 p-4 md:p-6 pt-16 md:pt-3 overflow-hidden'>
+			<main className='flex-1 p-4 md:p-6 pt-16 md:pt-3 overflow-hidden flex flex-col'>
 				<div className='flex items-center gap-2 justify-between'>
 					<div
 						className={`hidden md:flex items-center gap-1 text-xs px-3 py-2 rounded-full border shadow-xs backdrop-blur-md transition-all duration-300 ease-out
@@ -246,7 +236,9 @@ const DashboardLayout = () => {
 						</div>
 					</div>
 				</div>
-				<Outlet />
+				<div className='h-full flex-1 overflow-auto'>
+					<Outlet />
+				</div>
 			</main>
 			<MusicPlayerModal
 				isOpen={showMusicPlayerModal}

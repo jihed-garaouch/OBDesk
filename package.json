@@ -12,7 +12,9 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.76.1",
     "@tailwindcss/vite": "^4.1.14",
+    "axios": "^1.13.1",
     "gsap": "^3.13.0",
+    "idb": "^8.0.3",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-icons": "^5.5.0",

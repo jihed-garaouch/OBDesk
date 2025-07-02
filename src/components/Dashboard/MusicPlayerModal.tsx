@@ -9,6 +9,7 @@ import {
 	TbPlayerSkipForward,
 } from "react-icons/tb";
 import { UseMusicPlayer } from "@/context/MusicPlayerContext";
+import { UseTheme } from "@/context/ThemeContext";
 
 const MusicPlayerModal = ({
 	isOpen,
@@ -35,6 +36,7 @@ const MusicPlayerModal = ({
 		handleSeek,
 		formatTime,
 	} = UseMusicPlayer();
+	const { theme } = UseTheme();
 
 	// --- Handle Cover Rotation ---
 	const [rotation, setRotation] = useState(0);
@@ -61,6 +63,8 @@ const MusicPlayerModal = ({
 		frameId = requestAnimationFrame(rotate);
 		return () => cancelAnimationFrame(frameId);
 	}, [isPlaying]);
+
+	const isDarkTheme = theme === "dark";
 
 	if (!isOpen) return null;
 
@@ -119,20 +123,28 @@ const MusicPlayerModal = ({
 					<div className='flex items-center gap-3 mt-2'>
 						<button
 							onClick={() => setIsLooping((prev) => !prev)}
-							className={`p-2 rounded-full hover:bg-white/30 active:scale-95 transition-all cursor-pointer ${
-								isLooping ? "text-green-400" : ""
-							}`}
+							className={`p-2 rounded-full active:scale-95 transition-all duration-300 ease-in-out cursor-pointer ${
+								isLooping
+									? "text-green-400 bg-black"
+									: isDarkTheme
+									? ""
+									: "hover:text-background"
+							} ${isDarkTheme ? "hover:bg-white/30" : "hover:bg-foreground"}`}
 							title='Loop'>
 							<RiLoopRightFill size={18} />
 						</button>
 						<button
 							onClick={handlePrev}
-							className='p-2 rounded-full hover:bg-white/30 active:scale-95 transition-all cursor-pointer'>
+							className={`p-2 rounded-full active:scale-95 transition-all duration-300 ease-in-out cursor-pointer ${
+								isDarkTheme ? "" : "hover:text-background"
+							} ${isDarkTheme ? "hover:bg-white/30" : "hover:bg-foreground"}`}>
 							<TbPlayerSkipBack size={20} />
 						</button>
 						<button
 							onClick={handlePlayPause}
-							className='bg-white/20 p-3 rounded-full hover:bg-white/30 active:scale-95 transition-all cursor-pointer'>
+							className={`bg-black text-white p-3 rounded-full active:scale-95 transition-all duration-300 ease-in-out cursor-pointer ${
+								isDarkTheme ? "hover:bg-white/30 bg-white/20" : ""
+							}`}>
 							{isPlaying ? (
 								<TbPlayerPause size={22} />
 							) : (
@@ -141,12 +153,16 @@ const MusicPlayerModal = ({
 						</button>
 						<button
 							onClick={handleNext}
-							className='p-2 rounded-full hover:bg-white/30 active:scale-95 transition-all cursor-pointer'>
+							className={`p-2 rounded-full active:scale-95 transition-all duration-300 ease-in-out cursor-pointer ${
+								isDarkTheme ? "" : "hover:text-background"
+							} ${isDarkTheme ? "hover:bg-white/30" : "hover:bg-foreground"}`}>
 							<TbPlayerSkipForward size={20} />
 						</button>
 						<button
 							onClick={() => setIsMuted((prev) => !prev)}
-							className='p-2 rounded-full hover:bg-white/30 active:scale-95 transition-all cursor-pointer'
+							className={`p-2 rounded-full active:scale-95 transition-all duration-300 ease-in-out cursor-pointer ${
+								isDarkTheme ? "" : "hover:text-background"
+							} ${isDarkTheme ? "hover:bg-white/30" : "hover:bg-foreground"}`}
 							title={isMuted ? "Unmute" : "Mute"}>
 							{isMuted ? <LuVolumeX size={18} /> : <LuVolume2 size={18} />}
 						</button>

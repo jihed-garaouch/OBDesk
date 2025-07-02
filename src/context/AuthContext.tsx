@@ -1,4 +1,4 @@
-import { supabase } from "@/helper/supabaseClient";
+import { supabase } from "@/utils/supabase/supabaseClient";
 import type { Session } from "@supabase/supabase-js";
 import { createContext, useContext, useEffect, useState } from "react";
 import { z } from "zod";
@@ -160,16 +160,14 @@ export const AuthContextProvider = ({
 		localStorage.removeItem("provider");
 	};
 
-		useEffect(() => {
+	useEffect(() => {
 		supabase.auth.getSession().then(({ data: { session } }) => {
 			setSession(session);
 			setIsLoadingSession(false);
 			setUser(
-				session?.user?.identities
-					?.find(
-						(identity) => identity.provider === localStorage.getItem("provider")
-					)
-					?.identity_data
+				session?.user?.identities?.find(
+					(identity) => identity.provider === localStorage.getItem("provider")
+				)?.identity_data
 			);
 		});
 
