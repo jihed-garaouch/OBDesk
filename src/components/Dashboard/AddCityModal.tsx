@@ -1,7 +1,7 @@
+import { fetchTimezones } from "@/api/endpoints/timezones";
 import { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
-import ClockSkeleton from "../ui/ClockSkeleton";
-import { fetchTimezones } from "@/api/endpoints/timezones";
+import Skeleton from "../ui/Skeleton";
 
 interface AddCityModalProps {
 	isOpen: boolean;
@@ -71,7 +71,7 @@ export const AddCityModal = ({
 
 				<div className='max-h-60 overflow-y-auto space-y-2 scrollbar-thin scrollbar-thumb-foreground/30'>
 					{loading ? (
-						<ClockSkeleton />
+						<Skeleton />
 					) : filtered.length ? (
 						filtered.map((timezone, index) => (
 							<div

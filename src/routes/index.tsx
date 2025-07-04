@@ -1,5 +1,6 @@
 import AuthCallback from "@/components/Auth/AuthCallBack";
 import DashboardLayout from "@/components/Dashboard/DashboardLayout";
+import CurrencyScreen from "@/screens/Dashboard/Currency";
 import FinanceScreen from "@/screens/Dashboard/Finance";
 import HomeScreen from "@/screens/Dashboard/Home";
 import TodoScreen from "@/screens/Dashboard/Todo";
@@ -29,6 +30,7 @@ const routes: AppRoute[] = [
 		children: [
 			{ path: "", element: <HomeScreen /> },
 			{ path: "world-clock", element: <WorldClockScreen /> },
+			{ path: "currency", element: <CurrencyScreen /> },
 			{ path: "finance", element: <FinanceScreen /> },
 			{ path: "todo", element: <TodoScreen /> },
 		],

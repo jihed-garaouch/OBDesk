@@ -51,19 +51,18 @@ export const WorldClockProvider = ({
 	const user = session?.user;
 	const [timeZones, setTimeZones] = useState<TimeZone[]>([]);
 
-	const detectUserTimeZone = (): TimeZone => {
-		const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-		const city = timezone.split("/").pop()?.replace("_", " ") ?? timezone;
-		const now = new Date(
-			new Date().toLocaleString("en-US", { timeZone: timezone })
-		);
+	const detectUserTimeZone = (timezone?: string, active = true): TimeZone => {
+		const tz = timezone || Intl.DateTimeFormat().resolvedOptions().timeZone;
+		const city = tz.split("/").pop()?.replace("_", " ") ?? tz;
+
+		const now = new Date(new Date().toLocaleString("en-US", { timeZone: tz }));
 
 		const formattedTime = new Intl.DateTimeFormat("en-US", {
 			hour: "2-digit",
 			minute: "2-digit",
 			second: "2-digit",
 			hour12: true,
-			timeZone: timezone,
+			timeZone: tz,
 		}).format(now);
 
 		const [time, ampm] = formattedTime.split(" ");
@@ -73,18 +72,18 @@ export const WorldClockProvider = ({
 			month: "long",
 			day: "numeric",
 			year: "numeric",
-			timeZone: timezone,
+			timeZone: tz,
 		}).format(now);
 
 		const hourInZone = +new Intl.DateTimeFormat("en-US", {
 			hour: "2-digit",
 			hour12: false,
-			timeZone: timezone,
+			timeZone: tz,
 		}).format(now);
 
 		const timeOfDay = hourInZone >= 6 && hourInZone < 18 ? "day" : "night";
 
-		return { city, timezone, time, ampm, date, timeOfDay, active: true };
+		return { city, timezone: tz, time, ampm, date, timeOfDay, active };
 	};
 
 	const loadTimeZones = async () => {
@@ -101,8 +100,8 @@ export const WorldClockProvider = ({
 
 		// Step 2: Load cities
 		let savedCities: TimeZone[] = [];
-		if (isOnline) {
-			savedCities = await fetchUserCities(user!); // from Supabase
+		if (isOnline && user) {
+			savedCities = await fetchUserCities(user); // from Supabase
 			// Update IndexedDB
 			for (const city of savedCities) {
 				await saveCityToIndexedDB(city);
@@ -116,28 +115,59 @@ export const WorldClockProvider = ({
 
 		if (isOnline) {
 			const detected = detectUserTimeZone();
+
+			// If user location missing or timezone changed, update it
 			if (!firstLocation || firstLocation.timezone !== detected.timezone) {
-				firstLocation = detected;
-				await saveUserLocationToIndexedDB(detected);
+				firstLocation = {
+					city: detected.city,
+					timezone: detected.timezone,
+					active: true,
+					// store empty strings for time-related values
+					time: "",
+					ampm: "",
+					date: "",
+					timeOfDay: "",
+				};
+				await saveUserLocationToIndexedDB(firstLocation);
+			} else {
+				// If same timezone, refresh time-related fields dynamically (don’t use stale IndexedDB values)
+				firstLocation = { ...firstLocation, ...detected };
 			}
 		}
 
+		// Offline fallback handling
 		if (!firstLocation && savedCities.length) {
 			firstLocation = savedCities.shift()!;
 			firstLocation.active = true;
 		}
 
 		if (!firstLocation) {
-			firstLocation = detectUserTimeZone();
+			const detected = detectUserTimeZone();
+			firstLocation = {
+				city: detected.city,
+				timezone: detected.timezone,
+				active: true,
+				time: "",
+				ampm: "",
+				date: "",
+				timeOfDay: "",
+			};
 			if (isOnline) await saveUserLocationToIndexedDB(firstLocation);
 		}
 
-		setTimeZones([firstLocation, ...savedCities]);
+		const hydratedCities = [firstLocation, ...savedCities].map(
+			(city, index) =>
+				index === 0
+					? { ...city, ...detectUserTimeZone(city.timezone, true) } 
+					: { ...city, ...detectUserTimeZone(city.timezone, false) } 
+		);
+
+		setTimeZones(hydratedCities);
 	};
 
 	useEffect(() => {
-		loadTimeZones();
-	}, [isOnline]);
+		if (user) loadTimeZones();
+	}, [isOnline, user]);
 
 	// Update clock every second
 	useEffect(() => {

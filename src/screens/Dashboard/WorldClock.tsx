@@ -25,8 +25,14 @@ const WorldClockScreen = () => {
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 	const [cityToBeDeleted, setCityToBeDeleted] = useState("");
 
-	const { currentRegion, timeZones, handleAddCity, handleDeleteCity } =
-		UseWorldClock();
+	const {
+		currentRegion,
+		timeZones,
+		handleAddCity,
+		handleDeleteCity,
+	} = UseWorldClock();
+
+
 
 	if (timeZones.length === 0) return <LoadingScreen />;
 

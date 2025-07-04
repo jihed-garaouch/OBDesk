@@ -1,5 +1,5 @@
 import { FiCheckSquare, FiHome } from "react-icons/fi";
-import { MdOutlineInsertChart } from "react-icons/md";
+import { MdCurrencyExchange, MdOutlineInsertChart } from "react-icons/md";
 import { PiClockBold } from "react-icons/pi";
 
 export const navItems = [
@@ -8,6 +8,11 @@ export const navItems = [
 		path: "/dashboard/world-clock",
 		icon: <PiClockBold />,
 		label: "World Clock",
+	},
+	{
+		path: "/dashboard/currency",
+		icon: <MdCurrencyExchange />,
+		label: "Currency & Exchange",
 	},
 	{
 		path: "/dashboard/finance",
