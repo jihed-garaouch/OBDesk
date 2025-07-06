@@ -1,5 +1,5 @@
+import type { Currency } from "@/context/CurrencyContext";
 import { useEffect, useRef, useState } from "react";
-import type { Currency } from "../Dashboard/CurrencySection";
 import { LuChevronDown, LuSearch } from "react-icons/lu";
 
 interface CurrencyDropdownProps {

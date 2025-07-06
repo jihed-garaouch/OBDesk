@@ -1,3 +1,4 @@
+import MiniCurrency from "@/components/Dashboard/MiniCurrency";
 import MiniWorldClock from "@/components/Dashboard/MiniWorldClock";
 import Skeleton from "@/components/ui/Skeleton";
 import { UserAuth } from "@/context/AuthContext";
@@ -11,7 +12,7 @@ const HomeScreen = () => {
 	const fullName = user?.full_name;
 
 	return (
-		<div className='pr-4'>
+		<div className='pr-4 overflow-x-hidden'>
 			<div className='flex flex-col gap-1 mb-6'>
 				<h1 className='text-2xl font-bold'>
 					Welcome back,{" "}
@@ -31,6 +32,12 @@ const HomeScreen = () => {
 					<MiniWorldClock />
 				</div>
 			)}
+			<div className='mb-4 w-full flex flex-col gap-5 md:flex-row rounded-[20px]'>
+				<div className='flex-[0.3]'>
+					<MiniCurrency />
+				</div>
+				<div className='flex-1' />
+			</div>
 		</div>
 	);
 };

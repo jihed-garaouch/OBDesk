@@ -1,4 +1,5 @@
 import { AuthContextProvider, UserAuth } from "@/context/AuthContext";
+import { CurrencyProvider } from "@/context/CurrencyContext";
 import { MusicPlayerProvider } from "@/context/MusicPlayerContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { WorldClockProvider } from "@/context/WorldClockContext";
@@ -23,7 +24,9 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
 			<ThemeProvider>
 				<MusicPlayerProvider>
 					<WorldClockProvider>
-						<ProvidersInner>{children}</ProvidersInner>
+						<CurrencyProvider>
+							<ProvidersInner>{children}</ProvidersInner>
+						</CurrencyProvider>
 					</WorldClockProvider>
 				</MusicPlayerProvider>
 			</ThemeProvider>

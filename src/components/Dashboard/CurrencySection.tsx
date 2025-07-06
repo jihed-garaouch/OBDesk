@@ -1,4 +1,5 @@
-import { currencyToCountryCode } from "@/utils/constants";
+import CurrencyDropdown from "@/components/ui/CurrencyDropdown";
+import { UseCurrency } from "@/context/CurrencyContext";
 import { useEffect, useState } from "react";
 import { ImLoop2 } from "react-icons/im";
 import {
@@ -10,134 +11,32 @@ import {
 	XAxis,
 	YAxis,
 } from "recharts";
-import CurrencyDropdown from "../ui/CurrencyDropDown";
-import {
-	fetchCurrencies,
-	fetchExchangeRate,
-} from "@/api/endpoints/currencyExchange";
-
-interface Currency {
-	name: string;
-	countryCode?: string;
-}
-
 interface HistoricalDataPoint {
 	date: string;
 	rate: number;
 }
 
-const formatNumberForDisplay = (value: string): string => {
-	if (!value) return "";
-
-	const cleanedValue = value.replace(/,/g, "");
-
-	// Split into integer and decimal parts
-	const parts = cleanedValue.split(".");
-	const integerPart = parts[0];
-	const decimalPart = parts.length > 1 ? parts[1] : "";
-
-	// Add commas to the integer part
-	const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-	// Recombine. If a decimal part exists, keep it as is (allows user to type)
-	if (parts.length > 1) {
-		return `${formattedInteger}.${decimalPart}`;
-	}
-
-	return formattedInteger;
-};
-
-const parseFormattedInput = (formattedValue: string): string => {
-	if (!formattedValue) return "";
-	return formattedValue.replace(/,/g, "");
-};
-
 const CurrencySection = () => {
-	const getFlagUrl = (currencyCode: string): string | null => {
-		const countryCode = currencyToCountryCode[currencyCode];
-		return countryCode
-			? `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`
-			: null;
-	};
-
-	const [currencies, setCurrencies] = useState<Currency[]>([]);
-	const [fromCurrency, setFromCurrency] = useState<string>("USD");
-	const [toCurrency, setToCurrency] = useState<string>("EUR");
-	const [fromAmount, setFromAmount] = useState<string>("1");
-	const [displayAmount, setDisplayAmount] = useState<string>("1");
-	const [toAmount, setToAmount] = useState<string>("");
-	const [exchangeRate, setExchangeRate] = useState<number | null>(null);
-	const [loading, setLoading] = useState<boolean>(false);
 	const [historicalData, setHistoricalData] = useState<HistoricalDataPoint[]>(
 		[]
 	);
 	const [timeRange, setTimeRange] = useState<"7d" | "30d" | "90d">("7d");
-	const [error, setError] = useState<string | null>(null);
 
-	const formatCalculatedAmount = (amount: number): string => {
-		if (isNaN(amount) || amount === 0) return "0.00";
-		return new Intl.NumberFormat("en-US", {
-			minimumFractionDigits: 2,
-			maximumFractionDigits: 2,
-		}).format(amount);
-	};
-
-	// Fetch all available currencies
-	useEffect(() => {
-		const fetchAllCurrencies = async () => {
-			try {
-				const data = await fetchCurrencies();
-				const currencyList: Currency[] = Object.keys(data.rates).map(
-					(code) => ({
-						name: code,
-						countryCode: currencyToCountryCode[code],
-					})
-				);
-				setCurrencies(currencyList);
-			} catch (err) {
-				console.error("Failed to fetch currencies:", err);
-			}
-		};
-		fetchAllCurrencies();
-	}, []);
-
-	// Fetch exchange rate
-	useEffect(() => {
-		const fetchRate = async () => {
-			if (!fromCurrency || !toCurrency) return;
-
-			setLoading(true);
-			setError(null);
-			try {
-				const data = await fetchExchangeRate(fromCurrency);
-				const rate: number = data.rates[toCurrency];
-				setExchangeRate(rate);
-
-				// Calculate converted amount and apply formatting
-				if (fromAmount && !isNaN(Number(fromAmount))) {
-					const converted = parseFloat(fromAmount) * rate;
-					setToAmount(formatCalculatedAmount(converted));
-				}
-			} catch (err) {
-				setError("Failed to fetch exchange rates");
-				console.error(err);
-			} finally {
-				setLoading(false);
-			}
-		};
-
-		fetchRate();
-	}, [fromCurrency, toCurrency]);
-
-	// Update conversion when fromAmount or exchangeRate changes
-	useEffect(() => {
-		if (exchangeRate && fromAmount && !isNaN(Number(fromAmount))) {
-			const converted = parseFloat(fromAmount) * exchangeRate;
-			setToAmount(formatCalculatedAmount(converted));
-		} else {
-			setToAmount("");
-		}
-	}, [fromAmount, exchangeRate]);
+	const {
+		currencies,
+		fromCurrency,
+		toCurrency,
+		displayAmount,
+		toAmount,
+		exchangeRate,
+		loading,
+		error,
+		getFlagUrl,
+		handleSwap,
+		handleFromAmountChange,
+		setFromCurrency,
+		setToCurrency,
+	} = UseCurrency();
 
 	// Fetch historical data
 	useEffect(() => {
@@ -176,46 +75,13 @@ const CurrencySection = () => {
 		}
 	}, [fromCurrency, toCurrency, timeRange, exchangeRate]);
 
-	// Swap currencies and amounts.
-	const handleSwap = () => {
-		setFromCurrency(toCurrency);
-		setToCurrency(fromCurrency);
-
-		// Parse the formatted 'toAmount' back to a clean numeric string for 'fromAmount'
-		const newFromAmount = parseFormattedInput(toAmount);
-		setFromAmount(newFromAmount);
-
-		// Format the new clean 'fromAmount' for display
-		setDisplayAmount(formatNumberForDisplay(newFromAmount));
-	};
-
-	const handleFromAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const rawValue = e.target.value;
-
-		// 1. Clean the input for internal state (remove commas)
-		const cleanValue = parseFormattedInput(rawValue);
-
-		// Regex to check if the clean value is a valid numeric input (including incomplete decimal)
-		const isNumeric = /^\d*(\.\d*)?$/.test(cleanValue);
-
-		if (isNumeric || cleanValue === "") {
-			// Update the clean numeric state for calculations
-			setFromAmount(cleanValue);
-
-			// Update the display state with formatting
-			const formatted = formatNumberForDisplay(rawValue);
-			setDisplayAmount(formatted);
-		}
-		// If the input is invalid (e.g., two decimal points), simply ignore the keystroke
-	};
-
 	return (
 		<div className='flex-1 border border-foreground/20 shadow-lg rounded-lg p-4 h-full'>
 			{/* Header */}
 			<div className='flex flex-col items-center gap-2 mb-4'>
-				<h1 className='text-xl font-bold text-center'>Currency Exchange</h1>
+				<h1 className='text-base md:text-xl font-bold text-center'>Currency Exchange</h1>
 				{exchangeRate && !loading && (
-					<h1 className='text-3xl font-bold text-center'>
+					<h1 className='text-2xl md:text-3xl font-bold text-center'>
 						1 {fromCurrency} = {exchangeRate.toFixed(4)} {toCurrency}
 					</h1>
 				)}
@@ -247,8 +113,8 @@ const CurrencySection = () => {
 				{/* Swap Icon */}
 				<button
 					onClick={handleSwap}
-					className='rounded-full p-3 bg-foreground text-background flex-shrink-0 hover:opacity-80 transition-opacity cursor-pointer'>
-					<ImLoop2 className='text-base' />
+					className='rounded-full p-2 md:p-3 bg-foreground text-background flex-shrink-0 hover:opacity-80 transition-opacity cursor-pointer'>
+					<ImLoop2 className='text-xs md:text-base' />
 				</button>
 
 				{/* To Input */}
@@ -271,7 +137,7 @@ const CurrencySection = () => {
 
 			{/* Historical Trend Chart */}
 			<div className='mt-6'>
-				<div className='flex items-center justify-between mb-4'>
+				<div className='flex flex-col md:flex-row gap-3 items-center justify-between mb-4'>
 					<h2 className='text-lg font-semibold'>Historical Trend</h2>
 					<div className='flex gap-2'>
 						<button

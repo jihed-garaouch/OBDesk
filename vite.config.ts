@@ -61,9 +61,6 @@ export default defineConfig({
 					},
 				],
 			},
-			// workbox: {
-			// 	navigateFallback: '/offline.html',
-			// },
 		}),
 	],
 	resolve: {
