@@ -31,7 +31,6 @@ const CurrencySection = () => {
 		exchangeRate,
 		loading,
 		error,
-		getFlagUrl,
 		handleSwap,
 		handleFromAmountChange,
 		setFromCurrency,
@@ -79,7 +78,9 @@ const CurrencySection = () => {
 		<div className='flex-1 border border-foreground/20 shadow-lg rounded-lg p-4 h-full'>
 			{/* Header */}
 			<div className='flex flex-col items-center gap-2 mb-4'>
-				<h1 className='text-base md:text-xl font-bold text-center'>Currency Exchange</h1>
+				<h1 className='text-base md:text-xl font-bold text-center'>
+					Currency Exchange
+				</h1>
 				{exchangeRate && !loading && (
 					<h1 className='text-2xl md:text-3xl font-bold text-center'>
 						1 {fromCurrency} = {exchangeRate.toFixed(4)} {toCurrency}
@@ -99,7 +100,6 @@ const CurrencySection = () => {
 						value={fromCurrency}
 						onChange={setFromCurrency}
 						currencies={currencies}
-						getFlagUrl={getFlagUrl}
 					/>
 					<input
 						type='text'
@@ -123,7 +123,6 @@ const CurrencySection = () => {
 						value={toCurrency}
 						onChange={setToCurrency}
 						currencies={currencies}
-						getFlagUrl={getFlagUrl}
 					/>
 					<input
 						type='text'

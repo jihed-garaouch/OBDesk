@@ -12,7 +12,6 @@ const MiniCurrency = () => {
 		exchangeRate,
 		loading,
 		error,
-		getFlagUrl,
 		handleSwap,
 		handleFromAmountChange,
 		setFromCurrency,
@@ -24,7 +23,7 @@ const MiniCurrency = () => {
 			{/* Header */}
 			<div className='flex flex-col items-center gap-0 mb-4'>
 				<h1 className='text-sm font-bold text-center'>Currency Exchange</h1>
-				{exchangeRate && !loading && (
+				{exchangeRate && !loading && !error && (
 					<h1 className='text-xl font-bold text-center'>
 						1 {fromCurrency} = {exchangeRate.toFixed(4)} {toCurrency}
 					</h1>
@@ -43,7 +42,6 @@ const MiniCurrency = () => {
 						value={fromCurrency}
 						onChange={setFromCurrency}
 						currencies={currencies}
-						getFlagUrl={getFlagUrl}
 					/>
 					<input
 						type='text'
@@ -67,7 +65,6 @@ const MiniCurrency = () => {
 						value={toCurrency}
 						onChange={setToCurrency}
 						currencies={currencies}
-						getFlagUrl={getFlagUrl}
 					/>
 					<input
 						type='text'

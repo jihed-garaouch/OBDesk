@@ -63,6 +63,18 @@ export default defineConfig({
 			},
 		}),
 	],
+	// === Server tunneling ===
+	// server: {
+	// 	host: "0.0.0.0",
+	// 	port: 5173,
+	// 	hmr: {
+	// 		clientPort: 443,
+	// 	},
+	// 	allowedHosts: [
+	// 		".trycloudflare.com",
+	// 	],
+	// },
+	// === End ===
 	resolve: {
 		alias: {
 			"@": path.resolve(__dirname, "./src"),

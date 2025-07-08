@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import RouteGuard from "./components/RouteGuard";
 import ThemeToggle from "./components/ui/ThemeToggle";
 import routes, { type AppRoute } from "./routes";
@@ -36,9 +36,7 @@ const App = () => {
 				height={1}
 				style={{ display: "none" }}
 			/>
-			<BrowserRouter>
-				<Routes>{routes.map((r) => renderRoute(r))}</Routes>
-			</BrowserRouter>
+			<Routes>{routes.map((r) => renderRoute(r))}</Routes>
 		</div>
 	);
 };

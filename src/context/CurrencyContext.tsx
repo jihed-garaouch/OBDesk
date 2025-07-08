@@ -5,8 +5,13 @@ import {
 	useState,
 	type ReactNode,
 } from "react";
-import { fetchCurrencies, fetchExchangeRate } from "@/api/endpoints/currencyExchange";
+import {
+	fetchCurrencies,
+	fetchExchangeRate,
+} from "@/api/endpoints/currencyExchange";
 import { currencyToCountryCode } from "@/utils/constants";
+import useNetworkStatus from "@/hooks/useNetworkStatus";
+import { toast } from "sonner";
 
 export interface Currency {
 	name: string;
@@ -30,9 +35,13 @@ interface CurrencyContextType {
 	setToCurrency: (value: string) => void;
 }
 
-const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined);
+const CurrencyContext = createContext<CurrencyContextType | undefined>(
+	undefined
+);
 
 export const CurrencyProvider = ({ children }: { children: ReactNode }) => {
+	const { isOnline } = useNetworkStatus();
+
 	const [currencies, setCurrencies] = useState<Currency[]>([]);
 	const [fromCurrency, setFromCurrency] = useState("USD");
 	const [toCurrency, setToCurrency] = useState("EUR");
@@ -51,7 +60,9 @@ export const CurrencyProvider = ({ children }: { children: ReactNode }) => {
 		const integerPart = parts[0];
 		const decimalPart = parts[1] ?? "";
 		const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-		return parts.length > 1 ? `${formattedInteger}.${decimalPart}` : formattedInteger;
+		return parts.length > 1
+			? `${formattedInteger}.${decimalPart}`
+			: formattedInteger;
 	};
 
 	const parseFormattedInput = (formattedValue: string): string => {
@@ -78,10 +89,12 @@ export const CurrencyProvider = ({ children }: { children: ReactNode }) => {
 		const fetchAllCurrencies = async () => {
 			try {
 				const data = await fetchCurrencies();
-				const currencyList: Currency[] = Object.keys(data.rates).map((code) => ({
-					name: code,
-					countryCode: currencyToCountryCode[code],
-				}));
+				const currencyList: Currency[] = Object.keys(data.rates).map(
+					(code) => ({
+						name: code,
+						countryCode: currencyToCountryCode[code],
+					})
+				);
 				setCurrencies(currencyList);
 			} catch (err) {
 				console.error("Failed to fetch currencies:", err);
@@ -108,14 +121,15 @@ export const CurrencyProvider = ({ children }: { children: ReactNode }) => {
 				}
 			} catch (err) {
 				setError("Failed to fetch exchange rates");
+				toast.error("Failed to fetch exchange rates. Come back online to get updated rates.");
 				console.error(err);
 			} finally {
 				setLoading(false);
 			}
 		};
-        
+
 		fetchRate();
-	}, [fromCurrency, toCurrency]);
+	}, [fromCurrency, toCurrency, isOnline]);
 
 	// === Update conversion dynamically ===
 	useEffect(() => {

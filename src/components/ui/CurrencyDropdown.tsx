@@ -1,18 +1,17 @@
 import type { Currency } from "@/context/CurrencyContext";
 import { useEffect, useRef, useState } from "react";
 import { LuChevronDown, LuSearch } from "react-icons/lu";
+import Flag from "./Flag";
 
 interface CurrencyDropdownProps {
 	value: string;
 	onChange: (value: string) => void;
 	currencies: Currency[];
-	getFlagUrl: (currencyCode: string) => string | null;
 }
 const CurrencyDropdown = ({
 	value,
 	onChange,
 	currencies,
-	getFlagUrl,
 }: CurrencyDropdownProps) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [searchTerm, setSearchTerm] = useState("");
@@ -42,13 +41,7 @@ const CurrencyDropdown = ({
 			<button
 				onClick={() => setIsOpen(!isOpen)}
 				className='flex items-center gap-2 border border-foreground/30 px-3 py-1.5 rounded-full shadow-sm hover:bg-foreground/5 transition-colors cursor-pointer'>
-				{getFlagUrl(value) && (
-					<img
-						src={getFlagUrl(value)!}
-						alt={value}
-						className='w-6 h-[18px] object-cover rounded-sm'
-					/>
-				)}
+				<Flag currencyCode={value} />
 				<span className='text-xs md:text-sm font-light'>{value}</span>
 				<span>
 					<LuChevronDown
@@ -86,13 +79,7 @@ const CurrencyDropdown = ({
 								className={`w-full flex items-center gap-3 px-4 py-2 hover:bg-foreground/5 transition-colors cursor-pointer ${
 									value === currency.name ? "bg-foreground/10" : ""
 								}`}>
-								{getFlagUrl(currency.name) && (
-									<img
-										src={getFlagUrl(currency.name)!}
-										alt={currency.name}
-										className='w-6 h-[18px] object-cover rounded-sm flex-shrink-0'
-									/>
-								)}
+								<Flag currencyCode={currency.name} />
 								<span className='text-sm font-medium'>{currency.name}</span>
 							</button>
 						))}
