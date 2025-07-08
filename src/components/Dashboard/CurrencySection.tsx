@@ -81,7 +81,7 @@ const CurrencySection = () => {
 				<h1 className='text-base md:text-xl font-bold text-center'>
 					Currency Exchange
 				</h1>
-				{exchangeRate && !loading && (
+				{exchangeRate && !loading && !error && (
 					<h1 className='text-2xl md:text-3xl font-bold text-center'>
 						1 {fromCurrency} = {exchangeRate.toFixed(4)} {toCurrency}
 					</h1>
