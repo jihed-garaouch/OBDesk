@@ -45,7 +45,7 @@ const WorldClockScreen = () => {
 				</h1>
 
 				<div className='flex items-center justify-center gap-2'>
-					<h1 className='font-black text-[18vw] md:text-[17vw] leading-none'>
+					<h1 className='font-black text-[16vw] md:text-[17vw] leading-none'>
 						{currentRegion?.time ?? ""}
 					</h1>
 					<span className='text-xs md:text-[1.5rem] xl:text-[3rem] font-black'>
