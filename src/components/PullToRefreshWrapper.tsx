@@ -28,24 +28,10 @@ const PullToRefreshWrapper: React.FC<PullToRefreshProps> = ({
 	useEffect(() => {
 		if (disabled) return;
 
-		const disableDefaultPullToRefresh = (e: TouchEvent) => {
-			const container = containerRef.current;
-			if (container && container.scrollTop === 0 && e.touches) {
-				if (e.type === "touchmove" && canPull) {
-					e.preventDefault();
-				}
-			}
-		};
-
 		document.body.style.overscrollBehavior = "none";
 		document.documentElement.style.overscrollBehavior = "none";
 
-		document.addEventListener("touchmove", disableDefaultPullToRefresh, {
-			passive: false,
-		});
-
 		return () => {
-			document.removeEventListener("touchmove", disableDefaultPullToRefresh);
 			document.body.style.overscrollBehavior = "";
 			document.documentElement.style.overscrollBehavior = "";
 		};
@@ -55,7 +41,7 @@ const PullToRefreshWrapper: React.FC<PullToRefreshProps> = ({
 		if (disabled || isRefreshing) return;
 
 		const container = containerRef.current;
-		if (container && container.scrollTop === 0) {
+		if (container && container.scrollTop <= 0) {
 			startY.current = e.touches[0].clientY;
 			setCanPull(true);
 		}
@@ -65,15 +51,13 @@ const PullToRefreshWrapper: React.FC<PullToRefreshProps> = ({
 		if (!canPull || isRefreshing || disabled) return;
 
 		const container = containerRef.current;
-		if (!container || container.scrollTop > 0) {
-			setCanPull(false);
-			return;
-		}
+		if (!container) return;
 
 		const currentY = e.touches[0].clientY;
 		const distance = currentY - startY.current;
 
-		if (distance > 0) {
+		if (distance > 0 && container.scrollTop <= 0) {
+			e.preventDefault();
 			const resistance = 0.5;
 			const adjustedDistance = Math.min(distance * resistance, maxPull);
 			setPullDistance(adjustedDistance);
@@ -143,14 +127,19 @@ const PullToRefreshWrapper: React.FC<PullToRefreshProps> = ({
 			{/* Scrollable content */}
 			<div
 				ref={containerRef}
-				className='h-full overflow-y-auto transition-transform duration-300 ease-out'
 				onTouchStart={handleTouchStart}
 				onTouchMove={handleTouchMove}
-				onTouchEnd={handleTouchEnd}
-				style={{
-					transform: `translateY(${pullDistance}px)`,
-				}}>
-				{children}
+				onTouchEnd={handleTouchEnd}>
+				<div
+					style={{
+						transform: `translateY(${pullDistance}px)`,
+						transition:
+							isRefreshing || (!canPull && pullDistance === 0)
+								? "transform 0.3s ease"
+								: "none",
+					}}>
+					{children}
+				</div>
 			</div>
 		</>
 	);

@@ -1,12 +1,17 @@
 import { UseCurrency } from "@/context/CurrencyContext";
-import { useState } from "react";
+import useNetworkStatus from "@/hooks/useNetworkStatus";
+import { useEffect, useState } from "react";
 import { FaFlag } from "react-icons/fa";
 
 const Flag = ({ currencyCode }: { currencyCode: string }) => {
 	const [hasError, setHasError] = useState(false);
+	const [flagUrl, setFlagUrl] = useState<string | null>("");
 	const { getFlagUrl } = UseCurrency();
+	const { isOnline } = useNetworkStatus();
 
-	const flagUrl = getFlagUrl(currencyCode);
+	useEffect(() => {
+		setFlagUrl(getFlagUrl(currencyCode));
+	}, [isOnline]);
 
 	if (!flagUrl || hasError) {
 		return <FaFlag />;
