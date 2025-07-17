@@ -11,7 +11,7 @@ const Flag = ({ currencyCode }: { currencyCode: string }) => {
 
 	useEffect(() => {
 		setFlagUrl(getFlagUrl(currencyCode));
-	}, [isOnline]);
+	}, [isOnline, currencyCode]);
 
 	if (!flagUrl || hasError) {
 		return <FaFlag />;

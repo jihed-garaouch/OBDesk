@@ -10,13 +10,22 @@ const MiniWorldClock = () => {
 
 	return (
 		<div className='flex items-center gap-5 flex-wrap'>
-			<div>
-				<div className='flex items-center gap-2'>
-					<p className='font-bold text-xs'>Current City:</p>
-					<h1 className='font-bold'>{currentRegion?.city ?? ""}</h1>
+			<div
+				className={`flex ${
+					timeZones.length > 1
+						? "flex-col"
+						: "flex-col lg:flex-row lg:items-center lg:gap-5"
+				}`}>
+				<div>
+					<div className='flex items-center gap-2'>
+						<p className='font-bold text-xs'>Current City:</p>
+						<h1 className='font-bold'>{currentRegion?.city ?? ""}</h1>
+					</div>
+					<h1 className='font-bold text-base md:text-[1.2rem]'>
+						{currentRegion?.date ?? ""}
+					</h1>
 				</div>
-				<h1 className='font-bold text-base md:text-[1.2rem]'>{currentRegion?.date ?? ""}</h1>
-				<div className='flex items-center  gap-2'>
+				<div className='flex items-center gap-2'>
 					<h1 className='font-black text-[3.2rem] md:text-[4rem] leading-none'>
 						{currentRegion?.time ?? ""}
 					</h1>
@@ -40,7 +49,9 @@ const MiniWorldClock = () => {
 					{zone.time ? (
 						<>
 							<div className='flex justify-center items-end gap-1 font-bold'>
-								<h3 className='text-[2.5rem] md:text-[3rem] leading-none'>{zone.time}</h3>
+								<h3 className='text-[2.5rem] md:text-[3rem] leading-none'>
+									{zone.time}
+								</h3>
 								<span className='text-sm md:text-lg mb-1'>{zone.ampm}</span>
 							</div>
 							<div className='flex justify-between items-center gap-3 text-xs md:text-sm'>

@@ -12,6 +12,11 @@ import {
 import { currencyToCountryCode } from "@/utils/constants";
 import useNetworkStatus from "@/hooks/useNetworkStatus";
 import { toast } from "sonner";
+import {
+	formatCalculatedAmount,
+	formatNumberForDisplay,
+	parseFormattedInput,
+} from "@/utils";
 
 export interface Currency {
 	name: string;
@@ -51,31 +56,6 @@ export const CurrencyProvider = ({ children }: { children: ReactNode }) => {
 	const [exchangeRate, setExchangeRate] = useState<number | null>(null);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
-
-	// === Utility functions ===
-	const formatNumberForDisplay = (value: string): string => {
-		if (!value) return "";
-		const cleanedValue = value.replace(/,/g, "");
-		const parts = cleanedValue.split(".");
-		const integerPart = parts[0];
-		const decimalPart = parts[1] ?? "";
-		const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-		return parts.length > 1
-			? `${formattedInteger}.${decimalPart}`
-			: formattedInteger;
-	};
-
-	const parseFormattedInput = (formattedValue: string): string => {
-		return formattedValue?.replace(/,/g, "") ?? "";
-	};
-
-	const formatCalculatedAmount = (amount: number): string => {
-		if (isNaN(amount) || amount === 0) return "0.00";
-		return new Intl.NumberFormat("en-US", {
-			minimumFractionDigits: 2,
-			maximumFractionDigits: 2,
-		}).format(amount);
-	};
 
 	const getFlagUrl = (currencyCode: string): string | null => {
 		const countryCode = currencyToCountryCode[currencyCode];
@@ -120,8 +100,10 @@ export const CurrencyProvider = ({ children }: { children: ReactNode }) => {
 					setToAmount(formatCalculatedAmount(converted));
 				}
 			} catch (err) {
-				setError("Failed to fetch exchange rates");
-				toast.error("Failed to fetch exchange rates. Come back online to get updated rates.");
+				setError("Failed to fetch currency exchange rates");
+				toast.error(
+					"Failed to fetch currency exchange rates. Come back online to get updated rates."
+				);
 				console.error(err);
 			} finally {
 				setLoading(false);

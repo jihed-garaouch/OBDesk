@@ -49,7 +49,7 @@ const DashboardLayout = () => {
 	return (
 		<div className='h-svh flex'>
 			{/* Sidebar */}
-			<aside className='group hidden md:w-22 hover:md:w-54 border-r border-[var(--border)] p-4 h-svh md:flex flex-col transition-all duration-500 ease-in-out'>
+			<aside className='group hidden md:w-22 hover:md:w-54 border-r border-[var(--border)] p-4 h-svh lg:flex flex-col transition-all duration-500 ease-in-out'>
 				<Link
 					to='/dashboard'
 					className='flex group-hover:flex-row flex-col items-center gap-1 mb-8 text-xs group-hover:text-sm'>
@@ -102,7 +102,7 @@ const DashboardLayout = () => {
 			</aside>
 
 			{/* Mobile top bar */}
-			<header className='md:hidden fixed top-3 left-0 right-0 h-12 flex items-center px-3 z-40'>
+			<header className='lg:hidden fixed top-3 left-0 right-0 h-12 flex items-center px-3 z-40'>
 				<button
 					aria-label='Open menu'
 					onClick={() => setMobileOpen(true)}
@@ -114,14 +114,14 @@ const DashboardLayout = () => {
 			{/* Mobile backdrop */}
 			{mobileOpen && (
 				<div
-					className='fixed inset-0 bg-black/40 z-40 md:hidden'
+					className='fixed inset-0 bg-black/40 z-40 lg:hidden'
 					onClick={() => setMobileOpen(false)}
 				/>
 			)}
 
 			{/* Mobile drawer */}
 			<aside
-				className={`fixed top-0 left-0 bottom-0 w-64 z-50 h-svh flex flex-col transform transition-transform duration-250 ease-in-out md:hidden bg-background border-r border-[var(--border)] p-4 ${
+				className={`fixed top-0 left-0 bottom-0 w-64 z-50 h-svh flex flex-col transform transition-transform duration-250 ease-in-out lg:hidden bg-background border-r border-[var(--border)] p-4 ${
 					mobileOpen ? "translate-x-0" : "-translate-x-full"
 				}`}>
 				<div className='flex items-center justify-between mb-6'>
@@ -182,7 +182,7 @@ const DashboardLayout = () => {
 
 			{/* Mobile Offline Indicator */}
 			<div
-				className={`md:hidden fixed top-5 right-5 flex items-center gap-1 text-xs px-3 py-2 rounded-full border shadow-xs backdrop-blur-md transition-all duration-300 ease-out
+				className={`lg:hidden fixed top-5 right-5 flex items-center gap-1 text-xs px-3 py-2 rounded-full border shadow-xs backdrop-blur-md transition-all duration-300 ease-out
           ${
 						!isOnline
 							? "opacity-100 translate-y-0 bg-red-500/5 border-red-500/20 text-red-500"
@@ -204,10 +204,10 @@ const DashboardLayout = () => {
 			</div>
 
 			{/* Main Content */}
-			<main className='flex-1 p-4 md:p-6 pt-16 md:pt-3 overflow-hidden flex flex-col'>
+			<main className='flex-1 p-4 lg:p-6 pt-16 lg:pt-3 overflow-hidden flex flex-col'>
 				<div className='flex items-center gap-2 justify-between'>
 					<div
-						className={`hidden md:flex items-center gap-1 text-xs px-3 py-2 rounded-full border shadow-xs backdrop-blur-md transition-all duration-300 ease-out
+						className={`hidden lg:flex items-center gap-1 text-xs px-3 py-2 rounded-full border shadow-xs backdrop-blur-md transition-all duration-300 ease-out
           ${
 						!isOnline
 							? "opacity-100 translate-y-0 bg-red-500/5 border-red-500/20 text-red-500"

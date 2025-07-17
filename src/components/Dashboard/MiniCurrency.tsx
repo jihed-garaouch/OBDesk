@@ -29,9 +29,9 @@ const MiniCurrency = () => {
 					</h1>
 				)}
 				{loading && (
-					<p className='text-sm text-foreground/60'>Loading rates...</p>
+					<p className='text-sm text-foreground/60 text-center'>Loading rates...</p>
 				)}
-				{error && <p className='text-sm text-red-500'>{error}</p>}
+				{error && <p className='text-sm text-red-500 text-center'>{error}</p>}
 			</div>
 
 			{/* Converter */}

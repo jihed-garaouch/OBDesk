@@ -1,5 +1,6 @@
 import PullToRefreshWrapper from "@/components/PullToRefreshWrapper";
 import { AuthContextProvider, UserAuth } from "@/context/AuthContext";
+import { CryptoProvider } from "@/context/CryptoContext";
 import { CurrencyProvider } from "@/context/CurrencyContext";
 import { MusicPlayerProvider } from "@/context/MusicPlayerContext";
 import { ThemeProvider } from "@/context/ThemeContext";
@@ -14,7 +15,7 @@ const ProvidersInner = ({ children }: { children: React.ReactNode }) => {
 	const { session } = UserAuth();
 
 	const handleRefresh = async () => {
-		// if (!isOnline) return;
+		if (!isOnline) return;
 
 		try {
 			window.location.reload();
@@ -45,7 +46,9 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
 					<MusicPlayerProvider>
 						<WorldClockProvider>
 							<CurrencyProvider>
-								<ProvidersInner>{children}</ProvidersInner>
+								<CryptoProvider>
+									<ProvidersInner>{children}</ProvidersInner>
+								</CryptoProvider>
 							</CurrencyProvider>
 						</WorldClockProvider>
 					</MusicPlayerProvider>

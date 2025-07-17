@@ -12,7 +12,7 @@ const HomeScreen = () => {
 	const fullName = user?.full_name;
 
 	return (
-		<div className='pr-4 overflow-x-hidden'>
+		<div className='pr-4 overflow-x-hidden h-full'>
 			<div className='flex flex-col gap-1 mb-6'>
 				<h1 className='text-2xl font-bold'>
 					Welcome back,{" "}
