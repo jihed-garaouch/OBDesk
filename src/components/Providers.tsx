@@ -4,7 +4,7 @@ import { CryptoProvider } from "@/context/CryptoContext";
 import { CurrencyProvider } from "@/context/CurrencyContext";
 import { MusicPlayerProvider } from "@/context/MusicPlayerContext";
 import { ThemeProvider } from "@/context/ThemeContext";
-import { WorldClockProvider } from "@/context/WorldClockContext";
+import { UseWorldClock, WorldClockProvider } from "@/context/WorldClockContext";
 import useNetworkStatus from "@/hooks/useNetworkStatus";
 import OfflineScreen from "@/screens/Offline/Offline";
 import React from "react";
@@ -13,15 +13,15 @@ import { BrowserRouter } from "react-router-dom";
 const ProvidersInner = ({ children }: { children: React.ReactNode }) => {
 	const { isOnline } = useNetworkStatus();
 	const { session } = UserAuth();
+	const { loadTimeZones } = UseWorldClock();
+
+	const refreshAll = async () => {
+		await Promise.all([loadTimeZones()]);
+	};
 
 	const handleRefresh = async () => {
 		if (!isOnline) return;
-
-		try {
-			window.location.reload();
-		} catch (err) {
-			console.error(err);
-		}
+		await refreshAll();
 	};
 
 	if (!isOnline && !session) {
