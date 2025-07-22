@@ -14,11 +14,17 @@ import {
 	formatCalculatedAmount,
 	formatNumberForDisplay,
 	parseFormattedInput,
+	useDebounce,
 } from "@/utils";
 import {
 	getCryptosFromIndexedDB,
 	saveCryptosToIndexedDB,
 } from "@/utils/indexedDb/crypto";
+import {
+	fetchCryptoHistory,
+	fetchCryptoList,
+	fetchCryptoPrice,
+} from "@/api/endpoints/crypto";
 
 type Crypto = {
 	id: string;
@@ -62,66 +68,6 @@ interface CryptoContextType {
 }
 
 const CryptoContext = createContext<CryptoContextType | undefined>(undefined);
-
-// Utility: Exponential backoff retry with delay
-async function fetchWithRetry(url: string, maxRetries = 3, baseDelay = 1000) {
-	for (let attempt = 0; attempt <= maxRetries; attempt++) {
-		try {
-			const response = await fetch(url);
-
-			// Handle rate limiting
-			if (response.status === 429) {
-				const retryAfter = response.headers.get("Retry-After");
-				const delay = retryAfter
-					? parseInt(retryAfter) * 1000
-					: baseDelay * Math.pow(2, attempt);
-
-				if (attempt < maxRetries) {
-					console.warn(
-						`Rate limited. Retrying after ${delay}ms (attempt ${
-							attempt + 1
-						}/${maxRetries})`
-					);
-					await new Promise((resolve) => setTimeout(resolve, delay));
-					continue;
-				}
-				throw new Error("Rate limit exceeded. Please try again later.");
-			}
-
-			// Handle 404 or other errors
-			if (!response.ok) {
-				throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-			}
-
-			return await response.json();
-		} catch (error) {
-			if (attempt === maxRetries) {
-				throw error;
-			}
-			// Wait before retry
-			const delay = baseDelay * Math.pow(2, attempt);
-			console.warn(`Request failed. Retrying after ${delay}ms...`);
-			await new Promise((resolve) => setTimeout(resolve, delay));
-		}
-	}
-}
-
-// Debounce helper
-function useDebounce<T>(value: T, delay: number): T {
-	const [debouncedValue, setDebouncedValue] = useState<T>(value);
-
-	useEffect(() => {
-		const handler = setTimeout(() => {
-			setDebouncedValue(value);
-		}, delay);
-
-		return () => {
-			clearTimeout(handler);
-		};
-	}, [value, delay]);
-
-	return debouncedValue;
-}
 
 export const CryptoProvider = ({ children }: { children: ReactNode }) => {
 	const [cryptos, setCryptos] = useState<CryptoCurrency[]>([]);
@@ -182,9 +128,7 @@ export const CryptoProvider = ({ children }: { children: ReactNode }) => {
 			}
 
 			try {
-				const data = await fetchWithRetry(
-					"https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1"
-				);
+				const data = await fetchCryptoList();
 
 				const formatted = data.map((coin: Crypto) => ({
 					id: coin.id,
@@ -254,8 +198,9 @@ export const CryptoProvider = ({ children }: { children: ReactNode }) => {
 			setError(null);
 
 			try {
-				const data = await fetchWithRetry(
-					`https://api.coingecko.com/api/v3/simple/price?ids=${debouncedFromCrypto}&vs_currencies=${debouncedToCurrency}`
+				const data = await fetchCryptoPrice(
+					debouncedFromCrypto,
+					debouncedToCurrency
 				);
 
 				const fetchedPrice =
@@ -319,8 +264,10 @@ export const CryptoProvider = ({ children }: { children: ReactNode }) => {
 
 			try {
 				const days = timeRange === "24h" ? 1 : timeRange === "7d" ? 7 : 30;
-				const data = await fetchWithRetry(
-					`https://api.coingecko.com/api/v3/coins/${debouncedFromCrypto}/market_chart?vs_currency=${debouncedToCurrency}&days=${days}`
+				const data = await fetchCryptoHistory(
+					debouncedFromCrypto,
+					debouncedToCurrency,
+					days
 				);
 
 				if (!data.prices || data.prices.length === 0) {
