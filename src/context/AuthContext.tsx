@@ -161,20 +161,34 @@ export const AuthContextProvider = ({
 	};
 
 	useEffect(() => {
+		const updateUserFromSession = (session: Session | null) => {
+			if (!session?.user) {
+				setUser(undefined);
+				return;
+			}
+
+			const provider = localStorage.getItem("provider");
+			const identity = session.user.identities?.find(
+				(identity) => identity.provider === provider
+			);
+
+			// Fallback: if no provider match, use the first identity
+			const userData =
+				identity?.identity_data || session.user.identities?.[0]?.identity_data;
+			setUser(userData);
+		};
+
 		supabase.auth.getSession().then(({ data: { session } }) => {
 			setSession(session);
 			setIsLoadingSession(false);
-			setUser(
-				session?.user?.identities?.find(
-					(identity) => identity.provider === localStorage.getItem("provider")
-				)?.identity_data
-			);
+			updateUserFromSession(session);
 		});
 
 		const { data: subscription } = supabase.auth.onAuthStateChange(
 			(_event, session) => {
 				setSession(session);
 				setIsLoadingSession(false);
+				updateUserFromSession(session);
 			}
 		);
 
