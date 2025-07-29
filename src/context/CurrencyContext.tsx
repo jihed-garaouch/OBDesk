@@ -40,8 +40,8 @@ interface CurrencyContextType {
 	setToCurrency: (value: string) => void;
 }
 
-const CurrencyContext = createContext<CurrencyContextType | undefined>(
-	undefined
+const CurrencyContext = createContext<CurrencyContextType | null>(
+	null
 );
 
 export const CurrencyProvider = ({ children }: { children: ReactNode }) => {

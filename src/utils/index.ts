@@ -38,4 +38,32 @@ export const useDebounce = <T>(value: T, delay: number): T => {
 	}, [value, delay]);
 
 	return debouncedValue;
-}
+};
+
+export const formatIntlTime = (timezone: string, date: Date): string => {
+	return new Intl.DateTimeFormat("en-US", {
+		hour: "2-digit",
+		minute: "2-digit",
+		second: "2-digit",
+		hour12: true,
+		timeZone: timezone,
+	}).format(date);
+};
+
+export const formatIntlDate = (timezone: string, date: Date): string => {
+	return new Intl.DateTimeFormat("en-US", {
+		weekday: "long",
+		month: "long",
+		day: "numeric",
+		year: "numeric",
+		timeZone: timezone,
+	}).format(date);
+};
+
+export const formatIntlHourInZone = (timezone: string, date: Date): number => {
+	return +new Intl.DateTimeFormat("en-US", {
+		hour: "2-digit",
+		hour12: false,
+		timeZone: timezone,
+	}).format(date);
+};

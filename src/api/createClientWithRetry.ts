@@ -5,7 +5,7 @@ type CreateClientOptions = {
   label: string;
   maxRetries?: number;
   baseDelay?: number;
-  config?: Record<string, any>;
+  config?: Record<string, unknown>;
 };
 
 export const createClientWithRetry = ({

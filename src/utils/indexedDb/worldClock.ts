@@ -17,7 +17,7 @@ type DeleteSyncOperation = {
 const DB_NAME = "worldClockDB";
 const DB_VERSION = 1;
 const CITIES_STORE = "cities";
-const USER_STORE = "userLocation";
+const USER_LOCATION_STORE = "userLocation";
 const DELETE_SYNC_STORE = "deleteSyncQueue";
 
 // Initialize IndexedDB
@@ -27,8 +27,8 @@ const initDB = async () => {
 			if (!db.objectStoreNames.contains(CITIES_STORE)) {
 				db.createObjectStore(CITIES_STORE, { keyPath: "timezone" });
 			}
-			if (!db.objectStoreNames.contains(USER_STORE)) {
-				db.createObjectStore(USER_STORE, { keyPath: "timezone" });
+			if (!db.objectStoreNames.contains(USER_LOCATION_STORE)) {
+				db.createObjectStore(USER_LOCATION_STORE, { keyPath: "timezone" });
 			}
 			if (!db.objectStoreNames.contains(DELETE_SYNC_STORE)) {
 				db.createObjectStore(DELETE_SYNC_STORE, { keyPath: "timestamp" });
@@ -61,6 +61,22 @@ export const saveCityToIndexedDB = async (city: TimeZone) => {
 	await db.put(CITIES_STORE, city);
 };
 
+// Save multiple cities at once
+export const saveCitiesToIndexedDB = async (cities: TimeZone[]) => {
+  if (!cities.length) return;
+
+  await ensureDBReady();
+  const db = await initDB();
+  const tx = db.transaction(CITIES_STORE, "readwrite");
+  const store = tx.objectStore(CITIES_STORE);
+
+  for (const city of cities) {
+    store.put(city);
+  }
+
+  await tx.done;
+};
+
 // Get all saved cities
 export const getCitiesFromIndexedDB = async (): Promise<TimeZone[]> => {
 	await ensureDBReady();
@@ -72,9 +88,10 @@ export const getCitiesFromIndexedDB = async (): Promise<TimeZone[]> => {
 export const saveUserLocationToIndexedDB = async (location: TimeZone) => {
 	await ensureDBReady();
 	const db = await initDB();
-	const tx = db.transaction(USER_STORE, "readwrite");
-	await tx.objectStore(USER_STORE).clear(); // clear previous record
-	await tx.objectStore(USER_STORE).put(location); // save new record
+	const tx = db.transaction(USER_LOCATION_STORE, "readwrite");
+	const store = tx.objectStore(USER_LOCATION_STORE);
+	await store.clear(); // clear previous record
+	await store.put(location); // save new record
 	await tx.done;
 };
 
@@ -84,7 +101,7 @@ export const getUserLocationFromIndexedDB = async (): Promise<
 > => {
 	await ensureDBReady();
 	const db = await initDB();
-	const all = await db.getAll(USER_STORE);
+	const all = await db.getAll(USER_LOCATION_STORE);
 	return all[0]; // should be only one stored
 };
 
@@ -111,7 +128,8 @@ export const addToDeleteSyncQueue = async (
 	await ensureDBReady();
 	const db = await openDB(DB_NAME, DB_VERSION);
 	const tx = db.transaction(DELETE_SYNC_STORE, "readwrite");
-	await tx.objectStore(DELETE_SYNC_STORE).add(operation);
+	const store = tx.objectStore(DELETE_SYNC_STORE);
+	await store.add(operation);
 	await tx.done;
 };
 
@@ -127,6 +145,7 @@ export const removeFromDeleteSyncQueue = async (
 	await ensureDBReady();
 	const db = await openDB(DB_NAME, DB_VERSION);
 	const tx = db.transaction(DELETE_SYNC_STORE, "readwrite");
-	await tx.objectStore(DELETE_SYNC_STORE).delete(timestamp);
+	const store = tx.objectStore(DELETE_SYNC_STORE);
+	await store.delete(timestamp);
 	await tx.done;
 };

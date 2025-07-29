@@ -55,14 +55,14 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
 
 	if (!isReady) return null;
 
-	const value: ThemeContextType = { theme, toggleTheme };
+	const value = { theme, toggleTheme };
 
 	return (
 		<ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
 	);
 };
 
-export const UseTheme = (): ThemeContextType => {
+export const UseTheme = () => {
 	const ctx = useContext(ThemeContext);
 	if (!ctx) throw new Error("UseTheme must be used within ThemeProvider");
 	return ctx;

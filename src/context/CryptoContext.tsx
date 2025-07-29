@@ -67,7 +67,7 @@ interface CryptoContextType {
 	setTimeRange: (value: "24h" | "7d" | "30d") => void;
 }
 
-const CryptoContext = createContext<CryptoContextType | undefined>(undefined);
+const CryptoContext = createContext<CryptoContextType | null>(null);
 
 export const CryptoProvider = ({ children }: { children: ReactNode }) => {
 	const [cryptos, setCryptos] = useState<CryptoCurrency[]>([]);
@@ -91,7 +91,7 @@ export const CryptoProvider = ({ children }: { children: ReactNode }) => {
 	const priceCache = useRef<Map<string, { price: number; timestamp: number }>>(
 		new Map()
 	);
-	const CACHE_DURATION = 30000; // 30 seconds
+	const CACHE_DURATION = 60000; // 60 seconds
 
 	// Debounced crypto/currency changes to reduce API calls
 	const debouncedFromCrypto = useDebounce(fromCrypto, 500);

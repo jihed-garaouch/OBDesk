@@ -32,7 +32,8 @@ export const fetchUserCities = async (user: User): Promise<TimeZone[]> => {
 	try {
 		const { data, error } = await supabase
 			.from("cities")
-			.select("*")
+			// .select("*") // for selecting all.
+			.select("city, timezone")
 			.eq("user_id", user.id);
 
 		if (error) throw error;

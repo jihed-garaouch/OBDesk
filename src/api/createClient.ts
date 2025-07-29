@@ -3,7 +3,7 @@ import axios, { type AxiosInstance } from "axios";
 type CreateClientOptions = {
   baseURL: string;
   label: string;
-  config?: Record<string, any>;
+  config?: Record<string, unknown>;
 };
 
 export const createClient = ({ baseURL, label, config }: CreateClientOptions): AxiosInstance => {

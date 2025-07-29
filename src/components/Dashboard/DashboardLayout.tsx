@@ -182,7 +182,7 @@ const DashboardLayout = () => {
 
 			{/* Mobile Offline Indicator */}
 			<div
-				className={`lg:hidden fixed top-5 right-5 flex items-center gap-1 text-xs px-3 py-2 rounded-full border shadow-xs backdrop-blur-md transition-all duration-300 ease-out
+				className={`[@media(min-width:500px)]:hidden fixed top-5 right-5 flex items-center gap-1 text-xs px-3 py-2 rounded-full border shadow-xs backdrop-blur-md transition-all duration-300 ease-out
           ${
 						!isOnline
 							? "opacity-100 translate-y-0 bg-red-500/5 border-red-500/20 text-red-500"
@@ -204,10 +204,10 @@ const DashboardLayout = () => {
 			</div>
 
 			{/* Main Content */}
-			<main className='flex-1 p-4 lg:p-6 pt-16 lg:pt-3 overflow-hidden flex flex-col'>
+			<main className='flex-1 p-4 lg:p-6 pt-16 [@media(min-width:500px)]:pt-3 overflow-hidden flex flex-col'>
 				<div className='flex items-center gap-2 justify-between'>
 					<div
-						className={`hidden lg:flex items-center gap-1 text-xs px-3 py-2 rounded-full border shadow-xs backdrop-blur-md transition-all duration-300 ease-out
+						className={`hidden [@media(min-width:500px)]:flex [@media(min-width:500px)]:ml-8 [@media(min-width:500px)]:-mt-8 [@media(min-width:1000px)]:ml-0! [@media(min-width:1000px)]:mt-0! justify-start items-center gap-1 text-xs px-3 py-2 rounded-full border shadow-xs backdrop-blur-md transition-all duration-300 ease-out
           ${
 						!isOnline
 							? "opacity-100 translate-y-0 bg-red-500/5 border-red-500/20 text-red-500"

@@ -13,8 +13,8 @@ interface PullToRefreshProps {
 const PullToRefreshWrapper: React.FC<PullToRefreshProps> = ({
 	children,
 	onRefresh,
-	threshold = 80,
-	maxPull = 100,
+	threshold = 40,
+	maxPull = 60,
 	disabled = false,
 }) => {
 	const [pullDistance, setPullDistance] = useState(0);
@@ -24,7 +24,7 @@ const PullToRefreshWrapper: React.FC<PullToRefreshProps> = ({
 	const startY = useRef(0);
 	const containerRef = useRef<HTMLDivElement>(null);
 
-	// Disable native browser pull-to-refresh when our custom version is active
+	// Disable native browser pull-to-refresh when custom version is active
 	useEffect(() => {
 		if (disabled) return;
 
@@ -57,7 +57,6 @@ const PullToRefreshWrapper: React.FC<PullToRefreshProps> = ({
 		const distance = currentY - startY.current;
 
 		if (distance > 0 && container.scrollTop <= 0) {
-			e.preventDefault();
 			const resistance = 0.5;
 			const adjustedDistance = Math.min(distance * resistance, maxPull);
 			setPullDistance(adjustedDistance);

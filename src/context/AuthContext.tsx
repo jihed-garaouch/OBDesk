@@ -197,7 +197,7 @@ export const AuthContextProvider = ({
 		};
 	}, []);
 
-	const values: AuthContextType = {
+	const values = {
 		signUpWithEmail,
 		signInWithEmail,
 		session,
@@ -211,7 +211,7 @@ export const AuthContextProvider = ({
 	return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 };
 
-export const UserAuth = (): AuthContextType => {
+export const UserAuth = () => {
 	const ctx = useContext(AuthContext);
 	if (!ctx) throw new Error("UserAuth must be used within AuthContextProvider");
 	return ctx;

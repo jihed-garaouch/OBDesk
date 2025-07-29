@@ -6,6 +6,7 @@ import {
 	getDeleteSyncQueue,
 	getUserLocationFromIndexedDB,
 	removeFromDeleteSyncQueue,
+	saveCitiesToIndexedDB,
 	saveCityToIndexedDB,
 	saveUserLocationToIndexedDB,
 } from "@/utils/indexedDb/worldClock";
@@ -18,6 +19,7 @@ import useNetworkStatus from "@/hooks/useNetworkStatus";
 import { UserAuth } from "@/context/AuthContext";
 import { supabase } from "@/utils/supabase/supabaseClient";
 import { toast } from "sonner";
+import { formatIntlHourInZone, formatIntlDate, formatIntlTime } from "@/utils";
 
 export type TimeZone = {
 	city: string;
@@ -37,9 +39,7 @@ type WorldClockContextType = {
 	handleDeleteCity: (timezone: string) => Promise<void>;
 };
 
-const WorldClockContext = createContext<WorldClockContextType | undefined>(
-	undefined
-);
+const WorldClockContext = createContext<WorldClockContextType | null>(null);
 
 export const WorldClockProvider = ({
 	children,
@@ -57,29 +57,13 @@ export const WorldClockProvider = ({
 
 		const now = new Date(new Date().toLocaleString("en-US", { timeZone: tz }));
 
-		const formattedTime = new Intl.DateTimeFormat("en-US", {
-			hour: "2-digit",
-			minute: "2-digit",
-			second: "2-digit",
-			hour12: true,
-			timeZone: tz,
-		}).format(now);
+		const formattedTime = formatIntlTime(tz, now);
 
 		const [time, ampm] = formattedTime.split(" ");
 
-		const date = new Intl.DateTimeFormat("en-US", {
-			weekday: "long",
-			month: "long",
-			day: "numeric",
-			year: "numeric",
-			timeZone: tz,
-		}).format(now);
+		const date = formatIntlDate(tz, now);
 
-		const hourInZone = +new Intl.DateTimeFormat("en-US", {
-			hour: "2-digit",
-			hour12: false,
-			timeZone: tz,
-		}).format(now);
+		const hourInZone = formatIntlHourInZone(tz, now);
 
 		const timeOfDay = hourInZone >= 6 && hourInZone < 18 ? "day" : "night";
 
@@ -102,10 +86,8 @@ export const WorldClockProvider = ({
 		let savedCities: TimeZone[] = [];
 		if (isOnline && user) {
 			savedCities = await fetchUserCities(user); // from Supabase
-			// Update IndexedDB
-			for (const city of savedCities) {
-				await saveCityToIndexedDB(city);
-			}
+			// Update IndexedDB with Batch Write
+			await saveCitiesToIndexedDB(savedCities);
 		} else {
 			savedCities = await getCitiesFromIndexedDB(); // fallback offline
 		}
@@ -136,11 +118,6 @@ export const WorldClockProvider = ({
 		}
 
 		// Offline fallback handling
-		if (!firstLocation && savedCities.length) {
-			firstLocation = savedCities.shift()!;
-			firstLocation.active = true;
-		}
-
 		if (!firstLocation) {
 			const detected = detectUserTimeZone();
 			firstLocation = {
@@ -155,11 +132,10 @@ export const WorldClockProvider = ({
 			if (isOnline) await saveUserLocationToIndexedDB(firstLocation);
 		}
 
-		const hydratedCities = [firstLocation, ...savedCities].map(
-			(city, index) =>
-				index === 0
-					? { ...city, ...detectUserTimeZone(city.timezone, true) } 
-					: { ...city, ...detectUserTimeZone(city.timezone, false) } 
+		const hydratedCities = [firstLocation, ...savedCities].map((city, index) =>
+			index === 0
+				? { ...city, ...detectUserTimeZone(city.timezone, true) }
+				: { ...city, ...detectUserTimeZone(city.timezone, false) }
 		);
 
 		setTimeZones(hydratedCities);
@@ -177,26 +153,14 @@ export const WorldClockProvider = ({
 					const now = new Date(
 						new Date().toLocaleString("en-US", { timeZone: zone.timezone })
 					);
-					const formattedTime = new Intl.DateTimeFormat("en-US", {
-						hour: "2-digit",
-						minute: "2-digit",
-						second: "2-digit",
-						hour12: true,
-						timeZone: zone.timezone,
-					}).format(now);
+					const formattedTime = formatIntlTime(zone.timezone, now);
+
 					const [time, ampm] = formattedTime.split(" ");
-					const date = new Intl.DateTimeFormat("en-US", {
-						weekday: "long",
-						month: "long",
-						day: "numeric",
-						year: "numeric",
-						timeZone: zone.timezone,
-					}).format(now);
-					const hourInZone = +new Intl.DateTimeFormat("en-US", {
-						hour: "2-digit",
-						hour12: false,
-						timeZone: zone.timezone,
-					}).format(now);
+
+					const date = formatIntlDate(zone.timezone, now);
+
+					const hourInZone = formatIntlHourInZone(zone.timezone, now);
+
 					const timeOfDay =
 						hourInZone >= 6 && hourInZone < 18 ? "day" : "night";
 					return { ...zone, time, ampm, date, timeOfDay };
@@ -221,29 +185,13 @@ export const WorldClockProvider = ({
 			new Date().toLocaleString("en-US", { timeZone: timezone })
 		);
 
-		const formattedTime = new Intl.DateTimeFormat("en-US", {
-			hour: "2-digit",
-			minute: "2-digit",
-			second: "2-digit",
-			hour12: true,
-			timeZone: timezone,
-		}).format(now);
+		const formattedTime = formatIntlTime(timezone, now);
 
 		const [time, ampm] = formattedTime.split(" ");
 
-		const date = new Intl.DateTimeFormat("en-US", {
-			weekday: "long",
-			month: "long",
-			day: "numeric",
-			year: "numeric",
-			timeZone: timezone,
-		}).format(now);
+		const date = formatIntlDate(timezone, now);
 
-		const hourInZone = +new Intl.DateTimeFormat("en-US", {
-			hour: "2-digit",
-			hour12: false,
-			timeZone: timezone,
-		}).format(now);
+		const hourInZone = formatIntlHourInZone(timezone, now);
 
 		const timeOfDay = hourInZone >= 6 && hourInZone < 18 ? "day" : "night";
 

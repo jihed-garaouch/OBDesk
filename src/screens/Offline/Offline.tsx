@@ -17,7 +17,7 @@ const OfflineScreen = () => {
 			<img
 				src='/offline-bg.jpg'
 				alt='Offline-Background'
-				className={`fixed top-0 left-0 w-screen h-screen object-cover -z-10 ${
+				className={`fixed top-0 left-0 w-screen h-screen object-cover z-0 ${
 					isDarkTheme ? "" : "invert"
 				}`}
 				style={{ pointerEvents: "none" }}
