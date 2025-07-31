@@ -1,9 +1,9 @@
+import Skeleton from "@/components/ui/Skeleton";
 import { UseWorldClock } from "@/context/WorldClockContext";
 import { FiSun } from "react-icons/fi";
 import { IoIosArrowRoundForward } from "react-icons/io";
 import { MdOutlineModeNight } from "react-icons/md";
 import { Link } from "react-router-dom";
-import Skeleton from "../ui/Skeleton";
 
 const MiniWorldClock = () => {
 	const { currentRegion, timeZones } = UseWorldClock();

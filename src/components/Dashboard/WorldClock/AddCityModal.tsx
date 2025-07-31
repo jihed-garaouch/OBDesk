@@ -1,7 +1,7 @@
 import { fetchTimezones } from "@/api/endpoints/timezones";
+import Skeleton from "@/components/ui/Skeleton";
 import { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
-import Skeleton from "../ui/Skeleton";
 
 interface AddCityModalProps {
 	isOpen: boolean;
@@ -9,7 +9,7 @@ interface AddCityModalProps {
 	onAddCity: (city: string) => void;
 }
 
-export const AddCityModal = ({
+const AddCityModal = ({
 	isOpen,
 	onClose,
 	onAddCity,
@@ -95,3 +95,5 @@ export const AddCityModal = ({
 		</div>
 	);
 };
+
+export default AddCityModal;

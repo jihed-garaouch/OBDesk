@@ -1,5 +1,5 @@
-import MiniCurrency from "@/components/Dashboard/MiniCurrency";
-import MiniWorldClock from "@/components/Dashboard/MiniWorldClock";
+import MiniCurrency from "@/components/Dashboard/Currency/MiniCurrency";
+import MiniWorldClock from "@/components/Dashboard/WorldClock/MiniWorldClock";
 import Skeleton from "@/components/ui/Skeleton";
 import { UserAuth } from "@/context/AuthContext";
 import { UseWorldClock } from "@/context/WorldClockContext";

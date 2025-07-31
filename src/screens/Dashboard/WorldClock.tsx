@@ -1,5 +1,5 @@
-import { AddCityModal } from "@/components/Dashboard/AddCityModal";
-import DeleteCityModal from "@/components/Dashboard/DeleteCityModal";
+import AddCityModal from "@/components/Dashboard/WorldClock/AddCityModal";
+import DeleteCityModal from "@/components/Dashboard/WorldClock/DeleteCityModal";
 import LoadingScreen from "@/components/Loading/Loading";
 import { UseWorldClock } from "@/context/WorldClockContext";
 import useNetworkStatus from "@/hooks/useNetworkStatus";
@@ -25,14 +25,8 @@ const WorldClockScreen = () => {
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 	const [cityToBeDeleted, setCityToBeDeleted] = useState("");
 
-	const {
-		currentRegion,
-		timeZones,
-		handleAddCity,
-		handleDeleteCity,
-	} = UseWorldClock();
-
-
+	const { currentRegion, timeZones, handleAddCity, handleDeleteCity } =
+		UseWorldClock();
 
 	if (timeZones.length === 0) return <LoadingScreen />;
 

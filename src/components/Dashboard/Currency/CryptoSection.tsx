@@ -1,3 +1,5 @@
+import CryptoDropdown from "@/components/ui/CryptoDropdown";
+import CurrencyDropdown from "@/components/ui/CurrencyDropdown";
 import { UseCrypto } from "@/context/CryptoContext";
 import { ImLoop2 } from "react-icons/im";
 import {
@@ -9,8 +11,6 @@ import {
 	XAxis,
 	YAxis,
 } from "recharts";
-import CurrencyDropdown from "../ui/CurrencyDropdown";
-import CryptoDropdown from "../ui/CryptoDropdown";
 
 type TimeRange = "24h" | "7d" | "30d";
 
