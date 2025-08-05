@@ -73,8 +73,8 @@ const PieChartBreakdown = ({
 
 				{/* Center Text */}
 				<div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center'>
-					<p className='text-foreground text-lg'>{title}</p>
-					<p className='text-[36px] font-bold'>
+					<p className='text-foreground text-base'>{title}</p>
+					<p className='text-[32px] font-bold'>
 						{currencySymbols[globalFinanceCurrency]}
 						{isStandalone
 							? formatReadableBalance(total)

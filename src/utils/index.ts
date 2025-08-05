@@ -1,3 +1,4 @@
+import type { TransactionType } from "@/context/FinanceContext";
 import { useEffect, useState } from "react";
 
 export const formatNumberForDisplay = (value: string): string => {
@@ -68,29 +69,51 @@ export const formatIntlHourInZone = (timezone: string, date: Date): number => {
 	}).format(date);
 };
 
-export const formatReadableBalance = (num: number) => {
+export const formatReadableBalance = (num: number, isLarge: boolean = false) => {
 	const sign = num < 0 ? "-" : "";
 	const absNum = Math.abs(num);
 
 	if (absNum >= 1_000_000_000_000) {
-		return (
-			sign +
-			(absNum / 1_000_000_000_000)
-				.toFixed(1)
-				.replace(/\.0$/, "") +
-			"T"
-		);
+		if (isLarge) {
+			return (
+				sign +
+				(absNum / 1_000_000_000_000)
+					.toFixed(1)
+					.replace(/\.0$/, "") +
+				"T"
+			);
+		} else {
+			return (
+				sign +
+				(absNum / 1_000_000_000_000)
+					.toFixed(1)
+					.replace(/\.0$/, "") +
+				"T"
+			);
+		}
 	}
+
 	if (absNum >= 1_000_000_000) {
-		return (
-			sign +
-			(absNum / 1_000_000_000)
-				.toFixed(1)
-				.replace(/\.0$/, "") +
-			"B"
-		);
+		if (isLarge) {
+			return (
+				sign +
+				(absNum / 1_000_000_000)
+					.toFixed(1)
+					.replace(/\.0$/, "") +
+				"B"
+			);
+		} else {
+			return (
+				sign +
+				(absNum / 1_000_000_000)
+					.toFixed(1)
+					.replace(/\.0$/, "") +
+				"B"
+			);
+		}
 	}
-	if (absNum >= 1_000_000) {
+
+	if (!isLarge && absNum >= 1_000_000) {
 		return (
 			sign +
 			(absNum / 1_000_000)
@@ -99,8 +122,8 @@ export const formatReadableBalance = (num: number) => {
 			"M"
 		);
 	}
-	
-	// if (absNum >= 1_000) {
+
+	// if (!isLarge && absNum >= 1_000) {
 	// 	return (
 	// 		sign +
 	// 		(absNum / 1_000)
@@ -137,4 +160,73 @@ export const formatReadableDate = (dateString: string) => {
 			: "th";
 
 	return `${day}${ordinal} ${month} ${year}`;
+};
+
+export const parseReadableDateToInput = (dateStr: string): string => {
+	const regex = /^(\d{1,2})(?:st|nd|rd|th)? ([A-Za-z]+) (\d{4})$/;
+	const match = dateStr.match(regex);
+	if (!match) return "";
+
+	const day = match[1].padStart(2, "0");
+	const monthName = match[2];
+	const year = match[3];
+
+	const monthIndex = [
+		"January",
+		"February",
+		"March",
+		"April",
+		"May",
+		"June",
+		"July",
+		"August",
+		"September",
+		"October",
+		"November",
+		"December",
+	].findIndex((m) => m.toLowerCase() === monthName.toLowerCase());
+
+	if (monthIndex === -1) return "";
+
+	const month = String(monthIndex + 1).padStart(2, "0");
+	return `${year}-${month}-${day}`;
+};
+
+export const generateSmartYearOptions = (
+	transactions: TransactionType[],
+	pastYears = 20,
+	futureYears = 5
+) => {
+	const currentYear = new Date().getFullYear();
+
+	let startYear = currentYear - pastYears;
+	const endYear = currentYear + futureYears;
+
+	if (transactions.length > 0) {
+		const earliestTransactionYear = Math.min(
+			...transactions.map((t) => new Date(t.date).getFullYear())
+		);
+
+		if (earliestTransactionYear < startYear) {
+			startYear = earliestTransactionYear;
+		}
+	}
+
+	return Array.from({ length: endYear - startYear + 1 }, (_, i) => {
+		const year = endYear - i;
+		return { id: year, name: String(year) };
+	});
+};
+
+const parseTransactionDate = (dateStr: string, timeStr: string) => {
+  const cleanDate = dateStr.replace(/(\d+)(st|nd|rd|th)/, "$1");
+  return new Date(`${cleanDate} ${timeStr}`);
+};
+
+export const sortTransactions = (transactions: TransactionType[]) => {
+  return [...transactions].sort((a, b) => {
+    const dateA = parseTransactionDate(a.date, a.time);
+    const dateB = parseTransactionDate(b.date, b.time);
+    return dateB.getTime() - dateA.getTime(); // newest → oldest
+  });
 };

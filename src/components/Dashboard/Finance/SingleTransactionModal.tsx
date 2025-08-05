@@ -43,7 +43,7 @@ const SingleTransactionModal = ({
 						</span>
 					</div>
 					<p
-						className={`text-4xl font-bold ${
+						className={`text-4xl font-bold text-center ${
 							selectedTransaction?.transactionType === "income"
 								? "text-success"
 								: "text-destructive"

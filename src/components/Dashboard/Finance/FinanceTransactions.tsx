@@ -16,6 +16,8 @@ import SingleTransactionModal from "./SingleTransactionModal";
 import { currencySymbols } from "@/utils/constants";
 import { UseFinance, type TransactionType } from "@/context/FinanceContext";
 import { Link } from "react-router-dom";
+import DeleteTransactionModal from "./DeleteTransactionModal";
+import { formatReadableBalance } from "@/utils";
 
 interface FinanceTransactionsProps {
 	transactionType: "income" | "expense";
@@ -49,9 +51,18 @@ const FinanceTransactions = ({
 		others: <GiTakeMyMoney />,
 	};
 
-	const { globalFinanceCurrency, setShowFinanceModal, selectedDropdownOption } =
-		UseFinance();
+	const {
+		globalFinanceCurrency,
+		setShowFinanceModal,
+		selectedDropdownOption,
+		transactionToUpdate,
+		setTransactionToUpdate,
+		setIsUpdateTransaction,
+		handleDeleteTransaction,
+	} = UseFinance();
 	const [showTransactionModal, setShowTransactionModal] = useState(false);
+	const [showDeleteTransactionModal, setShowDeleteTransactionModal] =
+		useState(false);
 	const [selectedTransaction, setSelectedTransaction] =
 		useState<TransactionTypeWithIcon | null>(null);
 
@@ -120,13 +131,25 @@ const FinanceTransactions = ({
 								</div>
 							</div>
 						</div>
-						<div className='font-medium flex flex-col md:flex-row-reverse gap-2 md:gap-5 items-center'>
+						<div className='font-medium flex flex-col md:flex-row-reverse gap-2 md:gap-5 md:items-center items-end'>
 							{isStandalone && (
 								<div className='flex gap-2 items-center text-base md:text-xl'>
-									<span>
+									<span className="p-[6px] rounded-full bg-foreground text-background"
+										onClick={(e) => {
+											e.stopPropagation();
+											setTransactionToUpdate(transaction);
+											setShowFinanceModal(true);
+											setIsUpdateTransaction(true);
+										}}>
 										<MdEdit />
 									</span>
-									<span className='hover:text-destructive'>
+									<span
+										onClick={(e) => {
+											e.stopPropagation();
+											setTransactionToUpdate(transaction);
+											setShowDeleteTransactionModal(true);
+										}}
+										className='p-[6px] rounded-full bg-foreground text-destructive'>
 										<MdOutlineDelete />
 									</span>
 								</div>
@@ -136,10 +159,11 @@ const FinanceTransactions = ({
 									transactionType === "income"
 										? "text-success"
 										: "text-destructive"
-								}`}>
+								} text-center`}>
 								{transactionType === "income" ? "+" : "-"}
 								{currencySymbols[globalFinanceCurrency]}
-								{transaction.amount.toLocaleString()}
+								{formatReadableBalance(transaction.amount, true)}
+								{/* {transaction.amount.toLocaleString()} */}
 							</span>
 						</div>
 					</div>
@@ -164,6 +188,14 @@ const FinanceTransactions = ({
 					setShowTransactionModal(false);
 				}}
 				selectedTransaction={selectedTransaction}
+			/>
+			<DeleteTransactionModal
+				isOpen={showDeleteTransactionModal}
+				onClose={() => {
+					setShowDeleteTransactionModal(false);
+				}}
+				onDeleteTransaction={handleDeleteTransaction}
+				transactionToBeDeleted={transactionToUpdate || ({} as TransactionType)}
 			/>
 		</div>
 	);

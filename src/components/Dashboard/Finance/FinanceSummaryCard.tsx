@@ -2,7 +2,7 @@ import CurrencyDropdown from "@/components/ui/CurrencyDropdown";
 import SelectDropdown from "@/components/ui/SelectDropdown";
 import { UseCurrency } from "@/context/CurrencyContext";
 import { UseFinance } from "@/context/FinanceContext";
-import { formatReadableBalance } from "@/utils";
+import { formatReadableBalance, generateSmartYearOptions } from "@/utils";
 import { currencySymbols } from "@/utils/constants";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 import { MdOutlineArrowForward, MdOutlineArrowOutward } from "react-icons/md";
@@ -55,11 +55,7 @@ const FinanceSummaryCard = ({
 
 	const selectedYear = selectedDropdownOption.summaryYear;
 
-	const currentYear = new Date().getFullYear();
-	const yearOptions = Array.from({ length: 10 }).map((_, i) => ({
-		id: currentYear - i,
-		name: String(currentYear - i),
-	}));
+	const yearOptions = generateSmartYearOptions(transactions);
 
 	const handleMonthChange = (val: string) => {
 		setSelectedDropdownOption((prev) => ({
@@ -67,6 +63,8 @@ const FinanceSummaryCard = ({
 			summaryMonth: val,
 			incomeMonth: val,
 			expenseMonth: val,
+			incomeYear: prev.summaryYear,
+			expenseYear: prev.summaryYear,
 		}));
 	};
 
@@ -76,6 +74,8 @@ const FinanceSummaryCard = ({
 			summaryYear: val,
 			incomeYear: val,
 			expenseYear: val,
+			incomeMonth: prev.summaryMonth,
+			expenseMonth: prev.summaryMonth,
 		}));
 	};
 

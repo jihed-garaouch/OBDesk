@@ -8,7 +8,7 @@ import {
 import { currencySymbols } from "@/utils/constants";
 import { MdOutlineArrowOutward } from "react-icons/md";
 import FinanceTransactions from "./FinanceTransactions";
-import { formatReadableBalance } from "@/utils";
+import { formatReadableBalance, generateSmartYearOptions, sortTransactions } from "@/utils";
 
 interface FinanceDetailsCardProps {
 	title: string;
@@ -44,11 +44,7 @@ const FinanceDetailsCard = ({
 			? selectedDropdownOption.incomeYear
 			: selectedDropdownOption.expenseYear;
 
-	const currentYear = new Date().getFullYear();
-	const yearOptions = Array.from({ length: 10 }).map((_, i) => ({
-		id: currentYear - i,
-		name: String(currentYear - i),
-	}));
+	const yearOptions = generateSmartYearOptions(transactions);
 
 	const handleMonthChange = (val: string) => {
 		if (category === "income") {
@@ -78,7 +74,8 @@ const FinanceDetailsCard = ({
 		transactions.filter(
 			(transaction) =>
 				transaction.transactionType === "expense" &&
-				transaction.date.split(" ")[1] === selectedDropdownOption.expenseMonth &&
+				transaction.date.split(" ")[1] ===
+					selectedDropdownOption.expenseMonth &&
 				transaction.date.split(" ")[2] === selectedDropdownOption.expenseYear
 		) || [];
 
@@ -152,11 +149,11 @@ const FinanceDetailsCard = ({
 					transactions={
 						category === "income"
 							? isStandalone
-								? incomeTransactions
-								: incomeTransactions.slice(0, 4)
+								? sortTransactions(incomeTransactions)
+								: sortTransactions(incomeTransactions).slice(0, 4)
 							: isStandalone
-							? expenseTransactions
-							: expenseTransactions.slice(0, 4)
+							? sortTransactions(expenseTransactions)
+							: sortTransactions(expenseTransactions).slice(0, 4)
 					}
 				/>
 			</div>
