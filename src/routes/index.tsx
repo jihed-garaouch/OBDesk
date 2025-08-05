@@ -3,6 +3,7 @@ import DashboardLayout from "@/components/Dashboard/DashboardLayout";
 import CurrencyScreen from "@/screens/Dashboard/Currency";
 import FinanceScreen from "@/screens/Dashboard/Finance";
 import HomeScreen from "@/screens/Dashboard/Home";
+import SingleFinanceScreen from "@/screens/Dashboard/SingleFinance";
 import TodoScreen from "@/screens/Dashboard/Todo";
 import WorldClockScreen from "@/screens/Dashboard/WorldClock";
 import LoginScreen from "@/screens/Login/Login";
@@ -31,7 +32,12 @@ const routes: AppRoute[] = [
 			{ path: "", element: <HomeScreen /> },
 			{ path: "world-clock", element: <WorldClockScreen /> },
 			{ path: "currency", element: <CurrencyScreen /> },
-			{ path: "finance", element: <FinanceScreen /> },
+			{
+				path: "finance",
+				element: <FinanceScreen />,
+			},
+			{ path: "finance/income", element: <SingleFinanceScreen /> },
+			{ path: "finance/expense", element: <SingleFinanceScreen /> },
 			{ path: "todo", element: <TodoScreen /> },
 		],
 	},

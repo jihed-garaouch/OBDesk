@@ -1,9 +1,39 @@
-import { useState } from "react";
-import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
-import { MdOutlineArrowOutward } from "react-icons/md";
+import AddFinanceModal from "@/components/Dashboard/Finance/AddFinanceModal";
+import FinanceDetailsCard from "@/components/Dashboard/Finance/FinanceDetailsCard";
+import FinanceSummaryCard from "@/components/Dashboard/Finance/FinanceSummaryCard";
+import PieChartBreakdown from "@/components/ui/PieChartBreakdown";
+import { UseFinance } from "@/context/FinanceContext";
 
 const FinanceScreen = () => {
-	const [showBalance, setShowBalance] = useState(true);
+	const {
+		selectedDropdownOption,
+		setSelectedDropdownOption,
+		showBalance,
+		setShowBalance,
+		transactions,
+		setShowFinanceModal,
+		showFinanceModal,
+	} = UseFinance();
+
+	const totalIncome =
+		transactions
+			.filter(
+				(t) =>
+					t.transactionType === "income" &&
+					t.date.split(" ")[1] === selectedDropdownOption.summaryMonth &&
+					t.date.split(" ")[2] === selectedDropdownOption.summaryYear
+			)
+			.reduce((sum, t) => sum + t.amount, 0) || 0;
+
+	const totalExpense =
+		transactions
+			.filter(
+				(t) =>
+					t.transactionType === "expense" &&
+					t.date.split(" ")[1] === selectedDropdownOption.summaryMonth &&
+					t.date.split(" ")[2] === selectedDropdownOption.summaryYear
+			)
+			.reduce((sum, t) => sum + t.amount, 0) || 0;
 
 	return (
 		<div className='h-full px-4'>
@@ -11,42 +41,44 @@ const FinanceScreen = () => {
 			<p className='text-xs mb-6'>
 				Track balances, expenses, and incoming funds with precision.
 			</p>
-			<div className='flex'>
-				<div className='mb-4 py-4 px-6 border border-foreground/20 w-full md:w-fit min-w-[300px] rounded-[20px] shadow-lg'>
-					<p className='text-sm font-medium'>Total Balance</p>
-					<div className='flex items-center gap-4'>
-						<p className='text-[2.5rem] font-bold'>
-							{showBalance ? "$134,658.12" : "********"}
-						</p>
-						<span
-							className='text-xl cursor-pointer'
-							onClick={() => setShowBalance((prev) => !prev)}>
-							{showBalance ? <IoEyeOutline /> : <IoEyeOffOutline />}
-						</span>
+			<div className='flex flex-col gap-5 md:gap-2'>
+				<div className='flex flex-col items-start xl:flex-row xl:items-center gap-5 mb-5'>
+					<div>
+						<FinanceSummaryCard
+							showBalance={showBalance}
+							setShowBalance={setShowBalance}
+						/>
 					</div>
-					<div className='h-[1px] rounded-full w-full bg-foreground mb-3 mt-2'></div>
-					<div className='flex justify-between gap-3'>
-						<div>
-							<p className='text-xs font-medium'>Income</p>
-							<p className='text-[1.3rem] font-bold'>
-								{showBalance ? "$14,658.12" : "********"}
-							</p>
-						</div>
-						<div>
-							<p className='text-xs font-medium'>Expense</p>
-							<p className='text-[1.3rem] font-bold'>
-								{showBalance ? "$14,658.12" : "********"}
-							</p>
-						</div>
-					</div>
-					<div className='mt-4'>
-						<button className='flex items-center justify-center gap-2 text-xs md:text-sm font-medium cursor-pointer bg-black text-white border-foreground border p-2 min-w-[100px] rounded-full w-fit h-fit active:scale-95 transition-all duration-500 ease-in-out'>
-							<span>Add</span>
-							<MdOutlineArrowOutward className='text-lg' />
-						</button>
+					<div className='w-full md:w-[70%] mx-auto'>
+						<PieChartBreakdown
+							data={[
+								{ label: "Income", value: totalIncome, color: "#5A31F4" },
+								{ label: "Expenses", value: totalExpense, color: "#C792F9" },
+							]}
+						/>
 					</div>
 				</div>
+				<div className='flex items-start flex-wrap gap-2 md:gap-5'>
+					<FinanceDetailsCard
+						title='Income'
+						category='income'
+						selectedDropdownOption={selectedDropdownOption}
+						setSelectedDropdownOption={setSelectedDropdownOption}
+					/>
+					<FinanceDetailsCard
+						title='Expense'
+						category='expense'
+						selectedDropdownOption={selectedDropdownOption}
+						setSelectedDropdownOption={setSelectedDropdownOption}
+					/>
+				</div>
 			</div>
+			<AddFinanceModal
+				isOpen={showFinanceModal}
+				onClose={() => {
+					setShowFinanceModal(false);
+				}}
+			/>
 		</div>
 	);
 };

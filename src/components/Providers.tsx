@@ -2,6 +2,7 @@ import PullToRefreshWrapper from "@/components/PullToRefreshWrapper";
 import { AuthContextProvider, UserAuth } from "@/context/AuthContext";
 import { CryptoProvider } from "@/context/CryptoContext";
 import { CurrencyProvider } from "@/context/CurrencyContext";
+import { FinanceProvider } from "@/context/FinanceContext";
 import { MusicPlayerProvider } from "@/context/MusicPlayerContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { UseWorldClock, WorldClockProvider } from "@/context/WorldClockContext";
@@ -47,7 +48,9 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
 						<WorldClockProvider>
 							<CurrencyProvider>
 								<CryptoProvider>
-									<ProvidersInner>{children}</ProvidersInner>
+									<FinanceProvider>
+										<ProvidersInner>{children}</ProvidersInner>
+									</FinanceProvider>
 								</CryptoProvider>
 							</CurrencyProvider>
 						</WorldClockProvider>

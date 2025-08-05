@@ -67,3 +67,74 @@ export const formatIntlHourInZone = (timezone: string, date: Date): number => {
 		timeZone: timezone,
 	}).format(date);
 };
+
+export const formatReadableBalance = (num: number) => {
+	const sign = num < 0 ? "-" : "";
+	const absNum = Math.abs(num);
+
+	if (absNum >= 1_000_000_000_000) {
+		return (
+			sign +
+			(absNum / 1_000_000_000_000)
+				.toFixed(1)
+				.replace(/\.0$/, "") +
+			"T"
+		);
+	}
+	if (absNum >= 1_000_000_000) {
+		return (
+			sign +
+			(absNum / 1_000_000_000)
+				.toFixed(1)
+				.replace(/\.0$/, "") +
+			"B"
+		);
+	}
+	if (absNum >= 1_000_000) {
+		return (
+			sign +
+			(absNum / 1_000_000)
+				.toFixed(1)
+				.replace(/\.0$/, "") +
+			"M"
+		);
+	}
+	
+	// if (absNum >= 1_000) {
+	// 	return (
+	// 		sign +
+	// 		(absNum / 1_000)
+	// 			.toFixed(1)
+	// 			.replace(/\.0$/, "") +
+	// 		"K"
+	// 	);
+	// }
+
+	return (
+		sign +
+		absNum.toLocaleString("en-US", {
+			minimumFractionDigits: 2,
+			maximumFractionDigits: 2,
+		})
+	);
+};
+
+
+export const formatReadableDate = (dateString: string) => {
+	const date = new Date(dateString);
+
+	const day = date.getDate();
+	const month = date.toLocaleString("en-US", { month: "long" });
+	const year = date.getFullYear();
+
+	const ordinal =
+		day % 10 === 1 && day !== 11
+			? "st"
+			: day % 10 === 2 && day !== 12
+			? "nd"
+			: day % 10 === 3 && day !== 13
+			? "rd"
+			: "th";
+
+	return `${day}${ordinal} ${month} ${year}`;
+};

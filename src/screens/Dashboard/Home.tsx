@@ -1,12 +1,15 @@
 import MiniCurrency from "@/components/Dashboard/Currency/MiniCurrency";
+import FinanceSummaryCard from "@/components/Dashboard/Finance/FinanceSummaryCard";
 import MiniWorldClock from "@/components/Dashboard/WorldClock/MiniWorldClock";
 import Skeleton from "@/components/ui/Skeleton";
 import { UserAuth } from "@/context/AuthContext";
+import { UseFinance } from "@/context/FinanceContext";
 import { UseWorldClock } from "@/context/WorldClockContext";
 
 const HomeScreen = () => {
 	const { user } = UserAuth();
 	const { timeZones } = UseWorldClock();
+	const { setShowBalance, showBalance } = UseFinance();
 
 	const firstName = user?.first_name;
 	const fullName = user?.full_name;
@@ -33,10 +36,16 @@ const HomeScreen = () => {
 				</div>
 			)}
 			<div className='mb-4 w-full flex flex-col gap-5 md:flex-row rounded-[20px]'>
-				<div className='flex-[0.3]'>
+				<div className='flex-[1]'>
 					<MiniCurrency />
 				</div>
-				<div className='flex-1' />
+				<div className='flex-[1]'>
+					<FinanceSummaryCard
+						showBalance={showBalance}
+						setShowBalance={setShowBalance}
+						isWidget
+					/>
+				</div>
 			</div>
 		</div>
 	);

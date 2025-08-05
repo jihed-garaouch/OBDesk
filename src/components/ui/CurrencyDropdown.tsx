@@ -7,11 +7,13 @@ interface CurrencyDropdownProps {
 	value: string;
 	onChange: (value: string) => void;
 	currencies: Currency[];
+	isLeft?: boolean;
 }
 const CurrencyDropdown = ({
 	value,
 	onChange,
 	currencies,
+	isLeft = true,
 }: CurrencyDropdownProps) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [searchTerm, setSearchTerm] = useState("");
@@ -53,7 +55,10 @@ const CurrencyDropdown = ({
 			</button>
 
 			{isOpen && (
-				<div className='absolute top-full left-0 mt-2 w-64 bg-background border border-foreground/20 rounded-lg shadow-xl z-50 max-h-80 overflow-hidden'>
+				<div
+					className={`absolute top-full ${
+						isLeft ? "left-0" : "right-0"
+					} mt-2 w-64 bg-background border border-foreground/20 rounded-lg shadow-xl z-50 max-h-80 overflow-hidden`}>
 					<div className='p-2 border-b border-foreground/10 sticky top-0 bg-background'>
 						<div className='flex items-center gap-2 px-3 py-1.5 border border-foreground/30 rounded-full'>
 							<LuSearch className='w-4 h-4 text-foreground/50' />
