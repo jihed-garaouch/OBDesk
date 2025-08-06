@@ -80,7 +80,7 @@ const FinanceSummaryCard = ({
 	};
 
 	return (
-		<div className='py-4 px-6 border border-foreground/20 w-full h-full min-w-[300px] max-w-[350px] rounded-[20px] shadow-lg'>
+		<div className='py-4 px-6 border border-foreground/20 w-full h-full md:min-w-[300px] max-w-[350px] rounded-[20px] shadow-lg'>
 			<div className='flex gap-2 mb-4'>
 				<SelectDropdown value={selectedMonth} onChange={handleMonthChange} />
 				<SelectDropdown
@@ -91,7 +91,7 @@ const FinanceSummaryCard = ({
 			</div>
 			<p className='text-sm font-medium'>{`Total Balance for ${selectedMonth} ${selectedYear}`}</p>
 			<div className='flex items-center gap-4'>
-				<p className='text-[2rem] md:text-[2.5rem] font-bold overflow-auto'>
+				<p className='text-[1.8rem] md:text-[2.5rem] font-bold overflow-auto'>
 					{currencySymbols[globalFinanceCurrency]}
 					{showBalance ? formatReadableBalance(total) : "********"}
 				</p>
@@ -105,14 +105,14 @@ const FinanceSummaryCard = ({
 			<div className='flex items-center justify-between gap-3'>
 				<div className=''>
 					<p className='text-xs font-medium'>Income</p>
-					<p className='text-[1.3rem] font-bold overflow-auto'>
+					<p className='text-[1rem] md:text-[1.3rem] font-bold overflow-auto'>
 						{currencySymbols[globalFinanceCurrency]}
 						{showBalance ? formatReadableBalance(totalIncome) : "********"}
 					</p>
 				</div>
 				<div className=''>
 					<p className='text-xs font-medium'>Expense</p>
-					<p className='text-[1.3rem] font-bold overflow-auto'>
+					<p className='text-[1rem] md:text-[1.3rem] font-bold overflow-auto'>
 						{currencySymbols[globalFinanceCurrency]}
 						{showBalance ? formatReadableBalance(totalExpense) : "********"}
 					</p>
