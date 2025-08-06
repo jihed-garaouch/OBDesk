@@ -77,7 +77,7 @@ const SelectDropdown = ({
 			</button>
 
 			{isOpen && (
-				<div className='absolute top-full left-0 mt-2 w-full bg-background border border-foreground/20 rounded-lg shadow-xl z-50 max-h-60 overflow-hidden'>
+				<div className='absolute top-full left-0 mt-2 w-full min-w-[100px] bg-background border border-foreground/20 rounded-lg shadow-xl z-50 max-h-60 overflow-hidden'>
 					<div className='overflow-y-auto max-h-60'>
 						{options.length === 0 ? (
 							<div className='px-4 py-8 text-center text-sm text-foreground/50'>

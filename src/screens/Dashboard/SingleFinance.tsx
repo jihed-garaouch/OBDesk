@@ -17,7 +17,7 @@ const SingleFinanceScreen = () => {
 		location.pathname.split("/").pop() === "income" ? "income" : "expense";
 
 	return (
-		<div className='h-full px-4'>
+		<div className='h-full pr-4'>
 			<Link
 				to='/dashboard/finance'
 				className='text-sm flex gap-1 items-center mb-4'>

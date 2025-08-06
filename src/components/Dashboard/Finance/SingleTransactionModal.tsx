@@ -2,6 +2,7 @@ import { IoClose } from "react-icons/io5";
 import type { TransactionTypeWithIcon } from "./FinanceTransactions";
 import { UseFinance } from "@/context/FinanceContext";
 import { currencySymbols } from "@/utils/constants";
+import { formatReadableBalance } from "@/utils";
 
 const SingleTransactionModal = ({
 	isOpen,
@@ -43,14 +44,14 @@ const SingleTransactionModal = ({
 						</span>
 					</div>
 					<p
-						className={`text-4xl font-bold text-center ${
+						className={`text-[2.2rem] font-bold text-center ${
 							selectedTransaction?.transactionType === "income"
 								? "text-success"
 								: "text-destructive"
 						}`}>
 						{selectedTransaction?.transactionType === "income" ? "+" : "-"}
 						{currencySymbols[globalFinanceCurrency]}
-						{selectedTransaction?.amount.toLocaleString()}
+						{formatReadableBalance(selectedTransaction?.amount || 0, true)}
 					</p>
 					<p className='text-sm text-center w-[90%] max-h-[70px] overflow-auto'>
 						{selectedTransaction?.description}

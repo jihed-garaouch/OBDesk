@@ -109,7 +109,7 @@ const FinanceTransactions = ({
 								icon: transactionCategoryIcons[transaction.category],
 							});
 						}}
-						className='flex justify-between items-center gap-4 hover:bg-foreground/5 p-3 rounded-[10px] cursor-pointer transition-all duration-300 ease-in-out active:scale-[0.99]'>
+						className='flex justify-between items-center gap-4 hover:bg-foreground/5 p-3 rounded-[10px] cursor-pointer transition-all duration-300 ease-in-out active:scale-[0.99] lg:active:scale-[0.995]'>
 						<div className='flex gap-2 items-center'>
 							<div className='p-2 rounded-[10px] bg-foreground w-10 h-10 flex items-center justify-center'>
 								<span className='text-background text-2xl'>
@@ -159,11 +159,10 @@ const FinanceTransactions = ({
 									transactionType === "income"
 										? "text-success"
 										: "text-destructive"
-								} text-center`}>
+								} text-center text-xs lg:text-sm`}>
 								{transactionType === "income" ? "+" : "-"}
 								{currencySymbols[globalFinanceCurrency]}
 								{formatReadableBalance(transaction.amount, true)}
-								{/* {transaction.amount.toLocaleString()} */}
 							</span>
 						</div>
 					</div>

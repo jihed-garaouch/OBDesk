@@ -31,7 +31,7 @@ const WorldClockScreen = () => {
 	if (timeZones.length === 0) return <LoadingScreen />;
 
 	return (
-		<div className='px-4 h-full'>
+		<div className='pr-4 h-full'>
 			{/* Top Section */}
 			<div className='mb-4'>
 				<h1 className='font-bold text-sm md:text-[1.5rem] xl:text-[2rem]'>

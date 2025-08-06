@@ -1,4 +1,23 @@
+import useNetworkStatus from "@/hooks/useNetworkStatus";
+import {
+	addToTransactionSyncQueue,
+	deleteTransactionFromIndexedDB,
+	getTransactionsFromIndexedDB,
+	getTransactionSyncQueue,
+	removeFromSyncQueue,
+	saveTransactionsToIndexedDB,
+	saveTransactionToIndexedDB,
+	updateTransactionInIndexedDB,
+} from "@/utils/indexedDb/finance";
+import { supabase } from "@/utils/supabase/supabaseClient";
 import { createContext, useContext, useEffect, useState } from "react";
+import { UserAuth } from "./AuthContext";
+import {
+	addTransactionToSupabase,
+	deleteTransactionFromSupabase,
+	fetchUserTransactionsFromSupabase,
+	updateTransactionInSupabase,
+} from "@/utils/supabase/supabaseService";
 
 export type SelectedDropdownOption = {
 	incomeMonth: string;
@@ -49,6 +68,10 @@ export const FinanceProvider = ({
 }: {
 	children: React.ReactNode;
 }) => {
+	const { isOnline } = useNetworkStatus();
+	const { session } = UserAuth();
+	const user = session?.user;
+
 	const [globalFinanceCurrency, setGlobalFinanceCurrency] = useState<string>(
 		localStorage.getItem("globalFinanceCurrency") || "USD"
 	);
@@ -72,81 +95,155 @@ export const FinanceProvider = ({
 			expenseYear: defaultYear,
 			summaryYear: defaultYear,
 		});
-	const [transactions, setTransactions] = useState<TransactionType[]>([
-		{
-			id: "1",
-			date: "3rd December 2025",
-			description: "Salary",
-			amount: 350000,
-			category: "salary",
-			transactionType: "income",
-			time: "12:33 PM",
-		},
-		{
-			id: "2",
-			date: "1st December 2025",
-			description: "Salary",
-			amount: 350000,
-			category: "salary",
-			transactionType: "income",
-			time: "12:33 PM",
-		},
-		{
-			id: "3",
-			date: "4th December 2025",
-			description: "Salary",
-			amount: 350000,
-			category: "salary",
-			transactionType: "income",
-			time: "10:33 PM",
-		},
-		{
-			id: "4",
-			date: "2nd December 2025",
-			description: "Salary",
-			amount: 350000,
-			category: "salary",
-			transactionType: "income",
-			time: "12:33 PM",
-		},
-		{
-			id: "5",
-			date: "2nd December 2025",
-			description: "Salary",
-			amount: 350000,
-			category: "salary",
-			transactionType: "income",
-			time: "10:33 PM",
-		},
-		{
-			id: "6",
-			date: "2nd December 2025",
-			description: "Salary",
-			amount: 350000,
-			category: "salary",
-			transactionType: "income",
-			time: "10:33 AM",
-		},
-	]);
+	const [transactions, setTransactions] = useState<TransactionType[]>([]);
 
 	const [transactionToUpdate, setTransactionToUpdate] =
 		useState<TransactionType | null>(null);
 	const [isUpdateTransaction, setIsUpdateTransaction] =
 		useState<boolean>(false);
 
-	const handleAddTransaction = (transaction: TransactionType) => {
+	const handleAddTransaction = async (transaction: TransactionType) => {
 		setTransactions((prev) => [...prev, transaction]);
+		await saveTransactionToIndexedDB(transaction);
+
+		if (!isOnline) {
+			await addToTransactionSyncQueue({
+				id: transaction.id,
+				type: "create",
+				table: "transactions",
+				payload: transaction,
+				timestamp: Date.now(),
+			});
+			return;
+		}
+
+		if (user) await addTransactionToSupabase(transaction, user);
 	};
 
-	const handleEditTransaction = (transaction: TransactionType) => {
+	const handleEditTransaction = async (transaction: TransactionType) => {
 		setTransactions((prev) =>
 			prev.map((t) => (t.id === transaction.id ? transaction : t))
 		);
+		await updateTransactionInIndexedDB(transaction);
+
+		if (!isOnline) {
+			await addToTransactionSyncQueue({
+				id: transaction.id,
+				type: "update",
+				table: "transactions",
+				payload: transaction,
+				timestamp: Date.now(),
+			});
+			return;
+		}
+
+		if (user) await updateTransactionInSupabase(transaction, user);
 	};
 
-	const handleDeleteTransaction = (transaction: TransactionType) => {
+	const handleDeleteTransaction = async (transaction: TransactionType) => {
 		setTransactions((prev) => prev.filter((t) => t.id !== transaction.id));
+		await deleteTransactionFromIndexedDB(transaction);
+
+		if (!isOnline) {
+			await addToTransactionSyncQueue({
+				id: transaction.id,
+				type: "delete",
+				table: "transactions",
+				payload: transaction,
+				timestamp: Date.now(),
+			});
+			return;
+		}
+
+		if (user) await deleteTransactionFromSupabase(transaction.id, user);
 	};
+
+	const processSyncQueue = async () => {
+		const queue = await getTransactionSyncQueue();
+
+		for (const op of queue) {
+			if (!isOnline) break;
+
+			let success = false;
+
+			try {
+				if (op.type === "create") {
+					const tx = op.payload as TransactionType;
+					const payload = {
+						id: tx.id,
+						transaction_type: tx.transactionType,
+						category: tx.category,
+						description: tx.description,
+						amount: tx.amount,
+						date: tx.date,
+						time: tx.time,
+						user_id: user?.id,
+					};
+					const { error } = await supabase.from(op.table).insert([payload]);
+					if (!error) success = true;
+				}
+
+				if (op.type === "update") {
+					const tx = op.payload as TransactionType;
+					const payload = {
+						transaction_type: tx.transactionType,
+						category: tx.category,
+						description: tx.description,
+						amount: tx.amount,
+						date: tx.date,
+						time: tx.time,
+						updated_at: new Date().toISOString(),
+					};
+					const { error } = await supabase
+						.from(op.table)
+						.update(payload)
+						.eq("id", tx.id)
+						.eq("user_id", user?.id);
+					if (!error) success = true;
+				}
+
+				if (op.type === "delete") {
+					const tx = op.payload as { id: string };
+					const { error } = await supabase
+						.from(op.table)
+						.delete()
+						.eq("id", tx.id)
+						.eq("user_id", user?.id);
+					if (!error) success = true;
+				}
+			} catch (err) {
+				console.error("Offline transaction sync error:", err);
+			}
+
+			if (success) {
+				await removeFromSyncQueue(op.id);
+			} else {
+				console.warn("Sync failed for transaction operation:", op);
+			}
+		}
+	};
+
+	const loadTransactions = async () => {
+		if (isOnline) {
+			await processSyncQueue();
+		}
+
+		let savedTransactions: TransactionType[] = [];
+		if (isOnline && user) {
+			savedTransactions = await fetchUserTransactionsFromSupabase(user);
+
+			// Update IndexedDB with Batch Write
+			await saveTransactionsToIndexedDB(savedTransactions);
+		} else {
+			savedTransactions = await getTransactionsFromIndexedDB();
+		}
+
+		setTransactions(savedTransactions);
+	};
+
+	useEffect(() => {
+		if (user) loadTransactions();
+	}, [isOnline, user]);
 
 	useEffect(() => {
 		localStorage.setItem("globalFinanceCurrency", globalFinanceCurrency);

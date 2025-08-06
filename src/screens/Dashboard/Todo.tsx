@@ -1,6 +1,6 @@
 const TodoScreen = () => {
   return (
-    <div className="px-4 h-full">
+    <div className="pr-4 h-full">
       <h1 className="text-2xl font-bold mb-6">Todo List</h1>
       <div className="space-y-4">
         <div className="p-4 border border-[var(--border)] rounded-lg">

@@ -36,7 +36,7 @@ const FinanceScreen = () => {
 			.reduce((sum, t) => sum + t.amount, 0) || 0;
 
 	return (
-		<div className='h-full px-4'>
+		<div className='h-full pr-4'>
 			<h1 className='text-2xl font-bold'>Finance Tracker</h1>
 			<p className='text-xs mb-6'>
 				Track balances, expenses, and incoming funds with precision.
