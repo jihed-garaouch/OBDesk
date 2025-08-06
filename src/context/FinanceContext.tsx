@@ -59,6 +59,7 @@ interface FinanceContextType {
 	handleDeleteTransaction: (transaction: TransactionType) => void;
 	isUpdateTransaction: boolean;
 	setIsUpdateTransaction: React.Dispatch<React.SetStateAction<boolean>>;
+	loadTransactions: () => Promise<void>;
 }
 
 const FinanceContext = createContext<FinanceContextType | null>(null);
@@ -266,6 +267,7 @@ export const FinanceProvider = ({
 		setTransactionToUpdate,
 		isUpdateTransaction,
 		setIsUpdateTransaction,
+		loadTransactions,
 	};
 
 	return (

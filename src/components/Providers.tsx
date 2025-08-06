@@ -2,7 +2,7 @@ import PullToRefreshWrapper from "@/components/PullToRefreshWrapper";
 import { AuthContextProvider, UserAuth } from "@/context/AuthContext";
 import { CryptoProvider } from "@/context/CryptoContext";
 import { CurrencyProvider } from "@/context/CurrencyContext";
-import { FinanceProvider } from "@/context/FinanceContext";
+import { FinanceProvider, UseFinance } from "@/context/FinanceContext";
 import { MusicPlayerProvider } from "@/context/MusicPlayerContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { UseWorldClock, WorldClockProvider } from "@/context/WorldClockContext";
@@ -15,9 +15,10 @@ const ProvidersInner = ({ children }: { children: React.ReactNode }) => {
 	const { isOnline } = useNetworkStatus();
 	const { session } = UserAuth();
 	const { loadTimeZones } = UseWorldClock();
+	const { loadTransactions } = UseFinance();
 
 	const refreshAll = async () => {
-		await Promise.all([loadTimeZones()]);
+		await Promise.all([loadTimeZones(), loadTransactions()]);
 	};
 
 	const handleRefresh = async () => {
