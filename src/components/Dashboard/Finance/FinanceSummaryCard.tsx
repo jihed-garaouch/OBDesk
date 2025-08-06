@@ -91,7 +91,7 @@ const FinanceSummaryCard = ({
 			</div>
 			<p className='text-sm font-medium'>{`Total Balance for ${selectedMonth} ${selectedYear}`}</p>
 			<div className='flex items-center gap-4'>
-				<p className='text-[2.5rem] font-bold overflow-auto'>
+				<p className='text-[2rem] md:text-[2.5rem] font-bold overflow-auto'>
 					{currencySymbols[globalFinanceCurrency]}
 					{showBalance ? formatReadableBalance(total) : "********"}
 				</p>
