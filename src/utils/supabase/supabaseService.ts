@@ -163,7 +163,7 @@ export const fetchUserTransactionsFromSupabase = async (user: User) => {
 	return data.map((item) => ({
 		id: item.id,
 		transactionType: item.transaction_type,
-		category: item.category,
+		category: item.category.split(" ").join("_"),
 		description: item.description,
 		amount: item.amount,
 		date: item.date,
