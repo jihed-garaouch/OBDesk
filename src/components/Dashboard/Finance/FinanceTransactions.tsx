@@ -9,6 +9,7 @@ import {
 	MdOutlineAddCard,
 	MdOutlineArrowForward,
 	MdOutlineDelete,
+	MdSavings,
 } from "react-icons/md";
 import { PiStackPlusFill } from "react-icons/pi";
 import { RiHealthBookFill } from "react-icons/ri";
@@ -48,6 +49,7 @@ const FinanceTransactions = ({
 		healthcare: <RiHealthBookFill />,
 		education: <FaBookOpenReader />,
 		subscription: <MdOutlineAddCard />,
+		savings: <MdSavings />,
 		others: <GiTakeMyMoney />,
 	};
 
@@ -134,7 +136,8 @@ const FinanceTransactions = ({
 						<div className='font-medium flex flex-col md:flex-row-reverse gap-2 md:gap-5 md:items-center items-end'>
 							{isStandalone && (
 								<div className='flex gap-2 items-center text-base md:text-xl'>
-									<span className="p-[6px] rounded-full bg-foreground text-background"
+									<span
+										className='p-[6px] rounded-full bg-foreground text-background'
 										onClick={(e) => {
 											e.stopPropagation();
 											setTransactionToUpdate(transaction);

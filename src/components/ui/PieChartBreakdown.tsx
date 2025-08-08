@@ -32,6 +32,7 @@ const PieChartBreakdown = ({
 	const transactionCategoryColorCode: { [key: string]: string } = {
 		salary: "#5A31F4", 
 		gift: "#C792F9",
+		savings: "#92f5f9",
 		refund: "#00C49F", 
 		food: "#FF7043", 
 		transportation: "#FFBB28", 

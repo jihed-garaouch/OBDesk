@@ -319,6 +319,7 @@ const AddFinanceModal = ({
 								options={[
 									"Salary",
 									"Gift",
+									"Savings",
 									"Refund",
 									"Food",
 									"Transportation",
