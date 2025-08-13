@@ -2,6 +2,7 @@ import CurrencyDropdown from "@/components/ui/CurrencyDropdown";
 import SelectDropdown from "@/components/ui/SelectDropdown";
 import { UseCurrency } from "@/context/CurrencyContext";
 import { UseFinance } from "@/context/FinanceContext";
+import { UseTheme } from "@/context/ThemeContext";
 import { formatReadableBalance, generateSmartYearOptions } from "@/utils";
 import { currencySymbols } from "@/utils/constants";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
@@ -19,6 +20,7 @@ const FinanceSummaryCard = ({
 	setShowBalance,
 	isWidget = false,
 }: FinanceSummaryCardProps) => {
+	const { theme } = UseTheme();
 	const { currencies } = UseCurrency();
 	const {
 		globalFinanceCurrency,
@@ -79,8 +81,15 @@ const FinanceSummaryCard = ({
 		}));
 	};
 
+	const isDark = theme === "dark";
+
 	return (
-		<div className='py-4 px-6 border border-foreground/20 w-full h-full md:min-w-[300px] max-w-[350px] rounded-[20px] shadow-lg'>
+		<div
+			className={`py-4 px-6 border border-foreground/20 w-full h-full md:min-w-[300px] max-w-[350px] rounded-[20px] ${
+				isDark
+					? "shadow-[inset_0_2px_10px_rgba(255,255,255,0.10),0_2px_8px_rgba(0,0,0,0.16)]"
+					: "shadow-lg"
+			}`}>
 			<div className='flex gap-2 mb-4'>
 				<SelectDropdown value={selectedMonth} onChange={handleMonthChange} />
 				<SelectDropdown

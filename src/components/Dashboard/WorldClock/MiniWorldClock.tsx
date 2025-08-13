@@ -37,7 +37,7 @@ const MiniWorldClock = () => {
 			{timeZones.slice(1, 3).map((zone, index) => (
 				<div
 					key={index}
-					className={`p-4 pt-6 border border-foreground/50 rounded-lg flex flex-col gap-5 cursor-default relative w-full md:w-fit ${
+					className={`p-4 pt-6 border border-foreground/20 rounded-lg flex flex-col gap-5 cursor-default relative w-full md:w-fit ${
 						zone.active
 							? "bg-foreground text-background font-bold"
 							: "font-medium"

@@ -19,5 +19,5 @@ export const navItems = [
 		icon: <MdOutlineInsertChart />,
 		label: "Finance",
 	},
-	{ path: "/dashboard/todo", icon: <FiCheckSquare />, label: "Todo" },
+	{ path: "/dashboard/task-manager", icon: <FiCheckSquare />, label: "Task Manager" },
 ];

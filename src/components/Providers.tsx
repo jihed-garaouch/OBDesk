@@ -4,6 +4,7 @@ import { CryptoProvider } from "@/context/CryptoContext";
 import { CurrencyProvider } from "@/context/CurrencyContext";
 import { FinanceProvider } from "@/context/FinanceContext";
 import { MusicPlayerProvider } from "@/context/MusicPlayerContext";
+import { TaskManagerProvider } from "@/context/TaskManagerContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { WorldClockProvider } from "@/context/WorldClockContext";
 import useNetworkStatus from "@/hooks/useNetworkStatus";
@@ -51,7 +52,9 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
 							<CurrencyProvider>
 								<CryptoProvider>
 									<FinanceProvider>
-										<ProvidersInner>{children}</ProvidersInner>
+										<TaskManagerProvider>
+											<ProvidersInner>{children}</ProvidersInner>
+										</TaskManagerProvider>
 									</FinanceProvider>
 								</CryptoProvider>
 							</CurrencyProvider>

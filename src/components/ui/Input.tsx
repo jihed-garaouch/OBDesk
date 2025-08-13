@@ -1,9 +1,10 @@
 import { useRef, useState } from "react";
 import { IoCalendar, IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
+import { MdSearch } from "react-icons/md";
 
 interface InputProps {
 	type: string;
-	label: string;
+	label?: string;
 	id: string;
 	placeholder?: string;
 	value: string;
@@ -30,7 +31,24 @@ const Input = ({
 			<label htmlFor={id} className='font-bold'>
 				{label}
 			</label>
-			{type === "date" ? (
+			{type === "search" ? (
+				<div className='flex border-foreground/30 border px-4 py-2 w-full rounded-[4px] focus:outline-none'>
+					<input
+						id={id}
+						type='text'
+						value={value}
+						onChange={onChange}
+						placeholder={placeholder}
+						className='outline-none border-0 w-full'
+					/>
+					<button
+						type='button'
+						onClick={() => dateInputRef.current?.showPicker()}
+						className='text-foreground cursor-pointer w-fit active:scale-95 p-1 hover:bg-foreground hover:text-background rounded-full transition-all duration-300 ease-in-out'>
+						<MdSearch size={20} />
+					</button>
+				</div>
+			) : type === "date" ? (
 				<div
 					onClick={() => dateInputRef.current?.showPicker()}
 					className='relative cursor-pointer'>

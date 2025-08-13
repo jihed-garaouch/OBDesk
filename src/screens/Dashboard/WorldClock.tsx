@@ -1,6 +1,7 @@
 import AddCityModal from "@/components/Dashboard/WorldClock/AddCityModal";
 import DeleteCityModal from "@/components/Dashboard/WorldClock/DeleteCityModal";
 import LoadingScreen from "@/components/Loading/Loading";
+import { UseTheme } from "@/context/ThemeContext";
 import { UseWorldClock } from "@/context/WorldClockContext";
 import useNetworkStatus from "@/hooks/useNetworkStatus";
 import { useState } from "react";
@@ -21,6 +22,9 @@ export type TimeZone = {
 
 const WorldClockScreen = () => {
 	const { isOnline } = useNetworkStatus();
+	const { theme } = UseTheme();
+	const isDark = theme === "dark";
+
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 	const [cityToBeDeleted, setCityToBeDeleted] = useState("");
@@ -76,10 +80,14 @@ const WorldClockScreen = () => {
 				{timeZones.map((zone, index) => (
 					<div
 						key={index}
-						className={`p-4 pt-6 border border-foreground/50 rounded-lg flex flex-col gap-3 cursor-default relative ${
+						className={`p-4 pt-6 border border-foreground/25 rounded-lg flex flex-col gap-3 cursor-default relative ${
 							zone.active
 								? "bg-foreground text-background font-bold"
 								: "font-medium"
+						} ${
+							isDark
+								? "shadow-[inset_0_2px_10px_rgba(255,255,255,0.10),0_2px_8px_rgba(0,0,0,0.16)]"
+								: "shadow-lg"
 						}`}>
 						{index !== 0 && (
 							<div className=' absolute top-3 right-4 flex justify-end text-[1.3rem]'>

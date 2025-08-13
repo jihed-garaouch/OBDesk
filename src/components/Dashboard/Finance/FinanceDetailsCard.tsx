@@ -8,7 +8,12 @@ import {
 import { currencySymbols } from "@/utils/constants";
 import { MdOutlineArrowOutward } from "react-icons/md";
 import FinanceTransactions from "./FinanceTransactions";
-import { formatReadableBalance, generateSmartYearOptions, sortTransactions } from "@/utils";
+import {
+	formatReadableBalance,
+	generateSmartYearOptions,
+	sortTransactions,
+} from "@/utils";
+import { UseTheme } from "@/context/ThemeContext";
 
 interface FinanceDetailsCardProps {
 	title: string;
@@ -27,6 +32,7 @@ const FinanceDetailsCard = ({
 	setSelectedDropdownOption,
 	isStandalone = false,
 }: FinanceDetailsCardProps) => {
+	const { theme } = UseTheme();
 	const {
 		globalFinanceCurrency,
 		showBalance,
@@ -95,8 +101,15 @@ const FinanceDetailsCard = ({
 
 	const totalBalance = category === "income" ? totalIncome : totalExpense;
 
+	const isDark = theme === "dark";
+
 	return (
-		<div className='mb-4 py-4 px-2 md:px-6 border border-foreground/20 w-full min-w-[300px] rounded-[20px] shadow-lg flex-[1]'>
+		<div
+			className={`mb-4 py-4 px-2 md:px-6 border border-foreground/20 w-full min-w-[300px] rounded-[20px] flex-[1] ${
+				isDark
+					? "shadow-[inset_0_2px_10px_rgba(255,255,255,0.10),0_2px_8px_rgba(0,0,0,0.16)]"
+					: "shadow-lg"
+			}`}>
 			<div className='flex justify-between gap-3'>
 				<h1 className='text-xl lg:text-2xl font-semibold'>{title}</h1>
 				<div className='flex items-center gap-2'>

@@ -4,7 +4,7 @@ import CurrencyScreen from "@/screens/Dashboard/Currency";
 import FinanceScreen from "@/screens/Dashboard/Finance";
 import HomeScreen from "@/screens/Dashboard/Home";
 import SingleFinanceScreen from "@/screens/Dashboard/SingleFinance";
-import TodoScreen from "@/screens/Dashboard/Todo";
+import TaskManagerScreen from "@/screens/Dashboard/TaskManager";
 import WorldClockScreen from "@/screens/Dashboard/WorldClock";
 import LoginScreen from "@/screens/Login/Login";
 import NotFound from "@/screens/NotFound/NotFound";
@@ -38,7 +38,7 @@ const routes: AppRoute[] = [
 			},
 			{ path: "finance/income", element: <SingleFinanceScreen /> },
 			{ path: "finance/expense", element: <SingleFinanceScreen /> },
-			{ path: "todo", element: <TodoScreen /> },
+			{ path: "task-manager", element: <TaskManagerScreen /> },
 		],
 	},
 

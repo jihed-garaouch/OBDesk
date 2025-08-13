@@ -1,6 +1,7 @@
 import CryptoDropdown from "@/components/ui/CryptoDropdown";
 import CurrencyDropdown from "@/components/ui/CurrencyDropdown";
 import { UseCrypto } from "@/context/CryptoContext";
+import { UseTheme } from "@/context/ThemeContext";
 import { ImLoop2 } from "react-icons/im";
 import {
 	CartesianGrid,
@@ -15,6 +16,9 @@ import {
 type TimeRange = "24h" | "7d" | "30d";
 
 const CryptoSection = () => {
+	const { theme } = UseTheme();
+	const isDark = theme === "dark";
+
 	const {
 		cryptos,
 		fiatCurrencies,
@@ -44,7 +48,12 @@ const CryptoSection = () => {
 	const displaySymbol = currentCrypto?.symbol || fromCrypto.toUpperCase();
 
 	return (
-		<div className='flex-1 border border-foreground/20 shadow-lg rounded-lg p-4 h-full'>
+		<div
+			className={`flex-1 border border-foreground/20 rounded-lg p-4 h-full ${
+				isDark
+					? "shadow-[inset_0_2px_10px_rgba(255,255,255,0.10),0_2px_8px_rgba(0,0,0,0.16)]"
+					: "shadow-lg"
+			}`}>
 			{/* Header */}
 			<div className='flex flex-col items-center gap-2 mb-4'>
 				<h1 className='text-base md:text-xl font-bold text-center'>

@@ -230,3 +230,8 @@ export const sortTransactions = (transactions: TransactionType[]) => {
     return dateB.getTime() - dateA.getTime(); // newest → oldest
   });
 };
+
+export const stripTime = (date: Date) => {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+};
+

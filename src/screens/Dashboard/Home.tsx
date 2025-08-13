@@ -4,12 +4,16 @@ import MiniWorldClock from "@/components/Dashboard/WorldClock/MiniWorldClock";
 import Skeleton from "@/components/ui/Skeleton";
 import { UserAuth } from "@/context/AuthContext";
 import { UseFinance } from "@/context/FinanceContext";
+import { UseTheme } from "@/context/ThemeContext";
 import { UseWorldClock } from "@/context/WorldClockContext";
 
 const HomeScreen = () => {
 	const { user } = UserAuth();
 	const { timeZones } = UseWorldClock();
 	const { setShowBalance, showBalance } = UseFinance();
+
+	const { theme } = UseTheme();
+	const isDark = theme === "dark";
 
 	const firstName = user?.first_name;
 	const fullName = user?.full_name;
@@ -31,7 +35,12 @@ const HomeScreen = () => {
 			{timeZones.length === 0 ? (
 				<Skeleton />
 			) : (
-				<div className='mb-4 py-4 px-6 border border-foreground/20 w-fit rounded-[20px] shadow-lg'>
+				<div
+					className={`mb-4 py-4 px-6 border bg-background border-foreground/20 w-fit rounded-[20px] ${
+						isDark
+							? "shadow-[inset_0_2px_10px_rgba(255,255,255,0.10),0_2px_10px_rgba(0,0,0,0.16)]"
+							: "shadow-lg"
+					}`}>
 					<MiniWorldClock />
 				</div>
 			)}

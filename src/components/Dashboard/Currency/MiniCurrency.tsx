@@ -1,8 +1,12 @@
 import { UseCurrency } from "@/context/CurrencyContext";
 import CurrencyDropdown from "@/components/ui/CurrencyDropdown";
 import { ImLoop2 } from "react-icons/im";
+import { UseTheme } from "@/context/ThemeContext";
 
 const MiniCurrency = () => {
+	const { theme } = UseTheme();
+	const isDark = theme === "dark";
+
 	const {
 		currencies,
 		fromCurrency,
@@ -19,7 +23,12 @@ const MiniCurrency = () => {
 	} = UseCurrency();
 
 	return (
-		<div className='flex-1 border border-foreground/20 shadow-lg rounded-lg p-4 h-full'>
+		<div
+			className={`flex-1 border border-foreground/20 rounded-lg p-4 h-full ${
+				isDark
+					? "shadow-[inset_0_2px_10px_rgba(255,255,255,0.10),0_2px_8px_rgba(0,0,0,0.16)]"
+					: "shadow-lg"
+			}`}>
 			{/* Header */}
 			<div className='flex flex-col items-center gap-0 mb-4'>
 				<h1 className='text-sm font-bold text-center'>Currency Exchange</h1>
@@ -29,7 +38,9 @@ const MiniCurrency = () => {
 					</h1>
 				)}
 				{loading && (
-					<p className='text-sm text-foreground/60 text-center'>Loading rates...</p>
+					<p className='text-sm text-foreground/60 text-center'>
+						Loading rates...
+					</p>
 				)}
 				{error && <p className='text-sm text-red-500 text-center'>{error}</p>}
 			</div>
