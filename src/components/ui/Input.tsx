@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { IoCalendar, IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
+import { LuClock } from "react-icons/lu";
 import { MdSearch } from "react-icons/md";
 
 interface InputProps {
@@ -21,6 +22,7 @@ const Input = ({
 }: InputProps) => {
 	const [showPassWord, setShowPassWord] = useState<boolean>(false);
 	const dateInputRef = useRef<HTMLInputElement>(null);
+	const timeInputRef = useRef<HTMLInputElement>(null);
 
 	const handleShowPassword = () => {
 		setShowPassWord(!showPassWord);
@@ -46,6 +48,26 @@ const Input = ({
 						onClick={() => dateInputRef.current?.showPicker()}
 						className='text-foreground cursor-pointer w-fit active:scale-95 p-1 hover:bg-foreground hover:text-background rounded-full transition-all duration-300 ease-in-out'>
 						<MdSearch size={20} />
+					</button>
+				</div>
+			) : type === "time" ? (
+				<div
+					onClick={() => timeInputRef.current?.showPicker()}
+					className='relative cursor-pointer'>
+					<input
+						id={id}
+						type={type}
+						ref={timeInputRef}
+						value={value}
+						onChange={onChange}
+						placeholder={placeholder}
+						className='border-foreground/30 border px-4 py-2 w-full rounded-[4px] focus:outline-none cursor-pointer'
+					/>
+					<button
+						type='button'
+						onClick={() => timeInputRef.current?.showPicker()}
+						className='absolute right-3 top-1/2 -translate-y-1/2 text-foreground/80 cursor-pointer'>
+						<LuClock size={18} />
 					</button>
 				</div>
 			) : type === "date" ? (

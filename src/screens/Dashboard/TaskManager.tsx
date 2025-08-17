@@ -1,5 +1,8 @@
+import AddTaskModal from "@/components/Dashboard/TaskManager/AddTaskModal";
+import DeleteTaskModal from "@/components/Dashboard/TaskManager/DeleteTaskModal";
 import TaskCard from "@/components/Dashboard/TaskManager/TaskCard";
 import TaskFilter from "@/components/Dashboard/TaskManager/TaskFilter";
+import ViewTaskModal from "@/components/Dashboard/TaskManager/ViewTaskModal";
 import Input from "@/components/ui/Input";
 import SelectDropdown from "@/components/ui/SelectDropdown";
 import { UseTaskManager, type Task } from "@/context/TaskManagerContext";
@@ -14,6 +17,15 @@ const TaskManagerScreen = () => {
 		tasks,
 		selectedTaskFilter,
 		setSelectedTaskFilter,
+		showAddTaskModal,
+		setShowAddTaskModal,
+		showViewTaskModal,
+		setShowViewTaskModal,
+		showDeleteTaskModal,
+		setShowDeleteTaskModal,
+		selectedTask,
+		setIsAddTask,
+		handleDeleteTask,
 	} = UseTaskManager();
 
 	const isTaskInActiveFilter = (task: Task) => {
@@ -125,7 +137,10 @@ const TaskManagerScreen = () => {
 							/>
 						</div>
 						<button
-							// onClick={() => setShowFinanceModal(true)}
+							onClick={() => {
+								setShowAddTaskModal(true);
+								setIsAddTask(true);
+							}}
 							className='flex items-center justify-center gap-2 text-xs md:text-sm font-medium cursor-pointer bg-black text-white border-foreground border py-2 px-6 min-w-[100px] rounded-full w-fit h-fit active:scale-95 transition-all duration-500 ease-in-out'>
 							<span>Add Task</span>
 							<MdOutlineArrowOutward className='text-lg' />
@@ -136,16 +151,17 @@ const TaskManagerScreen = () => {
 			</div>
 
 			<div
-				className={`flex items-start ${
-					filteredTasks.length > 3 ? "justify-center" : "justify-start"
-				} gap-5 flex-wrap max-h-[400px] overflow-y-auto pr-3 py-4`}>
+				className={`flex items-start justify-center gap-5 flex-wrap max-h-[400px] md:max-h-[600px] overflow-y-auto pr-3 py-4`}>
 				{filteredTasks.map((task) => (
 					<TaskCard key={task.id} task={task} />
 				))}
 			</div>
 			{filteredTasks.length === 0 && (
 				<div
-					// onClick={() => setShowFinanceModal(true)}
+					onClick={() => {
+						setIsAddTask(true);
+						setShowAddTaskModal(true);
+					}}
 					className='flex flex-col items-center gap-2 mt-4'>
 					<div className='h-20 w-20 rounded-[20px] p-2 bg-foreground flex justify-center items-center active:scale-95 cursor-pointer transition-all duration-300 ease-in-out'>
 						<PiStackPlusFill className='text-background text-4xl' />
@@ -153,6 +169,27 @@ const TaskManagerScreen = () => {
 					<p className='text-sm'>No tasks found</p>
 				</div>
 			)}
+
+			<ViewTaskModal
+				isOpen={showViewTaskModal}
+				onClose={() => {
+					setShowViewTaskModal(false);
+				}}
+			/>
+			<AddTaskModal
+				isOpen={showAddTaskModal}
+				onClose={() => {
+					setShowAddTaskModal(false);
+				}}
+			/>
+			<DeleteTaskModal
+				isOpen={showDeleteTaskModal}
+				onClose={() => {
+					setShowDeleteTaskModal(false);
+				}}
+				onDeleteTask={handleDeleteTask}
+				taskToBeDeleted={selectedTask || ({} as Task)}
+			/>
 		</div>
 	);
 };

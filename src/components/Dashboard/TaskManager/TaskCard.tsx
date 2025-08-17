@@ -10,7 +10,13 @@ interface TaskCardProps {
 
 const TaskCard = ({ task }: TaskCardProps) => {
 	const { theme } = UseTheme();
-	const { setTasks } = UseTaskManager();
+	const {
+		setTasks,
+		setShowViewTaskModal,
+		setSelectedTask,
+		setShowAddTaskModal,
+		setShowDeleteTaskModal,
+	} = UseTaskManager();
 
 	const isDark = theme === "dark";
 
@@ -47,20 +53,25 @@ const TaskCard = ({ task }: TaskCardProps) => {
 
 	return (
 		<div
-			className={`group relative flex gap-3 bg-background border w-full md:w-fit p-5 rounded-xl border-foreground/30 md:min-w-[300px] md:max-w-[320px] ${
+			onClick={() => {
+				setSelectedTask(task);
+				setShowViewTaskModal(true);
+			}}
+			className={`group relative flex gap-3 bg-background border w-full md:w-fit p-5 rounded-xl border-foreground/30 md:min-w-[300px] md:max-w-[320px] cursor-pointer active:scale-[0.99] lg:active:scale-[0.98] transition-all duration-300 ease-in-out ${
 				isDark
 					? "shadow-[inset_0_2px_10px_rgba(255,255,255,0.10),0_2px_8px_rgba(0,0,0,0.16)]"
 					: "shadow-[0_3px_10px_rgba(0,0,0,0.16)]"
 			}`}>
 			{/* Custom Checkbox */}
 			<div
-				onClick={() =>
+				onClick={(e) => {
+					e.stopPropagation();
 					setTasks((t) =>
 						t.map((t) =>
 							t.id === task.id ? { ...t, isCompleted: !t.isCompleted } : t
 						)
-					)
-				}
+					);
+				}}
 				className='flex-shrink-0'>
 				<div
 					className={`flex items-center justify-center border-2 ${
@@ -153,11 +164,21 @@ const TaskCard = ({ task }: TaskCardProps) => {
 				</div>
 				<div className='mt-4 flex gap-2'>
 					<button
+						onClick={(e) => {
+							e.stopPropagation();
+							setSelectedTask(task);
+							setShowAddTaskModal(true);
+						}}
 						className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-[12px] font-normal rounded-md bg-black border border-white/50 text-white cursor-pointer active:scale-[0.95] transition-all duration-300 ease-in-out`}>
 						<FaEdit />
 						<span className='max-w-[100px] truncate'>Edit</span>
 					</button>
 					<button
+						onClick={(e) => {
+							e.stopPropagation();
+							setSelectedTask(task);
+							setShowDeleteTaskModal(true);
+						}}
 						className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-[12px] font-normal rounded-md bg-red-500 text-white cursor-pointer active:scale-[0.95] transition-all duration-300 ease-in-out`}>
 						<MdDelete />
 						<span className='max-w-[100px] truncate'>Delete</span>

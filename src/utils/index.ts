@@ -69,26 +69,21 @@ export const formatIntlHourInZone = (timezone: string, date: Date): number => {
 	}).format(date);
 };
 
-export const formatReadableBalance = (num: number, isLarge: boolean = false) => {
+export const formatReadableBalance = (
+	num: number,
+	isLarge: boolean = false
+) => {
 	const sign = num < 0 ? "-" : "";
 	const absNum = Math.abs(num);
 
 	if (absNum >= 1_000_000_000_000) {
 		if (isLarge) {
 			return (
-				sign +
-				(absNum / 1_000_000_000_000)
-					.toFixed(1)
-					.replace(/\.0$/, "") +
-				"T"
+				sign + (absNum / 1_000_000_000_000).toFixed(1).replace(/\.0$/, "") + "T"
 			);
 		} else {
 			return (
-				sign +
-				(absNum / 1_000_000_000_000)
-					.toFixed(1)
-					.replace(/\.0$/, "") +
-				"T"
+				sign + (absNum / 1_000_000_000_000).toFixed(1).replace(/\.0$/, "") + "T"
 			);
 		}
 	}
@@ -96,31 +91,17 @@ export const formatReadableBalance = (num: number, isLarge: boolean = false) => 
 	if (absNum >= 1_000_000_000) {
 		if (isLarge) {
 			return (
-				sign +
-				(absNum / 1_000_000_000)
-					.toFixed(1)
-					.replace(/\.0$/, "") +
-				"B"
+				sign + (absNum / 1_000_000_000).toFixed(1).replace(/\.0$/, "") + "B"
 			);
 		} else {
 			return (
-				sign +
-				(absNum / 1_000_000_000)
-					.toFixed(1)
-					.replace(/\.0$/, "") +
-				"B"
+				sign + (absNum / 1_000_000_000).toFixed(1).replace(/\.0$/, "") + "B"
 			);
 		}
 	}
 
 	if (!isLarge && absNum >= 1_000_000) {
-		return (
-			sign +
-			(absNum / 1_000_000)
-				.toFixed(1)
-				.replace(/\.0$/, "") +
-			"M"
-		);
+		return sign + (absNum / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
 	}
 
 	// if (!isLarge && absNum >= 1_000) {
@@ -141,7 +122,6 @@ export const formatReadableBalance = (num: number, isLarge: boolean = false) => 
 		})
 	);
 };
-
 
 export const formatReadableDate = (dateString: string) => {
 	const date = new Date(dateString);
@@ -192,6 +172,34 @@ export const parseReadableDateToInput = (dateStr: string): string => {
 	return `${year}-${month}-${day}`;
 };
 
+export const formatReadableTime = (time24: string): string => {
+	if (!time24) return "";
+
+	const [hourStr, minute] = time24.split(":");
+	let hour = parseInt(hourStr, 10);
+
+	const period = hour >= 12 ? "PM" : "AM";
+	hour = hour % 12 || 12;
+
+	return `${hour}:${minute} ${period}`;
+};
+
+export const parseReadableTimeToInput = (timeStr: string): string => {
+	if (!timeStr) return "";
+
+	const regex = /^(\d{1,2}):(\d{2})\s?(AM|PM)$/i;
+	const match = timeStr.match(regex);
+	if (!match) return "";
+
+	const [hourStr, minute, period] = match;
+	let hour = parseInt(hourStr, 10);
+
+	if (period.toUpperCase() === "PM" && hour !== 12) hour += 12;
+	if (period.toUpperCase() === "AM" && hour === 12) hour = 0;
+
+	return `${String(hour).padStart(2, "0")}:${minute}`;
+};
+
 export const generateSmartYearOptions = (
 	transactions: TransactionType[],
 	pastYears = 20,
@@ -219,19 +227,18 @@ export const generateSmartYearOptions = (
 };
 
 const parseTransactionDate = (dateStr: string, timeStr: string) => {
-  const cleanDate = dateStr.replace(/(\d+)(st|nd|rd|th)/, "$1");
-  return new Date(`${cleanDate} ${timeStr}`);
+	const cleanDate = dateStr.replace(/(\d+)(st|nd|rd|th)/, "$1");
+	return new Date(`${cleanDate} ${timeStr}`);
 };
 
 export const sortTransactions = (transactions: TransactionType[]) => {
-  return [...transactions].sort((a, b) => {
-    const dateA = parseTransactionDate(a.date, a.time);
-    const dateB = parseTransactionDate(b.date, b.time);
-    return dateB.getTime() - dateA.getTime(); // newest → oldest
-  });
+	return [...transactions].sort((a, b) => {
+		const dateA = parseTransactionDate(a.date, a.time);
+		const dateB = parseTransactionDate(b.date, b.time);
+		return dateB.getTime() - dateA.getTime(); // newest → oldest
+	});
 };
 
 export const stripTime = (date: Date) => {
-  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+	return new Date(date.getFullYear(), date.getMonth(), date.getDate());
 };
-
