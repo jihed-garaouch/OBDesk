@@ -2,6 +2,8 @@ import type { TimeZone } from "@/screens/Dashboard/WorldClock";
 import type { User } from "@supabase/supabase-js";
 import { supabase } from "./supabaseClient";
 import type { TransactionType } from "@/context/FinanceContext";
+import type { Task } from "@/context/TaskManagerContext";
+import { formatReadableDate, formatReadableTime, parseReadableDateToInput, parseReadableTimeToInput } from "..";
 
 export const syncCityToSupabase = async (city: TimeZone, user: User) => {
 	if (!user) return;
@@ -169,4 +171,102 @@ export const fetchUserTransactionsFromSupabase = async (user: User) => {
 		date: item.date,
 		time: item.time,
 	})) as TransactionType[];
+};
+
+export const addTaskToSupabase = async (task: Task, user: User) => {
+	if (!user) return;
+
+	const payload = {
+		id: task.id,
+		title: task.title,
+		description: task.description,
+		date: parseReadableDateToInput(task.date),
+		time: parseReadableTimeToInput(task.time),
+		priority: task.priority,
+		category: task.category,
+		client: task.client,
+		project_name: task.projectName,
+		is_completed: task.isCompleted,
+		has_reminder: task.hasReminder,
+		user_id: user.id,
+	};
+
+	try {
+		const { error } = await supabase.from("tasks").insert([payload]);
+		if (error) throw error;
+	} catch (err) {
+		console.error("Error adding task:", err);
+	}
+};
+
+export const updateTaskInSupabase = async (task: Task, user: User) => {
+	if (!user) return;
+
+	const payload = {
+		title: task.title,
+		description: task.description,
+		date: parseReadableDateToInput(task.date),
+		time: parseReadableTimeToInput(task.time),
+		priority: task.priority,
+		category: task.category,
+		client: task.client,
+		project_name: task.projectName,
+		is_completed: task.isCompleted,
+		has_reminder: task.hasReminder,
+		updated_at: new Date().toISOString(),
+	};
+
+	try {
+		const { error } = await supabase
+			.from("tasks")
+			.update(payload)
+			.eq("id", task.id)
+			.eq("user_id", user.id);
+		if (error) throw error;
+	} catch (err) {
+		console.error("Error editing task:", err);
+	}
+};
+
+export const deleteTaskFromSupabase = async (taskId: string, user: User) => {
+	if (!user) return;
+	try {
+		const { error } = await supabase
+			.from("tasks")
+			.delete()
+			.eq("id", taskId)
+			.eq("user_id", user.id);
+		if (error) throw error;
+	} catch (err) {
+		console.error("Error deleting task:", err);
+	}
+};
+
+export const fetchUserTasksFromSupabase = async (user: User) => {
+	if (!user) return [];
+
+	const { data, error } = await supabase
+		.from("tasks")
+		.select("*")
+		.eq("user_id", user.id)
+		.order("date", { ascending: false });
+
+	if (error) {
+		console.error("Error fetching:", error);
+		return [];
+	}
+
+	return data.map((item) => ({
+		id: item.id,
+		title: item.title,
+		description: item.description,
+		date: formatReadableDate(item.date),
+		time: formatReadableTime(item.time),
+		priority: item.priority,
+		category: item.category,
+		client: item.client,
+		projectName: item.project_name,
+		isCompleted: item.is_completed,
+		hasReminder: item.has_reminder,
+	})) as Task[];
 };

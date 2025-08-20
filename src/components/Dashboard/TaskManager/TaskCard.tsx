@@ -11,7 +11,7 @@ interface TaskCardProps {
 const TaskCard = ({ task }: TaskCardProps) => {
 	const { theme } = UseTheme();
 	const {
-		setTasks,
+		handleEditTask,
 		setShowViewTaskModal,
 		setSelectedTask,
 		setShowAddTaskModal,
@@ -66,11 +66,10 @@ const TaskCard = ({ task }: TaskCardProps) => {
 			<div
 				onClick={(e) => {
 					e.stopPropagation();
-					setTasks((t) =>
-						t.map((t) =>
-							t.id === task.id ? { ...t, isCompleted: !t.isCompleted } : t
-						)
-					);
+					handleEditTask({
+						...task,
+						isCompleted: !task.isCompleted,
+					});
 				}}
 				className='flex-shrink-0'>
 				<div
