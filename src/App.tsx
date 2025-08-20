@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import RouteGuard from "./components/RouteGuard";
 import ThemeToggle from "./components/ui/ThemeToggle";
 import routes, { type AppRoute } from "./routes";
+import NotificationPermissionModal from "./components/NotificationPermissionModal";
 
 const renderRoute = (route: AppRoute) => {
 	const element = route.protected ? (
@@ -37,6 +38,7 @@ const App = () => {
 				style={{ display: "none" }}
 			/>
 			<Routes>{routes.map((r) => renderRoute(r))}</Routes>
+			<NotificationPermissionModal />
 		</div>
 	);
 };

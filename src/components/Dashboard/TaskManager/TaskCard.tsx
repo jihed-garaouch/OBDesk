@@ -101,7 +101,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
 					</p>
 				)}
 
-				<div className='flex items-center gap-2 text-[10px] md:text-xs mt-1 font-light mb-3 text-foreground/80'>
+				<div className='flex items-center flex-wrap gap-2 text-[10px] md:text-xs mt-1 font-light mb-3 text-foreground/80'>
 					<p className='flex items-center gap-[2px]'>
 						<FiCalendar size={12} /> <span>{task.date}</span>
 					</p>
