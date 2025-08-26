@@ -7,7 +7,6 @@ import {
 	formatReadableTime,
 	parseReadableDateToInput,
 	parseReadableTimeToInput,
-	scheduleLocalReminder,
 } from "@/utils";
 import { LoaderIcon } from "@/vectors/loader";
 import { useEffect, useState } from "react";
@@ -153,20 +152,9 @@ const AddTaskModal = ({
 			category: taskFormDetails.category as "Personal" | "Work",
 		};
 
-		const unformattedTaskDetails: Task = {
-			...taskFormDetails,
-			id: formattedTaskDetails.id,
-			priority: taskFormDetails.priority as "High" | "Medium" | "Low",
-			category: taskFormDetails.category as "Personal" | "Work",
-		};
-
 		setIsLoading(true);
 		try {
 			handleEditTask(formattedTaskDetails);
-			if (formattedTaskDetails.hasReminder) {
-				scheduleLocalReminder(unformattedTaskDetails);
-				// optionally, also call your backend endpoint to schedule push notification
-			}
 		} catch (err) {
 			console.error("Failed to add task:", err);
 		} finally {
@@ -210,20 +198,9 @@ const AddTaskModal = ({
 			category: taskFormDetails.category as "Personal" | "Work",
 		};
 
-		const unformattedTaskDetails: Task = {
-			...taskFormDetails,
-			id: formattedTaskDetails.id,
-			priority: taskFormDetails.priority as "High" | "Medium" | "Low",
-			category: taskFormDetails.category as "Personal" | "Work",
-		};
-
 		setIsLoading(true);
 		try {
 			handleAddTask(formattedTaskDetails);
-			if (formattedTaskDetails.hasReminder) {
-				scheduleLocalReminder(unformattedTaskDetails);
-				// optionally, also call your backend endpoint to schedule push notification
-			}
 		} catch (err) {
 			console.error("Failed to add task:", err);
 		} finally {

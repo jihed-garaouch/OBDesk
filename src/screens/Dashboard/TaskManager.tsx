@@ -7,6 +7,7 @@ import Input from "@/components/ui/Input";
 import SelectDropdown from "@/components/ui/SelectDropdown";
 import { UseTaskManager, type Task } from "@/context/TaskManagerContext";
 import { formatIntlDate, parseReadableDateToInput, stripTime } from "@/utils";
+import { useEffect } from "react";
 import { MdOutlineArrowOutward } from "react-icons/md";
 import { PiStackPlusFill } from "react-icons/pi";
 
@@ -26,7 +27,41 @@ const TaskManagerScreen = () => {
 		selectedTask,
 		setIsAddTask,
 		handleDeleteTask,
+		setSelectedTask,
 	} = UseTaskManager();
+
+	useEffect(() => {
+		// Check URL params on mount
+		const params = new URLSearchParams(window.location.search);
+		const taskIdToOpen = params.get("openTask");
+
+		if (taskIdToOpen) {
+			const task = tasks.find((t) => t.id === taskIdToOpen);
+			if (task) {
+				setSelectedTask(task);
+				setShowViewTaskModal(true);
+				// Clean up URL
+				window.history.replaceState({}, "", "/dashboard/task-manager");
+			}
+		}
+
+		// Listen for messages from service worker
+		const handleMessage = (event: MessageEvent) => {
+			if (event.data.type === "OPEN_TASK") {
+				const task = tasks.find((t) => t.id === event.data.taskId);
+				if (task) {
+					setSelectedTask(task);
+					setShowViewTaskModal(true);
+				}
+			}
+		};
+
+		navigator.serviceWorker?.addEventListener("message", handleMessage);
+
+		return () => {
+			navigator.serviceWorker?.removeEventListener("message", handleMessage);
+		};
+	}, [tasks]);
 
 	const isTaskInActiveFilter = (task: Task) => {
 		const today = stripTime(new Date());

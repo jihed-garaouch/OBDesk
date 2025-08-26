@@ -176,12 +176,24 @@ export const fetchUserTransactionsFromSupabase = async (user: User) => {
 export const addTaskToSupabase = async (task: Task, user: User) => {
 	if (!user) return;
 
+	const isoDate = parseReadableDateToInput(task.date); // YYYY-MM-DD
+	const isoTime = parseReadableTimeToInput(task.time); // HH:mm
+	const localDateTime = new Date(`${isoDate}T${isoTime}`);
+
+	if (isNaN(localDateTime.getTime())) {
+		console.error("Invalid task date/time:", isoDate, isoTime);
+		return;
+	}
+
+	const taskDateTimeUTC = localDateTime.toISOString();
+
 	const payload = {
 		id: task.id,
 		title: task.title,
 		description: task.description,
-		date: parseReadableDateToInput(task.date),
-		time: parseReadableTimeToInput(task.time),
+		date: isoDate,
+		time: isoTime,
+		task_timestamp: taskDateTimeUTC,
 		priority: task.priority,
 		category: task.category,
 		client: task.client,
@@ -202,11 +214,31 @@ export const addTaskToSupabase = async (task: Task, user: User) => {
 export const updateTaskInSupabase = async (task: Task, user: User) => {
 	if (!user) return;
 
+	const isoDate = parseReadableDateToInput(task.date); // YYYY-MM-DD
+	const isoTime = parseReadableTimeToInput(task.time); // HH:mm
+	const localDateTime = new Date(`${isoDate}T${isoTime}`);
+
+	if (isNaN(localDateTime.getTime())) {
+		console.error("Invalid task date/time:", isoDate, isoTime);
+		return;
+	}
+
+	const taskDateTimeUTC = localDateTime.toISOString();
+
+	let notificationReset = {};
+    if (task.hasReminder && localDateTime.getTime() > Date.now()) {
+        notificationReset = {
+            notification_sent: false,
+            notification_acknowledged: false
+        };
+    }
+
 	const payload = {
 		title: task.title,
 		description: task.description,
-		date: parseReadableDateToInput(task.date),
-		time: parseReadableTimeToInput(task.time),
+		date: isoDate,
+		time: isoTime,
+		task_timestamp: taskDateTimeUTC,
 		priority: task.priority,
 		category: task.category,
 		client: task.client,
@@ -214,6 +246,7 @@ export const updateTaskInSupabase = async (task: Task, user: User) => {
 		is_completed: task.isCompleted,
 		has_reminder: task.hasReminder,
 		updated_at: new Date().toISOString(),
+		...notificationReset,
 	};
 
 	try {

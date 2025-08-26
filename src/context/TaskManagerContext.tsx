@@ -170,12 +170,16 @@ export const TaskManagerProvider = ({
 			try {
 				if (op.type === "create") {
 					const tx = op.payload as Task;
+					const taskDateTimeUTC = new Date(
+						`${tx.date}T${tx.time}`
+					).toISOString();
 					const payload = {
 						id: tx.id,
 						title: tx.title,
 						description: tx.description,
 						date: tx.date,
 						time: tx.time,
+						task_timestamp: taskDateTimeUTC,
 						priority: tx.priority,
 						category: tx.category,
 						client: tx.client,
@@ -191,11 +195,15 @@ export const TaskManagerProvider = ({
 
 				if (op.type === "update") {
 					const tx = op.payload as Task;
+					const taskDateTimeUTC = new Date(
+						`${tx.date}T${tx.time}`
+					).toISOString();
 					const payload = {
 						title: tx.title,
 						description: tx.description,
 						date: tx.date,
 						time: tx.time,
+						task_timestamp: taskDateTimeUTC,
 						priority: tx.priority,
 						category: tx.category,
 						client: tx.client,

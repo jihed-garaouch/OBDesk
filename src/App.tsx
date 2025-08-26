@@ -3,6 +3,7 @@ import RouteGuard from "./components/RouteGuard";
 import ThemeToggle from "./components/ui/ThemeToggle";
 import routes, { type AppRoute } from "./routes";
 import NotificationPermissionModal from "./components/NotificationPermissionModal";
+import MissedRemindersModal from "./components/MissedRemindersModal";
 
 const renderRoute = (route: AppRoute) => {
 	const element = route.protected ? (
@@ -39,6 +40,7 @@ const App = () => {
 			/>
 			<Routes>{routes.map((r) => renderRoute(r))}</Routes>
 			<NotificationPermissionModal />
+			<MissedRemindersModal />
 		</div>
 	);
 };

@@ -190,3 +190,78 @@ registerRoute(
 		],
 	})
 );
+
+// Handle push notifications
+self.addEventListener("push", (event) => {
+	console.log("=== PUSH EVENT RECEIVED ===");
+	console.log("Event:", event);
+	console.log("Event data:", event.data);
+
+	if (!event.data) {
+		console.log("❌ No data in push event");
+		return;
+	}
+
+	try {
+		const data = event.data.json();
+		console.log("✅ Parsed push data:", data);
+
+		const options = {
+			body: data.body || "You have a task due soon",
+			icon: "/icon-192x192.png",
+			tag: data.taskId,
+			data: {
+				taskId: data.taskId,
+				url: "/",
+			},
+			requireInteraction: true,
+			vibrate: [200, 100, 200],
+			actions: [
+				{ action: "view", title: "View Task" },
+				{ action: "dismiss", title: "Dismiss" },
+			],
+		};
+
+		console.log("Showing notification with options:", options);
+
+		event.waitUntil(
+			self.registration.showNotification(data.title, options)
+				.then(() => console.log("✅ Notification shown successfully"))
+				.catch(err => console.error("❌ Failed to show notification:", err))
+		);
+	} catch (err) {
+		console.error("❌ Error in push handler:", err);
+	}
+});
+
+// Handle notification clicks
+self.addEventListener("notificationclick", (event) => {
+	event.notification.close();
+
+	const taskId = event.notification.data?.taskId;
+
+	if (event.action === "view") {
+		event.waitUntil(
+			(self as ServiceWorkerGlobalScope).clients
+			.matchAll({ type: "window", includeUncontrolled: true })
+			.then(async (clientList) => {
+				// If app is already open
+				for (const client of clientList) {
+					if (client.url.includes("/dashboard/task-manager")) {
+						// Send message to the open client to open the task
+						client.postMessage({
+							type: "OPEN_TASK",
+							taskId: taskId,
+						});
+						return client.focus();
+					}
+				}
+
+				// Otherwise open new window with task ID in URL
+				return (self as ServiceWorkerGlobalScope).clients.openWindow(
+					`/dashboard/task-manager?openTask=${taskId}`
+				);
+			})
+		);
+	}
+});

@@ -1,5 +1,4 @@
 import type { TransactionType } from "@/context/FinanceContext";
-import type { Task } from "@/context/TaskManagerContext";
 import { useEffect, useState } from "react";
 
 export const formatNumberForDisplay = (value: string): string => {
@@ -242,21 +241,4 @@ export const sortTransactions = (transactions: TransactionType[]) => {
 
 export const stripTime = (date: Date) => {
 	return new Date(date.getFullYear(), date.getMonth(), date.getDate());
-};
-
-export const scheduleLocalReminder = (task: Task) => {
-	if (!task.hasReminder) return;
-
-	const dueTimestamp = new Date(`${task.date}T${task.time}`).getTime();
-	const delay = dueTimestamp - Date.now();
-
-	if (delay <= 0) return; // Past due
-
-	setTimeout(() => {
-		if (Notification.permission === "granted") {
-			new Notification(`Reminder: ${task.title}`, {
-				body: `Task is due at ${formatReadableDate(task.date)} ${formatReadableTime(task.time)}`,
-			});
-		}
-	}, delay);
 };
