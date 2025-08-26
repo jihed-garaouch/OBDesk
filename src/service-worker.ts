@@ -193,80 +193,85 @@ registerRoute(
 
 // Handle push notifications
 self.addEventListener("push", (event) => {
-    // 1. Tell the browser immediately to stay awake
-    event.waitUntil((async () => {
-        console.log("=== PUSH EVENT RECEIVED ===");
+	// 1. Tell the browser immediately to stay awake
+	event.waitUntil(
+		(async () => {
+			console.log("=== PUSH EVENT RECEIVED ===");
 
-        if (!event.data) {
-            console.log("❌ No data in push event");
-            return;
-        }
+			if (!event.data) {
+				console.log("❌ No data in push event");
+				return;
+			}
 
-        try {
-            // Now, even if parsing takes a few milliseconds, the SW won't be killed
-            const data = event.data.json();
-            
-            const options = {
-                body: data.body || "You have a task due soon",
-                icon: "/icon-192x192.png",
-                badge: "/icon-192x192.png", // Helps background visibility on Android
-                tag: data.taskId,
-                data: { taskId: data.taskId, url: "/" },
-                requireInteraction: true,
-                vibrate: [200, 100, 200],
-                actions: [
-                    { action: "view", title: "View Task" },
-                    { action: "dismiss", title: "Dismiss" },
-                ],
-            };
+			try {
+				// Now, even if parsing takes a few milliseconds, the SW won't be killed
+				const data = event.data.json();
 
-            // Use 'await' here to ensure the promise stays open
-            await self.registration.showNotification(data.title, options);
-            console.log("✅ Notification shown successfully");
-        } catch (err) {
-            console.error("❌ Error in push handler:", err);
-        }
-    })());
+				const options = {
+					body: data.body || "You have a task due soon",
+					icon: "/icon-192x192.png",
+					badge: "/icon-192x192.png", // Helps background visibility on Android
+					tag: data.taskId,
+					data: { taskId: data.taskId, url: "/" },
+					requireInteraction: true,
+					vibrate: [200, 100, 200],
+					actions: [
+						{ action: "view", title: "View Task" },
+						{ action: "dismiss", title: "Dismiss" },
+					],
+				};
+
+				// Use 'await' here to ensure the promise stays open
+				await self.registration.showNotification(data.title, options);
+				console.log("✅ Notification shown successfully");
+			} catch (err) {
+				console.error("❌ Error in push handler:", err);
+			}
+		})()
+	);
 });
 
 // Handle notification clicks
 self.addEventListener("notificationclick", (event) => {
-    // 1. Close the notification immediately
-    event.notification.close();
+	// 1. Close the notification immediately
+	event.notification.close();
 
-    const taskId = event.notification.data?.taskId;
-    const action = event.action; // This tells us which button was clicked
+	const taskId = event.notification.data?.taskId;
+	const action = event.action; // This tells us which button was clicked
 
-    // 2. Define the logic to open the app
-    const openApp = async () => {
-        // If they clicked "dismiss", just stop here
-        if (action === "dismiss") return;
+	// 2. Define the logic to open the app
+	const openApp = async () => {
+		// If they clicked "dismiss", just stop here
+		if (action === "dismiss") return;
 
-        const clientList = await (self as ServiceWorkerGlobalScope).clients.matchAll({ 
-            type: "window", 
-            includeUncontrolled: true 
-        });
+		const clientList = await (
+			self as ServiceWorkerGlobalScope
+		).clients.matchAll({
+			type: "window",
+			includeUncontrolled: true,
+		});
 
-        // Try to find an existing tab
-        for (const client of clientList) {
-            if (client.url.includes("/dashboard") && "focus" in client) {
-                // If found, send the task ID and focus the tab
-                client.postMessage({
-                    type: "OPEN_TASK",
-                    taskId: taskId,
-                });
-                return client.focus();
-            }
-        }
+		// Try to find an existing tab
+		for (const client of clientList) {
+			if (client.url.includes("/dashboard") && "focus" in client) {
+				// If found, send the task ID and focus the tab
+				client.postMessage({
+					type: "OPEN_TASK",
+					taskId: taskId,
+				});
+				return client.focus();
+			}
+		}
 
-        // If no tab is open, open a new one with the taskId in the URL
-        const urlToOpen = taskId 
-            ? `/dashboard/task-manager?openTask=${taskId}` 
-            : "/dashboard/task-manager";
-            
-        return (self as ServiceWorkerGlobalScope).clients.openWindow(urlToOpen);
-    };
+		const relativePath = taskId
+			? `/dashboard/task-manager?openTask=${taskId}`
+			: "/dashboard/task-manager";
 
-    // 3. Use waitUntil to keep the Service Worker alive during the redirect
-    event.waitUntil(openApp());
+		const fullUrl = new URL(relativePath, self.location.origin).href;
+
+		return (self as ServiceWorkerGlobalScope).clients.openWindow(fullUrl);
+	};
+
+	// 3. Use waitUntil to keep the Service Worker alive during the redirect
+	event.waitUntil(openApp());
 });
