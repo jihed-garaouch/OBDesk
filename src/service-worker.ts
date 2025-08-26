@@ -193,45 +193,40 @@ registerRoute(
 
 // Handle push notifications
 self.addEventListener("push", (event) => {
-	console.log("=== PUSH EVENT RECEIVED ===");
-	console.log("Event:", event);
-	console.log("Event data:", event.data);
+    // 1. Tell the browser immediately to stay awake
+    event.waitUntil((async () => {
+        console.log("=== PUSH EVENT RECEIVED ===");
 
-	if (!event.data) {
-		console.log("❌ No data in push event");
-		return;
-	}
+        if (!event.data) {
+            console.log("❌ No data in push event");
+            return;
+        }
 
-	try {
-		const data = event.data.json();
-		console.log("✅ Parsed push data:", data);
+        try {
+            // Now, even if parsing takes a few milliseconds, the SW won't be killed
+            const data = event.data.json();
+            
+            const options = {
+                body: data.body || "You have a task due soon",
+                icon: "/icon-192x192.png",
+                badge: "/icon-192x192.png", // Helps background visibility on Android
+                tag: data.taskId,
+                data: { taskId: data.taskId, url: "/" },
+                requireInteraction: true,
+                vibrate: [200, 100, 200],
+                actions: [
+                    { action: "view", title: "View Task" },
+                    { action: "dismiss", title: "Dismiss" },
+                ],
+            };
 
-		const options = {
-			body: data.body || "You have a task due soon",
-			icon: "/icon-192x192.png",
-			tag: data.taskId,
-			data: {
-				taskId: data.taskId,
-				url: "/",
-			},
-			requireInteraction: true,
-			vibrate: [200, 100, 200],
-			actions: [
-				{ action: "view", title: "View Task" },
-				{ action: "dismiss", title: "Dismiss" },
-			],
-		};
-
-		console.log("Showing notification with options:", options);
-
-		event.waitUntil(
-			self.registration.showNotification(data.title, options)
-				.then(() => console.log("✅ Notification shown successfully"))
-				.catch(err => console.error("❌ Failed to show notification:", err))
-		);
-	} catch (err) {
-		console.error("❌ Error in push handler:", err);
-	}
+            // Use 'await' here to ensure the promise stays open
+            await self.registration.showNotification(data.title, options);
+            console.log("✅ Notification shown successfully");
+        } catch (err) {
+            console.error("❌ Error in push handler:", err);
+        }
+    })());
 });
 
 // Handle notification clicks
