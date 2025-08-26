@@ -231,32 +231,42 @@ self.addEventListener("push", (event) => {
 
 // Handle notification clicks
 self.addEventListener("notificationclick", (event) => {
-	event.notification.close();
+    // 1. Close the notification immediately
+    event.notification.close();
 
-	const taskId = event.notification.data?.taskId;
+    const taskId = event.notification.data?.taskId;
+    const action = event.action; // This tells us which button was clicked
 
-	if (event.action === "view") {
-		event.waitUntil(
-			(self as ServiceWorkerGlobalScope).clients
-			.matchAll({ type: "window", includeUncontrolled: true })
-			.then(async (clientList) => {
-				// If app is already open
-				for (const client of clientList) {
-					if (client.url.includes("/dashboard/task-manager")) {
-						// Send message to the open client to open the task
-						client.postMessage({
-							type: "OPEN_TASK",
-							taskId: taskId,
-						});
-						return client.focus();
-					}
-				}
+    // 2. Define the logic to open the app
+    const openApp = async () => {
+        // If they clicked "dismiss", just stop here
+        if (action === "dismiss") return;
 
-				// Otherwise open new window with task ID in URL
-				return (self as ServiceWorkerGlobalScope).clients.openWindow(
-					`/dashboard/task-manager?openTask=${taskId}`
-				);
-			})
-		);
-	}
+        const clientList = await (self as ServiceWorkerGlobalScope).clients.matchAll({ 
+            type: "window", 
+            includeUncontrolled: true 
+        });
+
+        // Try to find an existing tab
+        for (const client of clientList) {
+            if (client.url.includes("/dashboard") && "focus" in client) {
+                // If found, send the task ID and focus the tab
+                client.postMessage({
+                    type: "OPEN_TASK",
+                    taskId: taskId,
+                });
+                return client.focus();
+            }
+        }
+
+        // If no tab is open, open a new one with the taskId in the URL
+        const urlToOpen = taskId 
+            ? `/dashboard/task-manager?openTask=${taskId}` 
+            : "/dashboard/task-manager";
+            
+        return (self as ServiceWorkerGlobalScope).clients.openWindow(urlToOpen);
+    };
+
+    // 3. Use waitUntil to keep the Service Worker alive during the redirect
+    event.waitUntil(openApp());
 });
