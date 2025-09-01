@@ -9,13 +9,12 @@ import { WorldClockProvider } from "@/context/WorldClockContext";
 import useNetworkStatus from "@/hooks/useNetworkStatus";
 import OfflineScreen from "@/screens/Offline/Offline";
 import { subscribeToPushNotifications } from "@/utils/pushNotifications";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter } from "react-router-dom";
 
 const ProvidersInner = ({ children }: { children: React.ReactNode }) => {
 	const { isOnline } = useNetworkStatus();
 	const { session } = UserAuth();
-	const hasSubscribedRef = useRef(false);
 
 	// const refreshAll = async () => {
 	// 	// await Promise.all([loadTimeZones(), loadTransactions()]);
@@ -29,9 +28,7 @@ const ProvidersInner = ({ children }: { children: React.ReactNode }) => {
 
 	useEffect(() => {
 		if (!session?.user) return;
-		if (hasSubscribedRef.current) return;
 
-		hasSubscribedRef.current = true;
 		subscribeToPushNotifications(session.user.id);
 	}, [session?.user?.id]);
 
