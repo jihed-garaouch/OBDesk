@@ -1,73 +1,79 @@
-# React + TypeScript + Vite
+<div align="center"> <h1> 🛰️ OrbitDesk </h1> <p><strong>Your command center for global work.</strong></p> </div>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 🌟 Overview
 
-Currently, two official plugins are available:
+**OrbitDesk** is a specialized digital dashboard designed to bridge the gap in cross-border work management. Built for the modern global professional, it serves as a centralized hub for tracking international projects while providing essential financial tools—including real-time currency converters and exchange rate trackers—to manage global earnings seamlessly.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+The project focuses on efficiency and accessibility, utilizing a Progressive Web App (PWA) architecture to ensure that your workspace is available anytime, anywhere, even offline.
 
-## React Compiler
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Snapshot 📸
+<img width="1920" height="1080" alt="Screenshot (20)" src=" " />
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 🛠 Tech Stack
+- [React](https://react.dev) – Core UI library for building a dynamic, component-based dashboard.
+- [Vite](https://vitejs.dev/) - Next-generation frontend tooling for an ultra-fast development experience.
+- [Supabase](https://supabase.com/) - Open-source Firebase alternative for authentication and real-time database management.
+- [Tailwind CSS](https://tailwindcss.com/) – Utility-first CSS framework for styling and responsive design  
+- [GSAP](https://gsap.com/) – Implementation of subtle, purposeful animations to enhance UX without distracting from productivity.  
+- [Vite-PWA](https://vite-pwa-org.netlify.app/) – Transforming the web app into a high-performance Progressive Web App with offline capabilities.
+- [Vercel](https://vercel.com/) – Hosting and deployment platform for seamless CI/CD  
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 🚀 Key Features
+- **Cross-Border Tracking**: Manage workflows across different time zones and regions.
+- **Financial Suite**: Integrated currency conversion and live exchange rate tracking.
+- **PWA Ready**: Installable on desktop and mobile for a native-app feel.
+- **Real-time Sync**: Powered by Supabase to keep your data updated across all devices.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+
+## How to run locally 💻
+
+Follow these steps to run OrbitDesk on your local machine.
+
+### Clone this repository
+
+```bash
+git clone https://github.com/jihed-garaouch/OrbitDesk.git
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Navigate to the directory
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cd OrbitDesk
 ```
+
+### Install Dependencies
+
+```bash
+npm install
+```
+
+### Environment Setup
+Create a ```.env``` file in the root directory and add your Supabase credentials:
+
+```bash
+VITE_SUPABASE_URL=your_url_here
+VITE_SUPABASE_ANON_KEY=your_key_here
+```
+
+### Run
+
+Run the development server to view the app.
+
+```bash
+npm run dev
+```
+
+Now, you can navigate to http://localhost:5173/ to view the app.
+
+### Build
+
+```bash
+npm run build
+```
+
+## Credits ✍
+
+Implementation by [@jihed-garaouch](https://github.com/jihed-garaouch)
