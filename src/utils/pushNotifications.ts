@@ -38,9 +38,10 @@ export async function subscribeToPushNotifications(userId: string) {
     });
   }
 
+  console.log("Subscribing to push notifications...");
   // 🔥 ALWAYS sync subscription to current user
   await supabase.from("push_subscriptions").upsert(
-    {
+	  {
       user_id: userId,
       endpoint: subscription.endpoint,
       p256dh: arrayBufferToBase64(subscription.getKey("p256dh")),
@@ -49,6 +50,7 @@ export async function subscribeToPushNotifications(userId: string) {
     },
     { onConflict: "endpoint" } // 👈 IMPORTANT CHANGE
 );
+console.log("Subscribed to push notifications...", subscription);
 
   return true;
 }
