@@ -26,33 +26,33 @@ function arrayBufferToBase64(buffer: ArrayBuffer | null): string {
 export async function subscribeToPushNotifications(userId: string) {
   const registration = await navigator.serviceWorker.ready;
 
-  // 🔒 IMPORTANT: Check existing subscription
-  const existing = await registration.pushManager.getSubscription();
-  if (existing) {
-    console.log("🔁 Push already subscribed");
-    return true;
+  let subscription = await registration.pushManager.getSubscription();
+
+  if (!subscription) {
+    const permission = await Notification.requestPermission();
+    if (permission !== "granted") return false;
+
+    subscription = await registration.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
+    });
   }
 
-  const permission = await Notification.requestPermission();
-  if (permission !== "granted") return false;
-
-  const subscription = await registration.pushManager.subscribe({
-    userVisibleOnly: true,
-    applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
-  });
-
+  // 🔥 ALWAYS sync subscription to current user
   await supabase.from("push_subscriptions").upsert(
     {
       user_id: userId,
       endpoint: subscription.endpoint,
       p256dh: arrayBufferToBase64(subscription.getKey("p256dh")),
       auth: arrayBufferToBase64(subscription.getKey("auth")),
+      updated_at: new Date().toISOString(),
     },
-    { onConflict: "user_id,endpoint" }
-  );
+    { onConflict: "endpoint" } // 👈 IMPORTANT CHANGE
+);
 
   return true;
 }
+
 
 
 export async function checkForMissedReminders(userId: string) {
