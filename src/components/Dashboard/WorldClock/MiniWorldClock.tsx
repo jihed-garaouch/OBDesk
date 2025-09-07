@@ -9,13 +9,13 @@ const MiniWorldClock = () => {
 	const { currentRegion, timeZones } = UseWorldClock();
 
 	return (
-		<div className='flex items-center gap-5 flex-wrap'>
-			<div
-				className={`flex ${
-					timeZones.length > 1
-						? "flex-col"
-						: "flex-col lg:flex-row lg:items-center lg:gap-5"
-				}`}>
+		<div
+			className={`flex gap-5 flex-wrap ${
+				timeZones.length > 1
+					? "flex-row items-center"
+					: "flex-row lg:flex-row lg:items-center"
+			}`}>
+			<div>
 				<div>
 					<div className='flex items-center gap-2'>
 						<p className='font-bold text-xs'>Current City:</p>
