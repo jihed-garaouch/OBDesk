@@ -103,36 +103,56 @@ const AddTaskModal = ({
 					isCompleted: selectedTask.isCompleted,
 					hasReminder: selectedTask.hasReminder,
 				});
-
-		}
+			}
 
 			setTimeout(() => setAnimateIn(true), 20);
 		} else {
 			setAnimateIn(false);
-			setTimeout(() => {
+
+			const timer = setTimeout(() => {
 				setVisible(false);
 				setIsAddTask(false);
 				setErrors({});
+
+				setTaskFormDetails({
+					id: "",
+					title: "",
+					description: "",
+					date: "",
+					time: "",
+					priority: "High",
+					category: "Personal",
+					client: "",
+					projectName: "",
+					isCompleted: false,
+					hasReminder: false,
+				});
 			}, 300);
 
-			setTaskFormDetails({
-				id: "",
-				title: "",
-				description: "",
-				date: "",
-				time: "",
-				priority: "High",
-				category: "Personal",
-				client: "",
-				projectName: "",
-				isCompleted: false,
-				hasReminder: false,
-			});
+			return () => clearTimeout(timer);
 		}
 	}, [isOpen]);
 
 	const handleEdit = async () => {
-		const result = taskSchema.safeParse(taskFormDetails);
+		const syncedDetails = {
+			...taskFormDetails,
+			title:
+				(document.getElementById("title") as HTMLInputElement)?.value ||
+				taskFormDetails.title,
+			description:
+				(document.getElementById("description") as HTMLInputElement)?.value ||
+				taskFormDetails.description,
+			date:
+				(document.getElementById("date") as HTMLInputElement)?.value ||
+				taskFormDetails.date,
+			time:
+				(document.getElementById("time") as HTMLInputElement)?.value ||
+				taskFormDetails.time,
+		};
+
+		setTaskFormDetails(syncedDetails);
+
+		const result = taskSchema.safeParse(syncedDetails);
 		if (!result.success) {
 			const fieldErrors: { [key: string]: string } = {};
 			result.error.issues.forEach((err) => {
@@ -145,39 +165,44 @@ const AddTaskModal = ({
 		}
 
 		const formattedTaskDetails: Task = {
-			...taskFormDetails,
-			date: formatReadableDate(taskFormDetails.date),
-			time: formatReadableTime(taskFormDetails.time),
-			priority: taskFormDetails.priority as "High" | "Medium" | "Low",
-			category: taskFormDetails.category as "Personal" | "Work",
+			...syncedDetails,
+			date: formatReadableDate(syncedDetails.date),
+			time: formatReadableTime(syncedDetails.time),
+			priority: syncedDetails.priority as "High" | "Medium" | "Low",
+			category: syncedDetails.category as "Personal" | "Work",
 		};
 
 		setIsLoading(true);
 		try {
 			handleEditTask(formattedTaskDetails);
+			onClose();
 		} catch (err) {
 			console.error("Failed to add task:", err);
 		} finally {
-			setTaskFormDetails({
-				id: "",
-				title: "",
-				description: "",
-				date: "",
-				time: "",
-				priority: "High",
-				category: "Personal",
-				client: "",
-				projectName: "",
-				isCompleted: false,
-				hasReminder: false,
-			});
-			onClose();
 			setIsLoading(false);
 		}
 	};
 
 	const handleSubmit = () => {
-		const result = taskSchema.safeParse(taskFormDetails);
+		const syncedDetails = {
+			...taskFormDetails,
+			title:
+				(document.getElementById("title") as HTMLInputElement)?.value ||
+				taskFormDetails.title,
+			description:
+				(document.getElementById("description") as HTMLInputElement)?.value ||
+				taskFormDetails.description,
+			date:
+				(document.getElementById("date") as HTMLInputElement)?.value ||
+				taskFormDetails.date,
+			time:
+				(document.getElementById("time") as HTMLInputElement)?.value ||
+				taskFormDetails.time,
+		};
+
+		setTaskFormDetails(syncedDetails);
+
+		const result = taskSchema.safeParse(syncedDetails);
 		if (!result.success) {
 			const fieldErrors: { [key: string]: string } = {};
 			result.error.issues.forEach((err) => {
@@ -190,34 +215,21 @@ const AddTaskModal = ({
 		}
 
 		const formattedTaskDetails: Task = {
-			...taskFormDetails,
+			...syncedDetails,
 			id: crypto.randomUUID(),
-			date: formatReadableDate(taskFormDetails.date),
-			time: formatReadableTime(taskFormDetails.time),
-			priority: taskFormDetails.priority as "High" | "Medium" | "Low",
-			category: taskFormDetails.category as "Personal" | "Work",
+			date: formatReadableDate(syncedDetails.date),
+			time: formatReadableTime(syncedDetails.time),
+			priority: syncedDetails.priority as "High" | "Medium" | "Low",
+			category: syncedDetails.category as "Personal" | "Work",
 		};
 
 		setIsLoading(true);
 		try {
 			handleAddTask(formattedTaskDetails);
+			onClose();
 		} catch (err) {
 			console.error("Failed to add task:", err);
 		} finally {
-			setTaskFormDetails({
-				id: "",
-				title: "",
-				description: "",
-				date: "",
-				time: "",
-				priority: "High",
-				category: "Personal",
-				client: "",
-				projectName: "",
-				isCompleted: false,
-				hasReminder: false,
-			});
-			onClose();
 			setIsLoading(false);
 		}
 	};
