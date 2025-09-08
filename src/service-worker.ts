@@ -4,6 +4,7 @@ import { precacheAndRoute, cleanupOutdatedCaches } from "workbox-precaching";
 import { registerRoute } from "workbox-routing";
 import { CacheFirst, NetworkFirst } from "workbox-strategies";
 import { ExpirationPlugin } from "workbox-expiration";
+import { RangeRequestsPlugin } from 'workbox-range-requests';
 
 declare let self: ServiceWorkerGlobalScope;
 
@@ -17,7 +18,7 @@ precacheAndRoute(self.__WB_MANIFEST);
 self.addEventListener("install", (event) => {
 	console.log("Service Worker installing...");
 	event.waitUntil(
-		Promise.all([
+		Promise.allSettled([
 			// Cache offline page and assets
 			caches.open("offline-assets").then((cache) => {
 				return cache.addAll([
@@ -43,7 +44,7 @@ self.addEventListener("install", (event) => {
 					"/music/audio/music-8.mp3",
 					"/music/audio/music-9.mp3",
 					"/music/audio/music-10.mp3",
-				]);
+				]).catch(err => console.warn("Music pre-cache failed, skipping:", err));
 			}),
 			// Cache music cover images
 			caches.open("music-covers").then((cache) => {
@@ -61,49 +62,27 @@ self.addEventListener("install", (event) => {
 					"/music/img/music-10.webp",
 				]);
 			}),
-		])
+		]).then(() => self.skipWaiting())
 	);
-	self.skipWaiting();
 });
 
 self.addEventListener("activate", (event) => {
 	console.log("Service Worker activated");
-	event.waitUntil(Promise.all([self.clients.claim()]));
+	event.waitUntil(self.clients.claim());
 });
 
 // Cache fonts
 registerRoute(
-	({ url }) => url.pathname.startsWith("/fonts/Satoshi/"),
-	new CacheFirst({
-		cacheName: "satoshi-fonts",
-		plugins: [
-			new ExpirationPlugin({
-				maxEntries: 10,
-				maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
-			}),
-			{
-				async cacheWillUpdate({ response }) {
-					if (!response || response.status !== 200) return null;
-					const cloned = response.clone();
-					const body = await cloned.blob();
-					const headers = new Headers(cloned.headers);
-
-					if (
-						!headers.get("Content-Type") ||
-						headers.get("Content-Type") === "application/octet-stream"
-					) {
-						headers.set("Content-Type", "font/otf");
-					}
-
-					return new Response(body, {
-						status: cloned.status,
-						statusText: cloned.statusText,
-						headers,
-					});
-				},
-			},
-		],
-	})
+    ({ url }) => url.pathname.startsWith("/fonts/Satoshi/"),
+    new CacheFirst({
+        cacheName: "satoshi-fonts",
+        plugins: [
+            new ExpirationPlugin({
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24 * 30,
+            }),
+        ],
+    })
 );
 
 // Cache offline assets
@@ -121,6 +100,7 @@ registerRoute(
 	new CacheFirst({
 		cacheName: "music-audio",
 		plugins: [
+			new RangeRequestsPlugin(),
 			new ExpirationPlugin({
 				maxEntries: 20,
 				maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
