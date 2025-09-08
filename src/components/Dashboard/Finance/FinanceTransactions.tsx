@@ -111,7 +111,7 @@ const FinanceTransactions = ({
 								icon: transactionCategoryIcons[transaction.category],
 							});
 						}}
-						className='flex justify-between items-center gap-4 hover:bg-foreground/5 p-3 rounded-[10px] cursor-pointer transition-all duration-300 ease-in-out active:scale-[0.99] lg:active:scale-[0.995]'>
+						className='flex justify-between items-center gap-4 hover:bg-foreground/5 hover:bg-foreground-5 p-3 rounded-[10px] cursor-pointer transition-all duration-300 ease-in-out active:scale-[0.99] lg:active:scale-[0.995]'>
 						<div className='flex gap-2 items-center'>
 							<div className='p-2 rounded-[10px] bg-foreground w-10 h-10 flex items-center justify-center'>
 								<span className='text-background text-2xl'>
@@ -122,7 +122,7 @@ const FinanceTransactions = ({
 								<p className='font-medium text-xs md:text-sm line-clamp-2 max-w-[150px] md:max-w-[200px] lg:max-w-[300px]'>
 									{transaction.description}
 								</p>
-								<div className='flex flex-col lg:flex-row lg:items-center gap-[2px] lg:gap-1 text-[11px] lg:text-xs text-foreground/70'>
+								<div className='flex flex-col lg:flex-row lg:items-center gap-[2px] lg:gap-1 text-[11px] lg:text-xs text-foreground/70 text-foreground-70'>
 									<span className='capitalize'>
 										{transaction.category.split("_").join(" ")}
 									</span>

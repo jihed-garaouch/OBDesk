@@ -74,18 +74,18 @@ const MusicPlayerModal = ({
 			className='fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-[999]'>
 			<div
 				onClick={(e) => e.stopPropagation()}
-				className='bg-background/90 rounded-2xl border border-foreground/20 w-[90%] max-w-md p-4 shadow-lg text-foreground relative z-[1000]'>
+				className='bg-background/90 bg-background-90 rounded-2xl border border-foreground/20 border-foreground-20 w-[90%] max-w-md p-4 shadow-lg text-foreground relative z-[1000]'>
 				{/* Close Button */}
 				<button
 					onClick={onClose}
-					className='absolute top-3 right-3 text-foreground/60 hover:text-foreground transition-all cursor-pointer'>
+					className='absolute top-3 right-3 text-foreground/60 text-foreground-60 text-foreground-60 hover:text-foreground transition-all cursor-pointer'>
 					<IoClose size={22} />
 				</button>
 
 				{/* Now Playing */}
 				<div className='flex flex-col items-center gap-3 mt-4'>
 					<div
-						className='h-32 w-32 rounded-full overflow-hidden shadow-md border border-foreground/20'
+						className='h-32 w-32 rounded-full overflow-hidden shadow-md border border-foreground/20 border-foreground-20'
 						style={{
 							transform: `rotate(${rotation}deg)`,
 							transition: "transform 0.1s linear",
@@ -100,7 +100,7 @@ const MusicPlayerModal = ({
 					{/* Track Info */}
 					<div className='text-center'>
 						<h2 className='text-sm font-medium'>{currentTrack.title}</h2>
-						<p className='text-xs text-foreground/60'>{currentTrack.artist}</p>
+						<p className='text-xs text-foreground/60 text-foreground-60'>{currentTrack.artist}</p>
 					</div>
 
 					{/* Progress Bar */}
@@ -113,7 +113,7 @@ const MusicPlayerModal = ({
 							onChange={(e) => handleSeek(parseFloat(e.target.value))}
 							className='w-full accent-foreground cursor-pointer'
 						/>
-						<div className='w-full flex justify-between text-[10px] text-foreground/70'>
+						<div className='w-full flex justify-between text-[10px] text-foreground/70 text-foreground-70'>
 							<span>{formatTime(currentTime)}</span>
 							<span>{formatTime(duration)}</span>
 						</div>
@@ -170,24 +170,24 @@ const MusicPlayerModal = ({
 				</div>
 
 				{/* Song List */}
-				<div className='mt-5 border-t border-foreground/10 pt-2 max-h-60 flex flex-col gap-1 overflow-y-auto'>
+				<div className='mt-5 border-t border-foreground/10 border-foreground-10 pt-2 max-h-60 flex flex-col gap-1 overflow-y-auto'>
 					{tracks.map((track, index) => (
 						<div
 							key={track.id}
 							onClick={() => handleSelect(index)}
 							className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-all ${
 								currentIndex === index
-									? "bg-foreground/10"
-									: "hover:bg-foreground/5"
+									? "bg-foreground/10 bg-foreground-10"
+									: "hover:bg-foreground/5 hover:bg-foreground-5"
 							}`}>
 							<img
 								src={track.cover}
 								alt={track.title}
-								className='w-10 h-10 rounded-full border border-foreground/20 object-cover'
+								className='w-10 h-10 rounded-full border border-foreground/20 border-foreground-20 border-foreground-20 object-cover'
 							/>
 							<div className='flex-1'>
 								<p className='text-sm font-medium truncate'>{track.title}</p>
-								<p className='text-xs text-foreground/60 truncate'>
+								<p className='text-xs text-foreground/60 text-foreground-60 text-foreground-60 truncate'>
 									{track.artist}
 								</p>
 							</div>

@@ -76,12 +76,12 @@ const NotificationPermissionModal = () => {
 
 			{/* Bottom Sheet Modal */}
 			<div
-				className={`relative w-full max-w-lg xl:max-w-xl bg-background border border-foreground/60 rounded-t-[16px] md:rounded-t-[32px] p-4 py-8 md:p-8 shadow-2xl transition-transform duration-300 ease-out transform ${
+				className={`relative w-full max-w-lg xl:max-w-xl bg-background border border-foreground/60 border-foreground-60 rounded-t-[16px] md:rounded-t-[32px] p-4 py-8 md:p-8 shadow-2xl transition-transform duration-300 ease-out transform ${
 					isVisible ? "translate-y-0" : "translate-y-full"
 				}`}>
 				<button
 					onClick={closeSheet}
-					className='absolute top-6 right-6 text-foreground/60 hover:text-foreground text-3xl cursor-pointer transition-all duration-300 ease-in-out'>
+					className='absolute top-6 right-6 text-foreground/60 text-foreground-60 hover:text-foreground text-3xl cursor-pointer transition-all duration-300 ease-in-out'>
 					<IoClose />
 				</button>
 

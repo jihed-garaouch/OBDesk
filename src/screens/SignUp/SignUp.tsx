@@ -204,14 +204,14 @@ const SignUpScreen = () => {
 					<button
 						onClick={signInWithGoogle}
 						type='button'
-						className='active:scale-95 focus:bg-foreground focus:text-background mt-5 w-full bg-transparent border border-foreground/50 text-foreground px-4 py-3 rounded-[4px] cursor-pointer font-bold text-sm flex items-center justify-center gap-2 hover:bg-foreground hover:text-background transition-all duration-500 ease-in-out'>
+						className='active:scale-95 focus:bg-foreground focus:text-background mt-5 w-full bg-transparent border border-foreground/50 border-foreground-50 text-foreground px-4 py-3 rounded-[4px] cursor-pointer font-bold text-sm flex items-center justify-center gap-2 hover:bg-foreground hover:text-background transition-all duration-500 ease-in-out'>
 						<FcGoogle className='text-xl' />
 						<span>Sign up with Google</span>
 					</button>
 					<button
 						onClick={signInWithGitHub}
 						type='button'
-						className='active:scale-95 focus:bg-foreground focus:text-background mt-5 w-full bg-transparent border border-foreground/50 text-foreground px-4 py-3 rounded-[4px] cursor-pointer font-bold text-sm flex items-center justify-center gap-2 hover:bg-foreground hover:text-background transition-all duration-500 ease-in-out'>
+						className='active:scale-95 focus:bg-foreground focus:text-background mt-5 w-full bg-transparent border border-foreground/50 border-foreground-50 text-foreground px-4 py-3 rounded-[4px] cursor-pointer font-bold text-sm flex items-center justify-center gap-2 hover:bg-foreground hover:text-background transition-all duration-500 ease-in-out'>
 						<FaGithub className='text-xl' />
 						<span>Sign up with GitHub</span>
 					</button>

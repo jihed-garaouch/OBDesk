@@ -30,11 +30,11 @@ const SingleTransactionModal = ({
 			className='fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-[999]'>
 			<div
 				onClick={(e) => e.stopPropagation()}
-				className='bg-background/90 rounded-2xl border border-foreground/20 w-[90%] max-w-md p-4 shadow-lg text-foreground relative z-[1000]'>
+				className='bg-background/90 bg-background-90 rounded-2xl border border-foreground/20 border-foreground-20 w-[90%] max-w-md p-4 shadow-lg text-foreground relative z-[1000]'>
 				{/* Close Button */}
 				<button
 					onClick={onClose}
-					className='absolute top-3 right-3 text-foreground/60 hover:text-foreground transition-all cursor-pointer'>
+					className='absolute top-3 right-3 text-foreground/60 text-foreground-60 hover:text-foreground transition-all cursor-pointer'>
 					<IoClose size={22} />
 				</button>
 				<div className='flex flex-col items-center gap-2'>
@@ -57,16 +57,16 @@ const SingleTransactionModal = ({
 						{selectedTransaction?.description}
 					</p>
 				</div>
-				<div className='border-foreground/15 text-sm px-4 border mt-4 rounded-[5px] flex flex-col gap-2'>
+				<div className='border-foreground/15 border-foreground-15 text-sm px-4 border mt-4 rounded-[5px] flex flex-col gap-2'>
 					{transactionDetails &&
 						Object.entries(transactionDetails).map(([key, value], i) => (
 							<div
 								key={i}
 								className={`flex justify-between ${
 									Object.entries(transactionDetails).length - 1 !== i &&
-									"border-b border-foreground/15"
+									"border-b border-foreground/15 border-foreground-15"
 								} py-3`}>
-								<p className='text-foreground/70'>{key}:</p>
+								<p className='text-foreground/70 text-foreground-70'>{key}:</p>
 								<p className='font-medium capitalize'>{value}</p>
 							</div>
 						))}

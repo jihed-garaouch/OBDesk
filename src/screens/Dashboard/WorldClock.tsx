@@ -80,7 +80,7 @@ const WorldClockScreen = () => {
 				{timeZones.map((zone, index) => (
 					<div
 						key={index}
-						className={`p-4 pt-6 border border-foreground/25 rounded-lg flex flex-col gap-3 cursor-default relative ${
+						className={`p-4 pt-6 border border-foreground/25 border-foreground-25 rounded-lg flex flex-col gap-3 cursor-default relative ${
 							zone.active
 								? "bg-foreground text-background font-bold"
 								: "font-medium"

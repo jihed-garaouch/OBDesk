@@ -45,8 +45,8 @@ const TaskFilter = () => {
 					className={`text-xs lg:text-sm shadow-sm px-4 py-2 rounded-full border flex items-center gap-2 cursor-pointer group transition-all duration-300 ease-in-out active:scale-[0.99] 
   ${
 		selectedTaskFilter.activeFilter === filter.name
-			? "bg-foreground text-background border-foreground/50 font-medium"
-			: "bg-transparent text-foreground border-foreground/30 hover:text-background hover:bg-foreground"
+			? "bg-foreground text-background border-foreground/50 border-foreground-50 font-medium"
+			: "bg-transparent text-foreground border-foreground/30 border-foreground-30 hover:text-background hover:bg-foreground"
 	}
 `}>
 					<span>{filter.name}</span>

@@ -100,7 +100,7 @@ const PullToRefreshWrapper: React.FC<PullToRefreshProps> = ({
 										? "text-foreground animate-spin"
 										: pullDistance >= threshold
 										? "text-foreground"
-										: "text-foreground/50"
+										: "text-foreground/50 text-foreground-50"
 								}`}
 							/>
 						) : (
@@ -108,7 +108,7 @@ const PullToRefreshWrapper: React.FC<PullToRefreshProps> = ({
 								className={`w-5 h-5 animate-pulse ${
 									pullDistance >= threshold
 										? "text-foreground"
-										: "text-foreground/50"
+										: "text-foreground/50 text-foreground-50"
 								}`}
 							/>
 						)}
@@ -117,7 +117,7 @@ const PullToRefreshWrapper: React.FC<PullToRefreshProps> = ({
 						) : pullDistance >= threshold ? (
 							<span className='text-foreground'>Release to refresh</span>
 						) : (
-							<span className='text-foreground/50'>Pull down to refresh</span>
+							<span className='text-foreground/50 text-foreground-50'>Pull down to refresh</span>
 						)}
 					</div>
 				</div>

@@ -49,7 +49,7 @@ const DashboardLayout = () => {
 	return (
 		<div className='h-svh flex'>
 			{/* Sidebar */}
-			<aside className='group hidden md:w-22 hover:md:w-54 border-r border-foreground/10 p-4 h-svh lg:flex flex-col transition-all duration-500 ease-in-out'>
+			<aside className='group hidden md:w-22 hover:md:w-54 border-r border-foreground/10 border-foreground-10 p-4 h-svh lg:flex flex-col transition-all duration-500 ease-in-out'>
 				<Link
 					to='/dashboard'
 					className='flex group-hover:flex-row flex-col items-center gap-1 mb-8 text-xs group-hover:text-sm'>
@@ -71,7 +71,7 @@ const DashboardLayout = () => {
 							className={`flex items-center gap-2 px-4 py-2 rounded-md w-fit group-hover:w-full ${
 								isActive(item.path)
 									? "bg-foreground text-background"
-									: "hover:bg-foreground/10 transition-all duration-500 ease-in-out"
+									: "hover:bg-foreground/10 hover:bg-foreground-10 transition-all duration-500 ease-in-out"
 							}`}>
 							<span>{item.icon}</span>
 							<span className='text-sm hidden group-hover:block truncate max-w[170px]'>
@@ -106,7 +106,7 @@ const DashboardLayout = () => {
 				<button
 					aria-label='Open menu'
 					onClick={() => setMobileOpen(true)}
-					className='p-2 rounded-md hover:bg-foreground/6 cursor-pointer'>
+					className='p-2 rounded-md hover:bg-foreground/6 hover:bg-foreground-6 cursor-pointer'>
 					<FiMenu size={18} />
 				</button>
 			</header>
@@ -141,7 +141,7 @@ const DashboardLayout = () => {
 					<button
 						aria-label='Close menu'
 						onClick={() => setMobileOpen(false)}
-						className='p-2 rounded-md hover:bg-foreground/6 cursor-pointer'>
+						className='p-2 rounded-md hover:bg-foreground/6 hover:bg-foreground-6 cursor-pointer'>
 						<FiX size={18} />
 					</button>
 				</div>
@@ -155,7 +155,7 @@ const DashboardLayout = () => {
 							className={`flex items-center gap-2 px-4 py-2 rounded-md transition-colors ${
 								isActive(item.path)
 									? "bg-foreground text-background"
-									: "hover:bg-foreground/10 transition-all duration-500 ease-in-out"
+									: "hover:bg-foreground/10 hover:bg-foreground-10 transition-all duration-500 ease-in-out"
 							}`}>
 							{item.icon}
 							<span>{item.label}</span>
@@ -164,7 +164,7 @@ const DashboardLayout = () => {
 				</nav>
 
 				<div className='mt-auto w-full flex flex-col items-center gap-4'>
-					<div className='flex items-center gap-2 cursor-default hover:bg-foreground/10 px-4 py-2 rounded-md w-full transition-all duration-500 ease-in-out'>
+					<div className='flex items-center gap-2 cursor-default hover:bg-foreground/10 hover:bg-foreground-10 hover:bg-foreground-10 px-4 py-2 rounded-md w-full transition-all duration-500 ease-in-out'>
 						<Avatar />
 						<span className='text-sm font-medium'>{fullName}</span>
 					</div>
@@ -227,7 +227,7 @@ const DashboardLayout = () => {
 							</>
 						)}
 					</div>
-					<div className='relative z-50 bg-foreground/5 border-foreground/10 border shadow-md backdrop-blur-md mb-3 rounded-full p-2 flex justify-between items-center text-xs ml-auto w-fit'>
+					<div className='relative z-50 bg-foreground/5 bg-foreground-5 border-foreground/10 border-foreground-10 border shadow-md backdrop-blur-md mb-3 rounded-full p-2 flex justify-between items-center text-xs ml-auto w-fit'>
 						<div className='flex items-center gap-2 md:gap-3'>
 							<MusicPlayer setShowMusicPlayerModal={setShowMusicPlayerModal} />
 							<div className='bg-foreground rounded-full h-8 w-8 shadow-sm flex items-center justify-center font-bold text-sm text-background overflow-hidden cursor-default'>
