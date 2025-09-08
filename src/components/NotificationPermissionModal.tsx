@@ -1,21 +1,26 @@
 import { useEffect, useState } from "react";
 import { IoClose, IoNotifications } from "react-icons/io5";
+import { toast } from "sonner";
 
 const NotificationPermissionModal = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [isVisible, setIsVisible] = useState(false);
 
+	const getPermissionStatus = () => {
+		if (typeof window !== "undefined" && "Notification" in window) {
+			return Notification.permission;
+		}
+		return "default"; // Default to "default" if API is missing (e.g., iOS Safari)
+	};
+
 	const isPWA =
 		typeof window !== "undefined" &&
 		window.matchMedia("(display-mode: standalone)").matches;
-	const isDenied =
-		typeof window !== "undefined" && Notification.permission === "denied";
+	const isDenied = getPermissionStatus() === "denied";
 
 	useEffect(() => {
-		if (
-			("Notification" in window && Notification.permission !== "granted") ||
-			Notification.permission === "denied"
-		) {
+		const permission = getPermissionStatus();
+		if ("Notification" in window && permission !== "granted") {
 			setIsOpen(true);
 			setTimeout(() => setIsVisible(true), 10);
 		}
@@ -43,10 +48,18 @@ const NotificationPermissionModal = () => {
 			return;
 		}
 
-		Notification.requestPermission().then((permission) => {
-			console.log("Notification permission:", permission);
+		if ("Notification" in window) {
+			Notification.requestPermission().then((permission) => {
+				console.log("Notification permission:", permission);
+				closeSheet();
+			});
+		} else {
+			// Fallback for iOS users who haven't added to Home Screen yet
+			toast.info(
+				"To enable notifications on iPhone, please 'Add to Home Screen' first."
+			);
 			closeSheet();
-		});
+		}
 	};
 
 	if (!isOpen) return null;
