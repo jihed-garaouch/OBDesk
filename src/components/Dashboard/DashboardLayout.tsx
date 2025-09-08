@@ -49,7 +49,7 @@ const DashboardLayout = () => {
 	return (
 		<div className='h-svh flex'>
 			{/* Sidebar */}
-			<aside className='group hidden md:w-22 hover:md:w-54 border-r border-[var(--border)] p-4 h-svh lg:flex flex-col transition-all duration-500 ease-in-out'>
+			<aside className='group hidden md:w-22 hover:md:w-54 border-r border-foreground/10 p-4 h-svh lg:flex flex-col transition-all duration-500 ease-in-out'>
 				<Link
 					to='/dashboard'
 					className='flex group-hover:flex-row flex-col items-center gap-1 mb-8 text-xs group-hover:text-sm'>
@@ -121,7 +121,7 @@ const DashboardLayout = () => {
 
 			{/* Mobile drawer */}
 			<aside
-				className={`fixed top-0 left-0 bottom-0 w-64 z-100 h-svh flex flex-col transform transition-transform duration-250 ease-in-out lg:hidden bg-background border-r border-[var(--border)] p-4 ${
+				className={`fixed top-0 left-0 bottom-0 w-64 z-100 h-svh flex flex-col transform transition-transform duration-250 ease-in-out lg:hidden bg-background border-r border-border p-4 ${
 					mobileOpen ? "translate-x-0" : "-translate-x-full"
 				}`}>
 				<div className='flex items-center justify-between mb-6'>
