@@ -49,13 +49,13 @@ const AddCityModal = ({ isOpen, onClose, onAddCity }: AddCityModalProps) => {
 			className='fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 px-4'>
 			<div
 				onClick={(e) => e.stopPropagation()}
-				className='bg-background text-foreground rounded-2xl p-6 w-full max-w-md shadow-lg border border-foreground/20 relative'>
+				className='bg-background text-foreground rounded-2xl p-6 w-full max-w-md shadow-lg border border-foreground/20 border-foreground-20 relative'>
 				<button
 					onClick={() => {
 						onClose();
 						setSearch("");
 					}}
-					className='absolute top-4 right-4 text-xl text-foreground/80 hover:text-foreground transition-colors cursor-pointer'>
+					className='absolute top-4 right-4 text-xl text-foreground/80 text-foreground-80 hover:text-foreground transition-colors cursor-pointer'>
 					<IoClose />
 				</button>
 
@@ -66,7 +66,7 @@ const AddCityModal = ({ isOpen, onClose, onAddCity }: AddCityModalProps) => {
 					value={search}
 					onChange={(e) => setSearch(e.target.value)}
 					placeholder='Search timezone (e.g., Europe/London)'
-					className='w-full border border-foreground/30 rounded-xl p-3 text-sm focus:outline-none focus:border-foreground transition-all mb-4'
+					className='w-full border border-foreground/30 border-foreground-30 rounded-xl p-3 text-sm focus:outline-none focus:border-foreground transition-all mb-4'
 				/>
 
 				<div className='max-h-60 overflow-y-auto space-y-2 scrollbar-thin scrollbar-thumb-foreground/30'>
@@ -81,14 +81,14 @@ const AddCityModal = ({ isOpen, onClose, onAddCity }: AddCityModalProps) => {
 									onClose();
 									setSearch("");
 								}}
-								className='cursor-pointer border border-foreground/20 rounded-lg p-3 hover:bg-foreground hover:text-background transition-all duration-300 ease-in-out'>
+								className='cursor-pointer border border-foreground/20 border-foreground-20 rounded-lg p-3 hover:bg-foreground hover:text-background transition-all duration-300 ease-in-out'>
 								{timezone}
 							</div>
 						))
 					) : (
 						hasFetched &&
 						filtered.length === 0 && (
-							<p className='text-sm text-center text-foreground/60'>
+							<p className='text-sm text-center text-foreground/60 text-foreground-60'>
 								No results found.
 							</p>
 						)

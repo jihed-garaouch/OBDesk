@@ -57,7 +57,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
 				setSelectedTask(task);
 				setShowViewTaskModal(true);
 			}}
-			className={`group relative flex gap-3 bg-background border w-full md:w-fit p-5 rounded-xl border-foreground/30 md:min-w-[300px] md:max-w-[320px] cursor-pointer active:scale-[0.99] lg:active:scale-[0.98] transition-all duration-300 ease-in-out ${
+			className={`group relative flex gap-3 bg-background border w-full md:w-fit p-5 rounded-xl border-foreground/30 border-foreground-30  md:min-w-[300px] md:max-w-[320px] cursor-pointer active:scale-[0.99] lg:active:scale-[0.98] transition-all duration-300 ease-in-out ${
 				isDark
 					? "shadow-[inset_0_2px_10px_rgba(255,255,255,0.10),0_2px_8px_rgba(0,0,0,0.16)]"
 					: "shadow-[0_3px_10px_rgba(0,0,0,0.16)]"
@@ -76,7 +76,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
 					className={`flex items-center justify-center border-2 ${
 						task.isCompleted
 							? "bg-blue-500 border-blue-500/40 hover:border-blue-500/60"
-							: "bg-background border-foreground/40 hover:border-foreground/60"
+							: "bg-background border-foreground/40 border-foreground-40 hover:border-foreground/60 hover:border-foreground-60"
 					} p-[3px] rounded-md h-5 w-5 cursor-pointer transition-colors duration-150 mt-1`}>
 					<FaCheck
 						className={`${task.isCompleted ? "block text-white" : "hidden"}`}
@@ -93,14 +93,14 @@ const TaskCard = ({ task }: TaskCardProps) => {
 				</h3>
 				{task.description && (
 					<p
-						className={`text-sm text-foreground/90 mb-2.5 line-clamp-2 ${
+						className={`text-sm text-foreground/90 text-foreground-90 mb-2.5 line-clamp-2 ${
 							task.isCompleted ? "line-through" : ""
 						}`}>
 						{task.description}
 					</p>
 				)}
 
-				<div className='flex items-center flex-wrap gap-2 text-[10px] md:text-xs mt-1 font-light mb-3 text-foreground/80'>
+				<div className='flex items-center flex-wrap gap-2 text-[10px] md:text-xs mt-1 font-light mb-3 text-foreground/80 text-foreground-80'>
 					<p className='flex items-center gap-[2px]'>
 						<FiCalendar size={12} /> <span>{task.date}</span>
 					</p>

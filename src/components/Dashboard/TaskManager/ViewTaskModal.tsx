@@ -70,7 +70,7 @@ const ViewTaskModal = ({
 			<div
 				onClick={(e) => e.stopPropagation()}
 				className={`
-                    h-full w-full max-w-[600px] bg-background border border-foreground/20 rounded-lg relative shadow-xl
+                    h-full w-full max-w-[600px] bg-background border border-foreground/20 border-foreground-20 rounded-lg relative shadow-xl
                     transition-all duration-300 ease-in-out
 
                     ${
@@ -109,17 +109,17 @@ const ViewTaskModal = ({
 						<h2 className='text-3xl font-bold mb-5'>Task Details</h2>
 						{/* Task details */}
 						<div className='flex flex-col gap-3 text-sm overflow-y-auto flex-1 min-h-0'>
-							<div className='flex items-start border-b border-foreground/30 pb-3 gap-4'>
+							<div className='flex items-start border-b border-foreground/30 border-foreground-30 pb-3 gap-4'>
 								<p className='flex-[1]'>Task name:</p>
 								<p className='flex-[3]'>{selectedTask?.title}</p>
 							</div>
 							{selectedTask?.description && (
-								<div className='flex items-start border-b border-foreground/30 pb-3 gap-4'>
+								<div className='flex items-start border-b border-foreground/30 border-foreground-30 pb-3 gap-4'>
 									<p className='flex-[1]'>Task description:</p>
 									<p className='flex-[3]'>{selectedTask?.description}</p>
 								</div>
 							)}
-							<div className='flex items-center border-b border-foreground/30 pb-3 gap-4'>
+							<div className='flex items-center border-b border-foreground/30 border-foreground-30 pb-3 gap-4'>
 								<p className='flex-[1]'>Priority:</p>
 								<p className='flex-[3]'>
 									{selectedTask?.priority && (
@@ -132,7 +132,7 @@ const ViewTaskModal = ({
 									)}
 								</p>
 							</div>
-							<div className='flex items-center border-b border-foreground/30 pb-3 gap-4'>
+							<div className='flex items-center border-b border-foreground/30 border-foreground-30 pb-3 gap-4'>
 								<p className='flex-[1]'>Category:</p>
 								<p className='flex-[3]'>
 									{selectedTask?.category && (
@@ -147,7 +147,7 @@ const ViewTaskModal = ({
 							</div>
 							{selectedTask?.category === "Work" && (
 								<>
-									<div className='flex items-center border-b border-foreground/30 pb-3 gap-4'>
+									<div className='flex items-center border-b border-foreground/30 border-foreground-30 pb-3 gap-4'>
 										<p className='flex-[1]'>Client:</p>
 										<p className='flex-[3]'>
 											{selectedTask?.category && (
@@ -160,7 +160,7 @@ const ViewTaskModal = ({
 											)}
 										</p>
 									</div>
-									<div className='flex items-center border-b border-foreground/30 pb-3 gap-4'>
+									<div className='flex items-center border-b border-foreground/30 border-foreground-30 pb-3 gap-4'>
 										<p className='flex-[1]'>Project Name:</p>
 										<p className='flex-[3]'>
 											{selectedTask?.category && (
@@ -175,15 +175,15 @@ const ViewTaskModal = ({
 									</div>
 								</>
 							)}
-							<div className='flex items-center border-b border-foreground/30 pb-3 gap-4'>
+							<div className='flex items-center border-b border-foreground/30 border-foreground-30 pb-3 gap-4'>
 								<p className='flex-[1]'>Due Date:</p>
 								<p className='flex-[3]'>{selectedTask?.date}</p>
 							</div>
-							<div className='flex items-center border-b border-foreground/30 pb-3 gap-4'>
+							<div className='flex items-center border-b border-foreground/30 border-foreground-30 pb-3 gap-4'>
 								<p className='flex-[1]'>Due Time:</p>
 								<p className='flex-[3]'>{selectedTask?.time}</p>
 							</div>
-							<div className='flex items-center border-b border-foreground/30 pb-3 gap-4'>
+							<div className='flex items-center border-b border-foreground/30 border-foreground-30 pb-3 gap-4'>
 								<p className='flex-[1]'>Reminder:</p>
 								<p className='flex-[3]'>
 									<span

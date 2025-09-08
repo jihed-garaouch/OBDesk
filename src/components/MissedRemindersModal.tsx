@@ -133,12 +133,12 @@ const MissedRemindersModal = () => {
 			className='fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[990] p-4'>
 			<div
 				onClick={(e) => e.stopPropagation()}
-				className='bg-background border border-foreground/20 rounded-lg max-w-md w-full max-h-[80vh] overflow-hidden flex flex-col shadow-2xl'>
+				className='bg-background border border-foreground/20 border-foreground-20 rounded-lg max-w-md w-full max-h-[80vh] overflow-hidden flex flex-col shadow-2xl'>
 				{/* Header */}
-				<div className='p-4 border-b border-foreground/20 flex items-center justify-between'>
+				<div className='p-4 border-b border-foreground/20 border-foreground-20 flex items-center justify-between'>
 					<div>
 						<h2 className='text-xl font-bold'>⏰ Missed Reminders</h2>
-						<p className='text-sm text-foreground/60 mt-1'>
+						<p className='text-sm text-foreground/60 text-foreground-60 mt-1'>
 							You have {missedReminders.length} missed reminder
 							{missedReminders.length > 1 ? "s" : ""}
 						</p>
@@ -156,16 +156,16 @@ const MissedRemindersModal = () => {
 					{missedReminders.map((reminder) => (
 						<div
 							key={reminder.id}
-							className='border border-foreground/20 rounded-lg p-4 hover:bg-foreground/2 cursor-pointer transition-colors'>
+							className='border border-foreground/20 border-foreground-20 rounded-lg p-4 hover:bg-foreground/2 hover:bg-foreground-2 cursor-pointer transition-colors'>
 							<div className='flex flex-col md:flex-row items-start justify-between gap-3'>
 								<div className='flex-1'>
 									<h3 className='font-semibold line-clamp-2'>{reminder.title}</h3>
 									{reminder.description && (
-										<p className='text-sm text-foreground/70 mt-1 line-clamp-2'>
+										<p className='text-sm text-foreground/70 text-foreground-70 mt-1 line-clamp-2'>
 											{reminder.description}
 										</p>
 									)}
-									<div className='flex flex-wrap items-center gap-2 mt-2 text-xs text-foreground/60'>
+									<div className='flex flex-wrap items-center gap-2 mt-2 text-xs text-foreground/60 text-foreground-60'>
 										<span>📅 {reminder.date}</span>
 										<span>•</span>
 										<span>🕐 {reminder.time}</span>
@@ -181,7 +181,7 @@ const MissedRemindersModal = () => {
 											}`}>
 											{reminder.priority}
 										</span>
-										<span className='text-xs px-2 py-1 rounded bg-foreground/10'>
+										<span className='text-xs px-2 py-1 rounded bg-foreground/10 bg-foreground-10'>
 											{reminder.category}
 										</span>
 									</div>
@@ -194,7 +194,7 @@ const MissedRemindersModal = () => {
 									</button>
 									<button
 										onClick={() => acknowledgeReminder(reminder.id)}
-										className='text-xs px-3 py-1 border border-foreground/20 rounded hover:bg-foreground/5 transition-colors whitespace-nowrap cursor-pointer'>
+										className='text-xs px-3 py-1 border border-foreground/20 border-foreground-20 rounded hover:bg-foreground/5 hover:bg-foreground-5 transition-colors whitespace-nowrap cursor-pointer'>
 										Dismiss
 									</button>
 								</div>
@@ -204,7 +204,7 @@ const MissedRemindersModal = () => {
 				</div>
 
 				{/* Footer */}
-				<div className='p-4 border-t border-foreground/20'>
+				<div className='p-4 border-t border-foreground/20 border-foreground-20'>
 					<button
 						onClick={acknowledgeAll}
 						className='w-full py-2 bg-foreground text-background rounded-lg font-semibold cursor-pointer'>

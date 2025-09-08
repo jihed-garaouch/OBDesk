@@ -216,11 +216,11 @@ const AddFinanceModal = ({
 			className='fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-[999]'>
 			<div
 				onClick={(e) => e.stopPropagation()}
-				className='bg-background/90 rounded-2xl border border-foreground/20 w-[90%] max-w-md p-4 shadow-lg text-foreground relative z-[1000]'>
+				className='bg-background/90 bg-background-90 rounded-2xl border border-foreground/20 border-foreground-20 w-[90%] max-w-md p-4 shadow-lg text-foreground relative z-[1000]'>
 				{/* Close Button */}
 				<button
 					onClick={onClose}
-					className='absolute top-3 right-3 text-foreground/60 hover:text-foreground transition-all cursor-pointer'>
+					className='absolute top-3 right-3 text-foreground/60 text-foreground-60 hover:text-foreground transition-all cursor-pointer'>
 					<IoClose size={22} />
 				</button>
 				<div>

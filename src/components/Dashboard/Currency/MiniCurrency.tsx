@@ -24,7 +24,7 @@ const MiniCurrency = () => {
 
 	return (
 		<div
-			className={`flex-1 border border-foreground/20 rounded-lg p-4 h-full ${
+			className={`flex-1 border border-foreground/20 border-foreground-20 rounded-lg p-4 h-full ${
 				isDark
 					? "shadow-[inset_0_2px_10px_rgba(255,255,255,0.10),0_2px_8px_rgba(0,0,0,0.16)]"
 					: "shadow-lg"
@@ -38,7 +38,7 @@ const MiniCurrency = () => {
 					</h1>
 				)}
 				{loading && (
-					<p className='text-sm text-foreground/60 text-center'>
+					<p className='text-sm text-foreground/60 text-foreground-60 text-center'>
 						Loading rates...
 					</p>
 				)}
@@ -48,7 +48,7 @@ const MiniCurrency = () => {
 			{/* Converter */}
 			<div className='flex flex-col items-center justify-between gap-3'>
 				{/* From Input */}
-				<div className='flex items-center gap-2 justify-between border border-foreground/30 shadow p-3 rounded-lg flex-1 w-full'>
+				<div className='flex items-center gap-2 justify-between border border-foreground/30 border-foreground-30 border-foreground-30 shadow p-3 rounded-lg flex-1 w-full'>
 					<CurrencyDropdown
 						value={fromCurrency}
 						onChange={setFromCurrency}
@@ -71,7 +71,7 @@ const MiniCurrency = () => {
 				</button>
 
 				{/* To Input */}
-				<div className='flex items-center gap-2 justify-between border border-foreground/30 shadow p-3 rounded-lg flex-1 w-full'>
+				<div className='flex items-center gap-2 justify-between border border-foreground/30 border-foreground-30 shadow p-3 rounded-lg flex-1 w-full'>
 					<CurrencyDropdown
 						value={toCurrency}
 						onChange={setToCurrency}

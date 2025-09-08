@@ -41,7 +41,7 @@ const HomeScreen = () => {
 						</div>
 					) : (
 						<div
-							className={`mb-4 py-4 px-6 border bg-background border-foreground/20 w-fit rounded-[20px] ${
+							className={`mb-4 py-4 px-6 border bg-background border-foreground/20 border-foreground-20 w-fit rounded-[20px] ${
 								isDark
 									? "shadow-[inset_0_2px_10px_rgba(255,255,255,0.10),0_2px_10px_rgba(0,0,0,0.16)]"
 									: "shadow-lg"
@@ -63,7 +63,7 @@ const HomeScreen = () => {
 					</div>
 				</div>
 				<div
-					className={`flex-[1] mb-4 py-4 px-4 md:px-6 border bg-background border-foreground/20 w-full rounded-[20px] ${
+					className={`flex-[1] mb-4 py-4 px-4 md:px-6 border bg-background border-foreground/20 border-foreground-20 w-full rounded-[20px] ${
 						isDark
 							? "shadow-[inset_0_2px_10px_rgba(255,255,255,0.10),0_2px_10px_rgba(0,0,0,0.16)]"
 							: "shadow-lg"

@@ -16,7 +16,7 @@ const CryptoIcon = ({ symbol, cryptos }: CryptoIconProps) => {
 	const iconUrl = crypto?.iconUrl;
 	const cryptoId = symbol.toLowerCase();
 
-	const fallbackIcon = <FaBitcoin className='w-5 h-5 text-foreground/70' />;
+	const fallbackIcon = <FaBitcoin className='w-5 h-5 text-foreground/70 text-foreground-70' />;
 
 	useEffect(() => {
 		let isMounted = true;

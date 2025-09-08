@@ -49,7 +49,7 @@ const CryptoSection = () => {
 
 	return (
 		<div
-			className={`flex-1 border border-foreground/20 rounded-lg p-4 h-full ${
+			className={`flex-1 border border-foreground/20 border-foreground-20 rounded-lg p-4 h-full ${
 				isDark
 					? "shadow-[inset_0_2px_10px_rgba(255,255,255,0.10),0_2px_8px_rgba(0,0,0,0.16)]"
 					: "shadow-lg"
@@ -64,7 +64,7 @@ const CryptoSection = () => {
 						1 {displaySymbol} = {price.toLocaleString()} {toCurrency}
 					</h1>
 				)}
-				{loading && <p className='text-sm text-foreground/60'>Loading...</p>}
+				{loading && <p className='text-sm text-foreground/60 text-foreground-60'>Loading...</p>}
 				{error && <p className='text-sm text-red-500'>{error}</p>}
 				{!loading && !error && historicalData.length > 0 && (
 					<div
@@ -93,7 +93,7 @@ const CryptoSection = () => {
 			{/* Converter */}
 			<div className='flex flex-col sm:flex-row items-center justify-between gap-3'>
 				{/* From Crypto Input */}
-				<div className='flex items-center gap-2 justify-between border border-foreground/30 shadow p-3 rounded-lg flex-1 w-full'>
+				<div className='flex items-center gap-2 justify-between border border-foreground/30 border-foreground-30 shadow p-3 rounded-lg flex-1 w-full'>
 					<CryptoDropdown
 						value={fromCrypto}
 						onChange={setFromCrypto}
@@ -111,13 +111,13 @@ const CryptoSection = () => {
 				{/* Swap Icon */}
 				<button
 					onClick={handleSwap}
-					className='rounded-full p-2 md:p-3 bg-foreground/20 text-foreground flex-shrink-0 hover:opacity-80 transition-opacity cursor-not-allowed opacity-50'
+					className='rounded-full p-2 md:p-3 bg-foreground/20 bg-foreground-20 text-foreground flex-shrink-0 hover:opacity-80 transition-opacity cursor-not-allowed opacity-50'
 					disabled>
 					<ImLoop2 className='text-xs md:text-base' />
 				</button>
 
 				{/* To Fiat Input */}
-				<div className='flex items-center gap-2 justify-between border border-foreground/30 shadow p-3 rounded-lg flex-1 w-full'>
+				<div className='flex items-center gap-2 justify-between border border-foreground/30 border-foreground-30 shadow p-3 rounded-lg flex-1 w-full'>
 					<CurrencyDropdown
 						value={toCurrency}
 						onChange={setToCurrency}
@@ -145,7 +145,7 @@ const CryptoSection = () => {
 								className={`px-3 py-1 rounded text-sm ${
 									timeRange === range
 										? "bg-foreground text-background"
-										: "border border-foreground/30 hover:bg-foreground/10"
+										: "border border-foreground/30 border-foreground-30 hover:bg-foreground/10 hover:bg-foreground-10"
 								}`}>
 								{range.toUpperCase()}
 							</button>
@@ -178,8 +178,8 @@ const CryptoSection = () => {
 						</LineChart>
 					</ResponsiveContainer>
 				) : (
-					<div className='h-[250px] flex items-center justify-center border border-foreground/20 rounded'>
-						<p className='text-foreground/60'>
+					<div className='h-[250px] flex items-center justify-center border border-foreground/20 border-foreground-20 rounded'>
+						<p className='text-foreground/60 text-foreground-60'>
 							{loading ? "Loading chart data..." : "No chart data available"}
 						</p>
 					</div>

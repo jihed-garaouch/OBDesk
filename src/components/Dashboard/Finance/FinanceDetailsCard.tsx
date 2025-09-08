@@ -105,7 +105,7 @@ const FinanceDetailsCard = ({
 
 	return (
 		<div
-			className={`mb-4 py-4 px-2 md:px-6 border border-foreground/20 w-full min-w-[300px] rounded-[20px] flex-[1] ${
+			className={`mb-4 py-4 px-2 md:px-6 border border-foreground/20 border-foreground-20 w-full min-w-[300px] rounded-[20px] flex-[1] ${
 				isDark
 					? "shadow-[inset_0_2px_10px_rgba(255,255,255,0.10),0_2px_8px_rgba(0,0,0,0.16)]"
 					: "shadow-lg"

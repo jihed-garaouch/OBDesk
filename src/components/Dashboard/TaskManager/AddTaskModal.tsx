@@ -257,7 +257,7 @@ const AddTaskModal = ({
 			<div
 				onClick={(e) => e.stopPropagation()}
 				className={`
-                    h-full w-full max-w-[600px] bg-background border border-foreground/20 rounded-lg relative shadow-xl
+                    h-full w-full max-w-[600px] bg-background border border-foreground/20 border-foreground-20 rounded-lg relative shadow-xl
                     transition-all duration-300 ease-in-out
 
                     ${

@@ -23,12 +23,12 @@ const DeleteCityModal = ({
 			className='fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 px-4'>
 			<div
 				onClick={(e) => e.stopPropagation()}
-				className='bg-background text-foreground rounded-2xl p-6 w-full max-w-xs md:max-w-sm shadow-lg border border-foreground/20 relative'>
+				className='bg-background text-foreground rounded-2xl p-6 w-full max-w-xs md:max-w-sm shadow-lg border border-foreground/20 border-foreground-20 relative'>
 				<button
 					onClick={() => {
 						onClose();
 					}}
-					className='absolute top-4 right-4 text-xl text-foreground/80 hover:text-foreground transition-colors cursor-pointer'>
+					className='absolute top-4 right-4 text-xl text-foreground/80 text-foreground-80 hover:text-foreground transition-colors cursor-pointer'>
 					<IoClose />
 				</button>
 

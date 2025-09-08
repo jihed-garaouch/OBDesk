@@ -49,11 +49,11 @@ const MusicPlayer = ({ setShowMusicPlayerModal }: MusicPlayerProps) => {
 	}, [isPlaying]);
 
 	return (
-		<div className='bg-foreground/12 p-2 rounded-full flex items-center text-[1.2rem] shadow-sm'>
+		<div className='bg-foreground/12 bg-foreground-12 p-2 rounded-full flex items-center text-[1.2rem] shadow-sm'>
 			{/* Cover + Track Name */}
 			<div
 				onClick={() => setShowMusicPlayerModal(true)}
-				className='group relative flex items-center gap-2 bg-foreground/8 hover:bg-foreground/15 active:scale-95 px-3 py-1 rounded-full transition-all cursor-pointer'>
+				className='group relative flex items-center gap-2 bg-foreground/8 bg-foreground-8 hover:bg-foreground/15 hover:bg-foreground-15 active:scale-95 px-3 py-1 rounded-full transition-all cursor-pointer'>
 				<button className='bg-white/50 border-[0.1px] border-white/5 rounded-full h-8 w-8 shadow-sm overflow-hidden'>
 					<img
 						src={currentTrack.cover}
@@ -81,25 +81,25 @@ const MusicPlayer = ({ setShowMusicPlayerModal }: MusicPlayerProps) => {
 			{/* Controls */}
 			<button
 				onClick={handlePrev}
-				className='hover:bg-foreground/15 active:scale-90 p-2 rounded-full transition-all text-sm md:text-base cursor-pointer'>
+				className='hover:bg-foreground/15 hover:bg-foreground-15 active:scale-90 p-2 rounded-full transition-all text-sm md:text-base cursor-pointer'>
 				<TbPlayerSkipBack />
 			</button>
 
 			<button
 				onClick={handlePlayPause}
-				className='hover:bg-foreground/15 active:scale-90 p-2 rounded-full transition-all text-sm md:text-base cursor-pointer'>
+				className='hover:bg-foreground/15 hover:bg-foreground-15 active:scale-90 p-2 rounded-full transition-all text-sm md:text-base cursor-pointer'>
 				{isPlaying ? <TbPlayerPause /> : <TbPlayerPlay />}
 			</button>
 
 			<button
 				onClick={handleNext}
-				className='hover:bg-foreground/15 active:scale-90 p-2 rounded-full transition-all text-sm md:text-base cursor-pointer'>
+				className='hover:bg-foreground/15 hover:bg-foreground-15 active:scale-90 p-2 rounded-full transition-all text-sm md:text-base cursor-pointer'>
 				<TbPlayerSkipForward />
 			</button>
 
 			<button
 				onClick={() => setIsMuted((prev) => !prev)}
-				className='hover:bg-foreground/15 active:scale-90 p-2 rounded-full transition-all text-sm md:text-base cursor-pointer'
+				className='hover:bg-foreground/15 hover:bg-foreground-15 active:scale-90 p-2 rounded-full transition-all text-sm md:text-base cursor-pointer'
 				title={isMuted ? "Unmute" : "Mute"}>
 				{isMuted ? <LuVolumeX /> : <LuVolume2 />}
 			</button>
