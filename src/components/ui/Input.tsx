@@ -21,6 +21,7 @@ const Input = ({
 	onChange,
 }: InputProps) => {
 	const [showPassWord, setShowPassWord] = useState<boolean>(false);
+	const [isReadOnly, setIsReadOnly] = useState<boolean>(true);
 	const dateInputRef = useRef<HTMLInputElement>(null);
 	const timeInputRef = useRef<HTMLInputElement>(null);
 
@@ -36,11 +37,15 @@ const Input = ({
 			{type === "search" ? (
 				<div className='flex border-foreground/30 border px-4 py-2 w-full rounded-[4px] focus:outline-none'>
 					<input
-						id={id}
+						id='task-search-field-99'
 						type='text'
 						value={value}
 						onChange={onChange}
+						onInput={onChange}
 						placeholder={placeholder}
+						readOnly={isReadOnly}
+						onFocus={() => setIsReadOnly(false)}
+						onBlur={() => setIsReadOnly(true)}
 						className='outline-none border-0 w-full'
 					/>
 					<button
@@ -59,6 +64,7 @@ const Input = ({
 						type={type}
 						ref={timeInputRef}
 						value={value}
+						onInput={onChange}
 						onChange={onChange}
 						placeholder={placeholder}
 						className='border-foreground/30 border px-4 py-2 w-full rounded-[4px] focus:outline-none cursor-pointer'
@@ -79,6 +85,7 @@ const Input = ({
 						type={type}
 						ref={dateInputRef}
 						value={value}
+						onInput={onChange}
 						onChange={onChange}
 						placeholder={placeholder}
 						className='border-foreground/30 border px-4 py-2 w-full rounded-[4px] focus:outline-none cursor-pointer'
@@ -96,6 +103,7 @@ const Input = ({
 						id={id}
 						type={showPassWord ? "text" : "password"}
 						value={value}
+						onInput={onChange}
 						onChange={onChange}
 						placeholder={placeholder}
 						className='border-none w-full rounded-[4px] focus:outline-none'
@@ -109,6 +117,7 @@ const Input = ({
 					id={id}
 					type={type}
 					value={value}
+					onInput={onChange}
 					onChange={onChange}
 					placeholder={placeholder}
 					className='border-foreground/30 border px-4 py-2 w-full rounded-[4px] focus:outline-none'
