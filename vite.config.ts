@@ -6,6 +6,18 @@ import path from "path";
 
 // https://vite.dev/config/
 export default defineConfig({
+	build: {
+    target: 'es2020', // This is the "sweet spot" for iOS compatibility
+    cssTarget: 'chrome61',
+	modulePreload: {
+      polyfill: true
+    }
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      target: 'es2020'
+    }
+  },
 	plugins: [
 		react(),
 		tailwindcss(),
