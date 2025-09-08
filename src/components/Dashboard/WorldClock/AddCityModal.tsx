@@ -9,16 +9,15 @@ interface AddCityModalProps {
 	onAddCity: (city: string) => void;
 }
 
-const AddCityModal = ({
-	isOpen,
-	onClose,
-	onAddCity,
-}: AddCityModalProps) => {
+const AddCityModal = ({ isOpen, onClose, onAddCity }: AddCityModalProps) => {
 	const [search, setSearch] = useState("");
 	const [timezones, setTimezones] = useState<string[]>([]);
 	const [loading, setLoading] = useState(false);
+	const [hasFetched, setHasFetched] = useState(false);
 
 	useEffect(() => {
+		if (!isOpen || timezones.length > 0) return;
+
 		const fetchAllTimezones = async () => {
 			setLoading(true);
 			try {
@@ -28,11 +27,12 @@ const AddCityModal = ({
 				console.error("Error fetching timezones", error);
 			} finally {
 				setLoading(false);
+				setHasFetched(true);
 			}
 		};
 
 		fetchAllTimezones();
-	}, []);
+	}, [isOpen]);
 
 	const filtered = timezones.filter((tz) =>
 		tz.toLowerCase().includes(search.toLowerCase())
@@ -72,7 +72,7 @@ const AddCityModal = ({
 				<div className='max-h-60 overflow-y-auto space-y-2 scrollbar-thin scrollbar-thumb-foreground/30'>
 					{loading ? (
 						<Skeleton />
-					) : filtered.length ? (
+					) : hasFetched && filtered.length > 0 ? (
 						filtered.map((timezone, index) => (
 							<div
 								key={index}
@@ -86,9 +86,12 @@ const AddCityModal = ({
 							</div>
 						))
 					) : (
-						<p className='text-sm text-center text-foreground/60'>
-							No results found.
-						</p>
+						hasFetched &&
+						filtered.length === 0 && (
+							<p className='text-sm text-center text-foreground/60'>
+								No results found.
+							</p>
+						)
 					)}
 				</div>
 			</div>
