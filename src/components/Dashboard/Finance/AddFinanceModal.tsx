@@ -84,7 +84,7 @@ const AddFinanceModal = ({
 				}),
 				amount: Number(Number(formDetails.amount).toFixed(2)) || 0,
 				transactionType: formDetails.transactionType.toLowerCase(),
-				category: formDetails.category.toLowerCase(),
+				category: formDetails.category.split(" ").join("_").toLocaleLowerCase(),
 			};
 			handleAddTransaction(newTransaction);
 		} catch (err) {
@@ -129,7 +129,7 @@ const AddFinanceModal = ({
 				}),
 				amount: Number(Number(formDetails.amount).toFixed(2)) || 0,
 				transactionType: formDetails.transactionType.toLowerCase(),
-				category: formDetails.category.toLowerCase(),
+				category: formDetails.category.split(" ").join("_").toLocaleLowerCase(),
 			};
 			handleEditTransaction(updatedTransaction);
 		} catch (err) {
@@ -177,8 +177,10 @@ const AddFinanceModal = ({
 				description: transactionToUpdate?.description || "",
 				amount: String(transactionToUpdate?.amount) || "",
 				category: transactionToUpdate?.category
-					? transactionToUpdate.category.charAt(0).toUpperCase() +
-					  transactionToUpdate.category.slice(1)
+					? transactionToUpdate.category
+							.split("_")
+							.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+							.join(" ")
 					: "Select Category",
 				transactionType: transactionToUpdate?.transactionType
 					? transactionToUpdate.transactionType.charAt(0).toUpperCase() +
