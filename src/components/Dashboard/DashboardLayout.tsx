@@ -121,7 +121,7 @@ const DashboardLayout = () => {
 
 			{/* Mobile drawer */}
 			<aside
-				className={`fixed top-0 left-0 bottom-0 w-64 z-50 h-svh flex flex-col transform transition-transform duration-250 ease-in-out lg:hidden bg-background border-r border-[var(--border)] p-4 ${
+				className={`fixed top-0 left-0 bottom-0 w-64 z-100 h-svh flex flex-col transform transition-transform duration-250 ease-in-out lg:hidden bg-background border-r border-[var(--border)] p-4 ${
 					mobileOpen ? "translate-x-0" : "-translate-x-full"
 				}`}>
 				<div className='flex items-center justify-between mb-6'>
@@ -227,7 +227,7 @@ const DashboardLayout = () => {
 							</>
 						)}
 					</div>
-					<div className='bg-foreground/5 border-foreground/10 border shadow-md backdrop-blur-md mb-3 rounded-full p-2 flex justify-between items-center text-xs ml-auto w-fit'>
+					<div className='relative z-50 bg-foreground/5 border-foreground/10 border shadow-md backdrop-blur-md mb-3 rounded-full p-2 flex justify-between items-center text-xs ml-auto w-fit'>
 						<div className='flex items-center gap-2 md:gap-3'>
 							<MusicPlayer setShowMusicPlayerModal={setShowMusicPlayerModal} />
 							<div className='bg-foreground rounded-full h-8 w-8 shadow-sm flex items-center justify-center font-bold text-sm text-background overflow-hidden cursor-default'>
