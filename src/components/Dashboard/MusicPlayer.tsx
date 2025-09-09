@@ -1,12 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { UseMusicPlayer } from "@/context/MusicPlayerContext";
+import { useEffect, useRef } from "react";
 import { LuVolume2, LuVolumeX } from "react-icons/lu";
 import {
-	TbPlayerPlay,
 	TbPlayerPause,
+	TbPlayerPlay,
 	TbPlayerSkipBack,
 	TbPlayerSkipForward,
 } from "react-icons/tb";
-import { UseMusicPlayer } from "@/context/MusicPlayerContext";
 
 interface MusicPlayerProps {
 	setShowMusicPlayerModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -23,21 +23,28 @@ const MusicPlayer = ({ setShowMusicPlayerModal }: MusicPlayerProps) => {
 		setIsMuted,
 	} = UseMusicPlayer();
 
-	const [rotation, setRotation] = useState(0);
+	const coverRef = useRef<HTMLDivElement>(null);
 	const rotationRef = useRef(0);
 	const lastTimestampRef = useRef<number | null>(null);
 
 	useEffect(() => {
 		let frameId: number;
 
+		if (isPlaying) {
+			lastTimestampRef.current = null;
+		}
+
 		const rotate = (timestamp: number) => {
 			if (lastTimestampRef.current === null)
 				lastTimestampRef.current = timestamp;
+
 			const delta = timestamp - lastTimestampRef.current;
 
-			if (isPlaying) {
-				rotationRef.current += (delta / 8000) * 360;
-				setRotation(rotationRef.current);
+			if (isPlaying && coverRef.current) {
+				rotationRef.current =
+					(rotationRef.current + (delta / 8000) * 360) % 360;
+
+				coverRef.current.style.transform = `rotate(${rotationRef.current}deg)`;
 			}
 
 			lastTimestampRef.current = timestamp;
@@ -45,7 +52,10 @@ const MusicPlayer = ({ setShowMusicPlayerModal }: MusicPlayerProps) => {
 		};
 
 		frameId = requestAnimationFrame(rotate);
-		return () => cancelAnimationFrame(frameId);
+		return () => {
+			cancelAnimationFrame(frameId);
+			lastTimestampRef.current = null;
+		};
 	}, [isPlaying]);
 
 	return (
@@ -54,17 +64,19 @@ const MusicPlayer = ({ setShowMusicPlayerModal }: MusicPlayerProps) => {
 			<div
 				onClick={() => setShowMusicPlayerModal(true)}
 				className='group relative flex items-center gap-2 bg-foreground/8 bg-foreground-8 hover:bg-foreground/15 hover:bg-foreground-15 active:scale-95 px-3 py-1 rounded-full transition-all cursor-pointer'>
-				<button className='bg-white/50 border-[0.1px] border-white/5 rounded-full h-8 w-8 shadow-sm overflow-hidden'>
+				<div
+					ref={coverRef}
+					className='bg-white/50 border-[0.1px] border-white/5 rounded-full h-8 w-8 shadow-sm overflow-hidden'>
 					<img
 						src={currentTrack.cover}
 						alt={currentTrack.title}
 						className='object-cover w-full h-full'
 						style={{
-							transform: `rotate(${rotation}deg)`,
-							transition: "transform 0.1s linear",
+							transition: "none", // Critical: Disable CSS transitions during JS animation
+							willChange: "transform", // Hint to iOS to use GPU acceleration
 						}}
 					/>
-				</button>
+				</div>
 
 				{/* Tooltip + Label */}
 				<div className='relative'>
