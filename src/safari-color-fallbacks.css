@@ -5,7 +5,7 @@
 
 /* ---------- BACKGROUND ---------- */
 .bg-background-90 {
-	background-color: rgba(var(--background) 0.9);
+	background-color: rgba(var(--background), 0.9);
 }
 
 /* ---------- FOREGROUND ---------- */

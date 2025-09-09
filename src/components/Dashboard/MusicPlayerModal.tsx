@@ -1,4 +1,6 @@
-import { useState, useRef, useEffect } from "react";
+import { UseMusicPlayer } from "@/context/MusicPlayerContext";
+import { UseTheme } from "@/context/ThemeContext";
+import { useEffect, useRef } from "react";
 import { IoClose } from "react-icons/io5";
 import { LuVolume2, LuVolumeX } from "react-icons/lu";
 import { RiLoopRightFill } from "react-icons/ri";
@@ -8,8 +10,6 @@ import {
 	TbPlayerSkipBack,
 	TbPlayerSkipForward,
 } from "react-icons/tb";
-import { UseMusicPlayer } from "@/context/MusicPlayerContext";
-import { UseTheme } from "@/context/ThemeContext";
 
 const MusicPlayerModal = ({
 	isOpen,
@@ -39,21 +39,28 @@ const MusicPlayerModal = ({
 	const { theme } = UseTheme();
 
 	// --- Handle Cover Rotation ---
-	const [rotation, setRotation] = useState(0);
+	const coverRef = useRef<HTMLDivElement>(null);
 	const rotationRef = useRef(0);
 	const lastTimestampRef = useRef<number | null>(null);
 
 	useEffect(() => {
 		let frameId: number;
 
+		if (isPlaying) {
+			lastTimestampRef.current = null;
+		}
+
 		const rotate = (timestamp: number) => {
 			if (lastTimestampRef.current === null)
 				lastTimestampRef.current = timestamp;
+
 			const delta = timestamp - lastTimestampRef.current;
 
-			if (isPlaying) {
-				rotationRef.current += (delta / 8000) * 360; // 8s for full rotation
-				setRotation(rotationRef.current);
+			if (isPlaying && coverRef.current) {
+				rotationRef.current =
+					(rotationRef.current + (delta / 8000) * 360) % 360;
+
+				coverRef.current.style.transform = `rotate(${rotationRef.current}deg)`;
 			}
 
 			lastTimestampRef.current = timestamp;
@@ -61,7 +68,10 @@ const MusicPlayerModal = ({
 		};
 
 		frameId = requestAnimationFrame(rotate);
-		return () => cancelAnimationFrame(frameId);
+		return () => {
+			cancelAnimationFrame(frameId);
+			lastTimestampRef.current = null;
+		};
 	}, [isPlaying]);
 
 	const isDarkTheme = theme === "dark";
@@ -85,10 +95,11 @@ const MusicPlayerModal = ({
 				{/* Now Playing */}
 				<div className='flex flex-col items-center gap-3 mt-4'>
 					<div
+						ref={coverRef}
 						className='h-32 w-32 rounded-full overflow-hidden shadow-md border border-foreground/20 border-foreground-20'
 						style={{
-							transform: `rotate(${rotation}deg)`,
-							transition: "transform 0.1s linear",
+							transition: "none", // Critical: Disable CSS transitions during JS animation
+							willChange: "transform", // Hint to iOS to use GPU acceleration
 						}}>
 						<img
 							src={currentTrack.cover}
@@ -100,7 +111,9 @@ const MusicPlayerModal = ({
 					{/* Track Info */}
 					<div className='text-center'>
 						<h2 className='text-sm font-medium'>{currentTrack.title}</h2>
-						<p className='text-xs text-foreground/60 text-foreground-60'>{currentTrack.artist}</p>
+						<p className='text-xs text-foreground/60 text-foreground-60'>
+							{currentTrack.artist}
+						</p>
 					</div>
 
 					{/* Progress Bar */}
