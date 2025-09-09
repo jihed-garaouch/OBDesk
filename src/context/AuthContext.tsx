@@ -75,6 +75,7 @@ export const AuthContextProvider = ({
 		}
 
 		localStorage.setItem("provider", "email");
+		localStorage.setItem("orbit_desk_returning_user", "true");
 		toast.success("Sign-up successful.");
 		return { success: true, data };
 	};
@@ -92,6 +93,7 @@ export const AuthContextProvider = ({
 		}
 
 		localStorage.setItem("provider", "google");
+		localStorage.setItem("orbit_desk_returning_user", "true");
 		return { success: true, data };
 	};
 
@@ -111,6 +113,7 @@ export const AuthContextProvider = ({
 		}
 
 		localStorage.setItem("provider", "github");
+		localStorage.setItem("orbit_desk_returning_user", "true");
 		return { success: true, data };
 	};
 
@@ -138,6 +141,7 @@ export const AuthContextProvider = ({
 			}
 
 			localStorage.setItem("provider", "email");
+			localStorage.setItem("orbit_desk_returning_user", "true");
 			toast.success("Signed in successfully");
 			return { success: true, data };
 		} catch (err: unknown) {

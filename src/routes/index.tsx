@@ -1,16 +1,18 @@
 import AuthCallback from "@/components/Auth/AuthCallBack";
 import DashboardLayout from "@/components/Dashboard/DashboardLayout";
+import PublicGuard from "@/components/PublicGuard";
+import RootRedirect from "@/components/RootRedirect";
 import CurrencyScreen from "@/screens/Dashboard/Currency";
 import FinanceScreen from "@/screens/Dashboard/Finance";
 import HomeScreen from "@/screens/Dashboard/Home";
 import SingleFinanceScreen from "@/screens/Dashboard/SingleFinance";
 import TaskManagerScreen from "@/screens/Dashboard/TaskManager";
 import WorldClockScreen from "@/screens/Dashboard/WorldClock";
+import LandingScreen from "@/screens/Landing/Landing";
 import LoginScreen from "@/screens/Login/Login";
 import NotFound from "@/screens/NotFound/NotFound";
 import SignUpScreen from "@/screens/SignUp/SignUp";
 import React from "react";
-import { Navigate } from "react-router-dom";
 
 export type AppRoute = {
 	path: string;
@@ -20,7 +22,7 @@ export type AppRoute = {
 };
 
 const routes: AppRoute[] = [
-	{ path: "/", element: <Navigate to='/dashboard' replace /> },
+	{ path: "/", element: <RootRedirect /> },
 
 	{ path: "/auth/v1/callback", element: <AuthCallback /> },
 
@@ -42,8 +44,30 @@ const routes: AppRoute[] = [
 		],
 	},
 
-	{ path: "/login", element: <LoginScreen /> },
-	{ path: "/sign-up", element: <SignUpScreen /> },
+	{
+		path: "/landing",
+		element: (
+			<PublicGuard>
+				<LandingScreen />
+			</PublicGuard>
+		),
+	},
+	{
+		path: "/login",
+		element: (
+			<PublicGuard>
+				<LoginScreen />
+			</PublicGuard>
+		),
+	},
+	{
+		path: "/sign-up",
+		element: (
+			<PublicGuard>
+				<SignUpScreen />
+			</PublicGuard>
+		),
+	},
 
 	{ path: "*", element: <NotFound /> },
 ];

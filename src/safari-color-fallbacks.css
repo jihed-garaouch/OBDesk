@@ -4,6 +4,12 @@
 /* ===================================== */
 
 /* ---------- BACKGROUND ---------- */
+.bg-background-10 {
+	background-color: rgba(var(--background), 0.1);
+}
+.bg-background-50 {
+	background-color: rgba(var(--background), 0.5);
+}
 .bg-background-90 {
 	background-color: rgba(var(--background), 0.9);
 }
@@ -32,6 +38,9 @@
 }
 .bg-foreground-20 {
 	background-color: rgba(var(--foreground), 0.2);
+}
+.bg-foreground-30 {
+	background-color: rgba(var(--foreground), 0.3);
 }
 
 /* ---------- TEXT ---------- */
@@ -63,6 +72,9 @@
 }
 .border-foreground-25 {
 	border-color: rgba(var(--foreground), 0.25);
+}
+.border-background-30 {
+	border-color: rgba(var(--background), 0.3);
 }
 .border-foreground-30 {
 	border-color: rgba(var(--foreground), 0.3);
