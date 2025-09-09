@@ -84,7 +84,7 @@ const MusicPlayerModal = ({
 			className='fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-[999]'>
 			<div
 				onClick={(e) => e.stopPropagation()}
-				className='bg-background/90 bg-background-90 rounded-2xl border border-foreground/20 border-foreground-20 w-[90%] max-w-md p-4 shadow-lg text-foreground relative z-[1000]'>
+				className='bg-background/90 bg-background-90 rounded-2xl border border-foreground/20 border-foreground-20 w-[90%] max-w-md max-h-[90%] overflow-hidden p-4 shadow-lg text-foreground relative z-[1000]'>
 				{/* Close Button */}
 				<button
 					onClick={onClose}
@@ -93,10 +93,10 @@ const MusicPlayerModal = ({
 				</button>
 
 				{/* Now Playing */}
-				<div className='flex flex-col items-center gap-3 mt-4'>
+				<div className='flex flex-col items-center gap-3 mt-2 md:mt-4'>
 					<div
 						ref={coverRef}
-						className='h-32 w-32 rounded-full overflow-hidden shadow-md border border-foreground/20 border-foreground-20'
+						className='h-24 w-24 md:h-32 md:w-32 rounded-full overflow-hidden shadow-md border border-foreground/20 border-foreground-20'
 						style={{
 							transition: "none", // Critical: Disable CSS transitions during JS animation
 							willChange: "transform", // Hint to iOS to use GPU acceleration
@@ -133,7 +133,7 @@ const MusicPlayerModal = ({
 					</div>
 
 					{/* Controls */}
-					<div className='flex items-center gap-3 mt-2'>
+					<div className='flex items-center gap-3 mt-0 md:mt-2'>
 						<button
 							onClick={() => setIsLooping((prev) => !prev)}
 							className={`p-2 rounded-full active:scale-95 transition-all duration-300 ease-in-out cursor-pointer ${

@@ -13,6 +13,8 @@ import { Link, Outlet, useLocation } from "react-router-dom";
 import Avatar from "../ui/Avatar";
 import MusicPlayer from "./MusicPlayer";
 import MusicPlayerModal from "./MusicPlayerModal";
+import NotificationPermissionModal from "../NotificationPermissionModal";
+import MissedRemindersModal from "../MissedRemindersModal";
 
 const DashboardLayout = () => {
 	const { theme } = UseTheme();
@@ -230,7 +232,7 @@ const DashboardLayout = () => {
 					<div className='relative z-50 bg-foreground/5 bg-foreground-5 border-foreground/10 border-foreground-10 border shadow-md backdrop-blur-md mb-3 rounded-full p-2 flex justify-between items-center text-xs ml-auto w-fit'>
 						<div className='flex items-center gap-2 md:gap-3'>
 							<MusicPlayer setShowMusicPlayerModal={setShowMusicPlayerModal} />
-							<div className='bg-foreground rounded-full h-8 w-8 shadow-sm flex items-center justify-center font-bold text-sm text-background overflow-hidden cursor-default'>
+							<div className='[@media(max-width:330px)]:hidden bg-foreground rounded-full h-8 w-8 shadow-sm flex items-center justify-center font-bold text-sm text-background overflow-hidden cursor-default'>
 								<Avatar />
 							</div>
 						</div>
@@ -244,6 +246,8 @@ const DashboardLayout = () => {
 				isOpen={showMusicPlayerModal}
 				onClose={() => setShowMusicPlayerModal(false)}
 			/>
+			<NotificationPermissionModal />
+			<MissedRemindersModal />
 		</div>
 	);
 };

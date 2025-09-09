@@ -1,13 +1,14 @@
 import Input from "@/components/ui/Input";
+import { UserAuth } from "@/context/AuthContext";
 import { UseTheme } from "@/context/ThemeContext";
+import { LoaderIcon } from "@/vectors/loader";
 import { useState } from "react";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
+import { FiGrid } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
-import { z } from "zod";
 import { toast } from "sonner";
-import { UserAuth } from "@/context/AuthContext";
-import { LoaderIcon } from "@/vectors/loader";
+import { z } from "zod";
 
 const signUpSchema = z.object({
 	firstName: z.string().min(3, "First name is required"),
@@ -115,10 +116,22 @@ const SignUpScreen = () => {
 	};
 
 	return (
-		<div className='h-svh flex w-full text-foreground bg-background'>
-			<div className='flex-1 flex flex-col items-start justify-center relative'>
-				<div className='px-8 w-[95%] md:w-[60%] lg:w-[70%] mx-auto z-20 backdrop-blur-xs h-full flex flex-col py-4 justify-center'>
-					<div className='flex flex-col justify-center items-center gap-1 mb-4'>
+		<div className='min-h-svh flex w-full text-foreground bg-background'>
+			<div className='flex-1 flex flex-col items-start justify-center relative p-2'>
+				<Link
+					to='/landing'
+					className={`absolute top-4 left-4 text-[10px] z-50 flex items-center gap-1 py-2 px-4 ${
+						isDarkTheme
+							? "bg-transparent border border-foreground/30 border-foreground-30 text-foreground"
+							: "bg-foreground text-background"
+					} active:scale-95 transition-all duration-700 ease-in-out rounded-full font-bold group`}>
+					<FiGrid className='text-xs group-hover:rotate-90 transition-all duration-700 ease-in-out' />
+					<span>App Overview</span>
+				</Link>
+				<div className='px-2 md:px-8 w-[95%] md:w-[60%] lg:w-[70%] mx-auto z-20 h-full flex flex-col py-4 justify-center'>
+					<Link
+						to='/landing'
+						className='flex flex-col justify-center items-center gap-1 mb-4'>
 						<img
 							src='/logo.webp'
 							alt='logo'
@@ -127,7 +140,7 @@ const SignUpScreen = () => {
 							}`}
 						/>
 						<p className='font-bold'>OrbitDesk</p>
-					</div>
+					</Link>
 					<h1 className='font-bold text-xl mb-1 text-center'>
 						Create your Account
 					</h1>
