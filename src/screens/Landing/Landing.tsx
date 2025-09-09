@@ -24,11 +24,11 @@ const LandingScreen = () => {
 						<img
 							src='/logo.webp'
 							alt='logo'
-							className={`w-[40px] h-[40px] md:w-[45px] md:h-[45px] border-2 rounded-full ${
+							className={`w-[35px] h-[35px] md:w-[40px] md:h-[40px] border-2 rounded-full ${
 								isDarkTheme ? "border-foreground" : "border-gray-400"
 							}`}
 						/>
-						<p className='font-bold text-lg md:text-2xl tracking-tight'>OrbitDesk</p>
+						<p className='font-bold text-lg md:text-xl tracking-tight'>OrbitDesk</p>
 					</div>
 				</div>
 
